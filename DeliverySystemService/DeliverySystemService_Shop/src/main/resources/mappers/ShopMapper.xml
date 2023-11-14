@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.dao.ShopMapper">
+
+    <!-- 分页查询-自定义sql-Wrapper -->
+    <select id="selpageCustomSqlByWrapper" resultType="org.example.domain.shop.Shop">
+        select * from shop t ${ew.customSqlSegment}
+    </select>
+
+    <!-- 分页查询-自定义sql-Map -->
+    <select id="selpageCustomSqlByMap" resultType="org.example.domain.shop.Shop">
+        select * from shop t where id=#{params.id} and name=#{params.name}
+    </select>
+
+<!--    根据传参判断或者改为三表联查判断是不是父类-->
+    <select id="listShopsByCategoryId" resultType="org.example.domain.shop.Shop">
+        select *
+        from shop join shop_category on shop.id = shop_category.shop_id
+        <if test="isParentId">
+            where shop_category.category_id in (
+            SELECT id
+            from category
+            where parent_id = #{categoryId}
+            )
+        </if>
+        <if test="!isParentId">
+            where shop_category.category_id = #{categoryId}
+        </if>
+    </select>
+</mapper>

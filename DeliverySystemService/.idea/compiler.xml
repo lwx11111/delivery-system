@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="DeliverySystemService_UAA" />
+        <module name="DeliverySystemService_Gateway" />
+        <module name="DeliverySystemService_Shop" />
+        <module name="DeliverySystemService_Order" />
+        <module name="DeliverySystemService_Common" />
+        <module name="DeliverySystemService_File" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="DeliverySystemService_Dependencies" target="17" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="DeliverySystemService_Common" options="-parameters" />
+      <module name="DeliverySystemService_Dependencies" options="-parameters" />
+      <module name="DeliverySystemService_File" options="-parameters" />
+      <module name="DeliverySystemService_Gateway" options="-parameters" />
+      <module name="DeliverySystemService_Order" options="-parameters" />
+      <module name="DeliverySystemService_Shop" options="-parameters" />
+      <module name="DeliverySystemService_UAA" options="-parameters" />
+    </option>
+  </component>
+</project>
