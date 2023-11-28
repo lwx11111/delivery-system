@@ -12,7 +12,20 @@ export default {
       data: data
     })
   },
-
+  // 根据店铺ID查询店铺商品
+  listShopItemsByShopId(id){
+    return request({
+      url: serverName + '/shop/listShopItemsByShopId/'+id,
+      method: 'get',
+    })
+  },
+  saveShopItems(data){
+    return request({
+      url: serverName + '/shop/saveShopItems',
+      method: 'post',
+      data: data
+    })
+  },
   // 添加
   add4shop(obj) {
     return request({

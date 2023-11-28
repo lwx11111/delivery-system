@@ -1,4 +1,4 @@
-package org.example.service.serviceImpl;
+package org.example.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -15,7 +15,6 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
@@ -50,6 +49,8 @@ import java.util.Map;
 @Service
 @Slf4j
 public class SysOssServiceImpl extends ServiceImpl<SysOssMapper, SysOss> implements ISysOssService {
+    @Autowired
+    private SysOssMapper mapper;
     @Value("${minio.endpoint}")
     private String endpoint;
 
@@ -233,6 +234,34 @@ public class SysOssServiceImpl extends ServiceImpl<SysOssMapper, SysOss> impleme
         map.put("bucket", bucket);
         map.put("message", "上传成功");
         return map;
+    }
+
+    @Override
+    public Boolean deleteFileByGroupId(String groupId) throws Exception {
+        return null;
+    }
+
+    @Override
+    public Boolean deleteFileByStorageFileName(String storageFileName) throws Exception {
+        MinioClient minioClient = this.getMinioClient();
+        // json 形式 为“str”
+        storageFileName = storageFileName.substring(1,storageFileName.length() - 1);
+        System.out.println(storageFileName);
+        // 删除对象
+        minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                        .bucket(bucket)
+                        .object(storageFileName)
+                        .build()
+        );
+
+        // 数据库删除
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("storage_file_name",storageFileName);
+        System.out.println(storageFileName);
+        mapper.deleteByMap(param);
+        return true;
+
     }
 
     /**

@@ -87,9 +87,14 @@ export function listFunResTypesApi(funId) {
   })
 }
 
+/**
+ * 查询有没有页面权限
+ * @param url
+ * @returns {*}
+ */
 export function pagePermApi(url) {
   return request({
-    url: managerUriPrefix + 'v1/function/page-perm',
+    url: '/auth-manager-microservice-lwx/' + 'v1/function/page-perm',
     method: 'post',
     data: qs.stringify({url})
   })

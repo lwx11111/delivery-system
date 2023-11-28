@@ -2,8 +2,13 @@ package org.example.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.example.dao.ShopCategoryMapper;
+import org.example.dao.ShopItemMapper;
 import org.example.domain.shop.Shop;
 import org.example.dao.ShopMapper;
+import org.example.domain.shop.ShopCategory;
+import org.example.domain.shop.ShopItem;
+import org.example.domain.shop.ShopItemVO;
 import org.example.service.IShopService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -28,6 +33,7 @@ import java.io.InputStream;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -39,12 +45,60 @@ import java.util.Map;
  */
 @Service
 public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IShopService {
+    // 商品分类中间表
+    @Autowired
+    private ShopCategoryMapper shopCategoryMapper;
+
+    // 商铺物品中间表
+    @Autowired
+    private ShopItemMapper shopItemMapper;
+
     @Autowired
     private ShopMapper shopMapper;
 
     @Override
-    public void saveByParam(Shop obj,Map<String, String> params){
+    public List<ShopItemVO> listShopItemsByShopId(String id) throws Exception {
+        List<ShopItem> all = shopItemMapper.selectList(new QueryWrapper<ShopItem>().eq("shop_id", id));
+        List<ShopItemVO> shopItemVOs = Lists.newArrayList();
+        // 根据分类名称分组
+        Map<String, List<ShopItem>> collect = all.stream().collect(Collectors.groupingBy(ShopItem :: getCategoryName));
+        for (Map.Entry<String, List<ShopItem>> entry : collect.entrySet()) {
+            ShopItemVO shopItemVO = new ShopItemVO();
+            shopItemVO.setCategoryName(entry.getKey());
+            shopItemVO.setItems(entry.getValue());
+            shopItemVOs.add(shopItemVO);
+        }
+        return shopItemVOs;
+    }
+
+    @Override
+    public void saveByParam(Shop obj,Map<String, String> params) throws Exception {
+        log.warn("saveByParam方法参数obj：");
+        System.out.println(obj);
         this.save(obj);
+        System.out.println(obj.getId());
+        if (StringUtils.isNotBlank(obj.getId())) {
+            for (String categoryId : obj.getCategoryIds()) {
+                ShopCategory shopCategory = new ShopCategory();
+                shopCategory.setShopId(obj.getId());
+                shopCategory.setCategoryId(categoryId);
+                shopCategoryMapper.insert(shopCategory);
+            }
+        }
+    }
+
+    @Override
+    public void saveShopItems(List<ShopItemVO> shopItemVOList) throws Exception {
+        // 先全部删除再保存
+        String shopId = shopItemVOList.get(0).getItems().get(0).getShopId();
+        shopItemMapper.delete(new QueryWrapper<ShopItem>().eq("shop_id", shopId));
+        // TODO 业务优化
+        for (ShopItemVO shopItemVO : shopItemVOList) {
+            for (ShopItem shopItem : shopItemVO.getItems()) {
+                shopItem.setCategoryName(shopItemVO.getCategoryName());
+                shopItemMapper.insert(shopItem);
+            }
+        }
     }
 
     @Override
@@ -158,7 +212,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
                 query.eq("user_id",entry.getValue());
             }
             if("name".equals(entry.getKey())){
-                query.eq("name",entry.getValue());
+                query.like("name",entry.getValue());
             }
             if("province".equals(entry.getKey())){
                 query.eq("province",entry.getValue());
@@ -166,8 +220,8 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
             if("county".equals(entry.getKey())){
                 query.eq("county",entry.getValue());
             }
-            if("localtion".equals(entry.getKey())){
-                query.eq("localtion",entry.getValue());
+            if("location".equals(entry.getKey())){
+                query.eq("location",entry.getValue());
             }
             if("score".equals(entry.getKey())){
                 query.eq("score",entry.getValue());

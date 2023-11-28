@@ -111,6 +111,20 @@ public class CategoryController {
         return  service.selectBy(params);
     }
 
+    @GetMapping("/listTreeCategory")
+    @Operation(description = "分页查询")
+    @ResponseBody
+    public SimpleResponse listTreeCategory() {
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.listTreeCategory());
+        } catch (Exception e) {
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
     @PostMapping("/selpage")
     @Operation(description = "分页查询")
     @ResponseBody

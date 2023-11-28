@@ -1,6 +1,12 @@
 import request from '@/utils/request'
 const serverName = '/shop'
 export default {
+    listTreeCategory() {
+        return request({
+          url: serverName + '/category/listTreeCategory',
+          method: 'get',
+        })
+    },
 
     // 分页查询
     selpage4category(data) {

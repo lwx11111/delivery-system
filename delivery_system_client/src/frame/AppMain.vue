@@ -1,5 +1,4 @@
 <template>
-<!--    <router-view :key="key"></router-view>-->
     <router-view v-slot="{ Component }" :key="key">
         <transition name="fade-transform" mode="out-in">
             <keep-alive :include="cachedViews">

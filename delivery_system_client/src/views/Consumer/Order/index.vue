@@ -116,6 +116,8 @@ const data = reactive({
     tabName: 'allOrder',
     // 查询参数
     params: {
+        // todo user
+        userId: '',
         status: '',
         pageIndex: 1,
         pageSize: 10

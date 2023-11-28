@@ -4,23 +4,26 @@
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
 import qs from "qs";
+import {getLocalStorageItem, getToken, removeToken} from '@/utils/auth/auth'
 
 // axios默认配置
 axios.defaults.timeout = 10000 // 超时时间
 
 // 网关地址
-axios.defaults.baseURL = 'http://localhost:9999'
+axios.defaults.baseURL = 'http://localhost:8921'
 
 // 整理数据
 axios.defaults.transformRequest = function(data) {
-
-    // data = JSON.stringify(data)
     return data
 }
 
 // 路由请求拦截
 axios.interceptors.request.use(
     config => {
+        if (getToken()) {
+            config.headers['Authorization'] = getToken()
+        }
+
         if (config.type === 'form'){
             // 后端@RequestParams注解接收
             config.headers['Content-Type'] = 'application/x-www-form-urlencoded'
@@ -38,18 +41,64 @@ axios.interceptors.request.use(
     },
     error => {
         return Promise.reject(error.response)
-    })
+    }
+)
 
 // 路由响应拦截
 axios.interceptors.response.use(
     response => {
-        if (response.data.success === false) {
-            return ElMessage.error(response.data.errDesc)
+        console.log(response)
+        if (response.headers && (response.headers['content-type'] === 'application/x-msdownload' ||
+                response.headers['content-type'].indexOf('application/vnd.ms-excel') !== -1 ||
+                response.headers['content-type'].indexOf('application/octet-stream') !== -1)) {
+            return response;
         } else {
-            return response.data
+            const res = response.data;
+            // if (res.code !== '20000') {
+            //     Message({
+            //         message: res.message || '操作失败，请联系管理员',
+            //         type: 'error',
+            //         duration: 5 * 1000
+            //     })
+            //     return Promise.reject(new Error(JSON.stringify(res) || '操作失败，请联系管理员'))
+            // } else {
+            //     return res
+            // }
+            return res
         }
     },
     error => {
-        return Promise.reject(error.response) // 返回接口返回的错误信息
-    })
+        console.log('err' + error) // for debug
+        if (error && error.response) {
+            const {status} = error.response;
+            if (status === 401) {
+                ElMessage.error('Token值无效，请重新登录');
+                removeToken();
+                router.replace('/login');
+            } else {
+                // Message({
+                //     message: error.message,
+                //     type: 'error',
+                //     duration: 5 * 1000
+                // });
+            }
+        } else {
+            ElMessage.error('网络出现问题，请稍后再试');
+        }
+        return Promise.reject(error)
+    }
+
+    // response => {
+    //     if (response.data.success === false) {
+    //         return ElMessage.error(response.data.errDesc)
+    //     } else {
+    //         return response.data
+    //     }
+    // },
+    // error => {
+    //     return Promise.reject(error.response) // 返回接口返回的错误信息
+    // }
+
+
+)
 export default axios

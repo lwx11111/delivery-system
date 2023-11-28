@@ -9,10 +9,10 @@
   <packaging>pom</packaging>
   <version>1.0-SNAPSHOT</version>
   <modules>
-    <module>DeliverySystemService_Shop</module>
-    <module>DeliverySystemService_Order</module>
-    <module>DeliverySystemService_UAA</module>
-    <module>DeliverySystemService_Gateway</module>
+      <module>DeliverySystemService_Shop</module>
+      <module>DeliverySystemService_Order</module>
+      <module>DeliverySystemService_UAA</module>
+      <module>DeliverySystemService_Gateway</module>
       <module>DeliverySystemService_Common</module>
       <module>DeliverySystemService_File</module>
   </modules>

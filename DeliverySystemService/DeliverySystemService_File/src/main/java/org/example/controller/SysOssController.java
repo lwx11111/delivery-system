@@ -51,18 +51,58 @@ public class SysOssController {
                                     @RequestParam(required = false) String tagName) throws Exception {
         SimpleResponse response = new SimpleResponse();
         try {
-            System.out.println("uploadOSS");
-            System.out.println(file.toString());
-            System.out.println(file.getName());
-            System.out.println(file.getOriginalFilename());
-            System.out.println(groupId);
-            System.out.println(groupName);
-            System.out.println(bizId);
-            System.out.println(groupInfoId);
-            System.out.println(groupInfoName);
-            System.out.println(fileName);
-            System.out.println(tagName);
             response.setData(service.uploadOSS(file, groupId,groupName,bizId,groupInfoId,groupInfoName,fileName, tagName));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * 删除文件
+     * @param groupId
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/deleteFileByGroupId")
+    @ResponseBody
+    @Operation(description = "上传附件")
+    public SimpleResponse deleteFileByGroupId(@RequestBody String groupId) throws Exception {
+        SimpleResponse response = new SimpleResponse();
+        try {
+            if (service.deleteFileByGroupId(groupId)){
+                response.setMessage("删除成功");
+            } else {
+                response.setCode(201);
+                response.setMessage("删除失败");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * 删除文件
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/deleteFileByStorageFileName")
+    @ResponseBody
+    @Operation(description = "上传附件")
+    public SimpleResponse deleteFileByStorageFileName(@RequestBody String storageFileName){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            if (service.deleteFileByStorageFileName(storageFileName)){
+                response.setMessage("删除成功");
+            } else {
+                response.setCode(201);
+                response.setMessage("删除失败");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);

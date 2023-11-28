@@ -1,15 +1,25 @@
 <template>
+<!--    v-model:file-list="props.fileList"-->
     <el-upload
-            v-model:file-list="data.fileList"
-            :action="data.minioUrl"
-            :data="data.fileData"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
-            :on-success="handleSuccess"
-            :on-error="handleError"
-            list-type="picture"
-            :limit="props.limit">
+        ref="upload"
+        :auto-upload="true"
+        list-type="picture"
+        :limit="props.limit"
+        :action="data.minioUrl"
+        :data="data.fileData"
+        :on-preview="handlePreview"
+        :on-remove="handleRemove"
+        :on-success="handleSuccess"
+        :on-error="handleError"
+        :before-upload="handleBeforeUpload"
+        :on-exceed="handleExceed"
+        :on-change="handleChange">
         <el-button type="primary">点击上传</el-button>
+        <template #tip>
+            <div class="el-upload__tip text-red">
+                文件大小不能超过2MB!
+            </div>
+        </template>
     </el-upload>
 </template>
 
@@ -19,15 +29,15 @@ import { reactive, ref, onMounted, toRefs } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
+import ApiOss from "@/api/api_sysoss";
 
 const emits = defineEmits(["uploadCallback"]);
 const store = useStore();
 const router = useRouter()
-import type { UploadProps, UploadUserFile } from 'element-plus'
+import type { UploadProps, UploadUserFile, UploadInstance, UploadRawFile } from 'element-plus'
+import { genFileId } from 'element-plus'
 // Data
 const data = reactive({
-    // 上传的文件列表
-    fileList: [],
     fileData: {
         groupId: '',
         groupName:''
@@ -35,13 +45,28 @@ const data = reactive({
     minioUrl: "http://localhost:9999/file/sysoss/uploadOSS",
     minioServerUrl: "http://127.0.0.1:9000/"
 })
-
+// const fileList = ref<UploadUserFile[]>([
+//     {
+//         name: 'element-plus-logo.svg',
+//         url: 'https://element-plus.org/images/element-plus-logo.svg',
+//     },
+//     {
+//         name: 'element-plus-logo2.svg',
+//         url: 'https://element-plus.org/images/element-plus-logo.svg',
+//     },
+// ])
 // Props
 const props = defineProps({
     limit: {
         type: Number,
         default: 100
     },
+    // 上传的文件列表
+    fileList: {
+        type: Array,
+        default: []
+    },
+
 })
 
 // Mounted
@@ -50,6 +75,67 @@ onMounted(() => {
 })
 
 // Methods
+
+/**
+ *  限制只能上传一个文件，再次上传则覆盖之前的文件
+ */
+const upload = ref<UploadInstance>()
+const handleExceed: UploadProps['onExceed'] = (files) => {
+    console.log(upload.value)
+    console.log(files)
+    ElMessageBox.confirm('重复上传会覆盖之前的材料，是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        // 先从oss删除之前的文件
+        console.log(data.fileData)
+        if (data.fileData != null){
+            deleteFile();
+        }
+        upload.value!.clearFiles()
+        const file = files[0] as UploadRawFile
+        file.uid = genFileId()
+        upload.value!.handleStart(file)
+        upload.value!.submit()
+
+
+    })
+}
+
+/**
+ * 删除目前的文件
+ */
+const deleteFile = () => {
+    ApiOss.deleteFileByStorageFileName(data.fileData.storageFileName).then(res => {
+        console.log(res);
+        if (res.code === 200){
+            data.fileData = null;
+        }
+    })
+}
+/**
+ *
+ * @param rawFile
+ */
+const handleBeforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
+    //文件类型和大小限制
+    if (rawFile.type !== 'image/jpeg') {
+        ElMessage.error('图片必须是JPG类型')
+        return false
+    } else if (rawFile.size / 1024 / 1024 > 2) {
+        ElMessage.error('图片大小不能超过2MB!')
+        return false
+    }
+
+    // 文件数量限制
+    if (props.fileList.length >= props.limit) {
+        ElMessage.error(`最多只能上传${props.limit}个文件`)
+        return false
+    }
+    return true
+}
+
 /**
  * 上传成功回调函数，对象存储：提示成功，并更新文件列表、groupId，同时返回 response，调用回调函数，由调用者处理
  * excel导入：只返回 response，调用回调函数，由调用者处理
@@ -60,6 +146,8 @@ onMounted(() => {
 const handleSuccess: UploadProps['onSuccess'] = (response, file, fileList) => {
     console.log(response)
     if (response.code === 200){
+        // 封装文件信息
+        data.fileData = response.data;
         const url = data.minioServerUrl + response.data.bucket + "/" + response.data.storageFileName;
         emits("uploadCallback", response, url);
     }
@@ -95,6 +183,7 @@ const handleSuccess: UploadProps['onSuccess'] = (response, file, fileList) => {
  * @param fileList
  */
 const handleError: UploadProps['onError'] = (err, file, fileList) => {
+    console.log(file)
     this.uploadStatus = false
     if (this.oss) {
         this.$notify.error({
@@ -106,13 +195,40 @@ const handleError: UploadProps['onError'] = (err, file, fileList) => {
     this.$emit('callback', 'put', false, this.data.groupId, err,this.data.groupName)
 }
 
+/**
+ *
+ * @param uploadFile
+ * @param uploadFiles
+ */
 const handleRemove: UploadProps['onRemove'] = (uploadFile, uploadFiles) => {
-    console.log(uploadFile, uploadFiles)
+    console.log(uploadFile)
+    return ElMessageBox.confirm(
+        `Cancel the transfer of ${uploadFile.name} ?`
+    ).then(
+        () => true,
+        () => false
+    )
 }
 
+/**
+ *
+ * @param file
+ */
 const handlePreview: UploadProps['onPreview'] = (file) => {
     console.log(file)
 }
+
+/**
+ * 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
+ * @param file
+ */
+const handleChange: UploadProps['onChange'] = (file) => {
+    console.log(file)
+}
+
+defineExpose({
+    deleteFile,
+});
 
 </script>
 

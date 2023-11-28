@@ -22,18 +22,18 @@
     </div>
 </template>
 <script>
-import { useStore } from "vuex";
-import { useRouter } from 'vue-router'
-import { mapState } from 'vuex'
-import { onBeforeRouteUpdate } from "vue-router";
-const store = useStore();
-const router = useRouter()
+    import { useStore } from "vuex";
+    import { useRouter } from 'vue-router'
+    import { mapState } from 'vuex'
+    import { onBeforeRouteUpdate } from "vue-router";
+    const store = useStore();
+    const router = useRouter()
     // import {mapGetters} from 'vuex'
     import Logo from './Logo.vue'
     import SidebarItem from './SidebarItem.vue'
     // import variables from '@/styles/variables.scss'
     import {leftMenuApi} from '@/api/function'
-import useMapState from "@/store/useMapState";
+    import useMapState from "@/store/useMapState";
 
     export default {
         setup() {
@@ -67,9 +67,14 @@ import useMapState from "@/store/useMapState";
                     },
                     {
                         'funId': '1',
-                        'funName': '分类管理',
-                        'url': '/Management/category/index',
+                        'funName': '商铺管理',
+                        'url': '/Management/shopinfo/index',
                         // 'icon': '&#xe720;'
+                    },
+                    {
+                        'funId': '1',
+                        'funName': '商铺分类管理',
+                        'url': '/Management/category/index',
                     },
                     {
                         'funId': '1',

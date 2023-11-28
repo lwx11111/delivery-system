@@ -29,6 +29,9 @@ public interface ISysOssService extends IService<SysOss> {
      */
     Map uploadOSS(MultipartFile file, String groupId,String groupName,String bizId,String groupInfoId,String groupInfoName,String fileName, String tagName) throws Exception;
 
+    Boolean deleteFileByGroupId(String groupId) throws Exception;
+
+    Boolean deleteFileByStorageFileName(String storageFileName) throws Exception;
     /**
      * 根据参数保存
      * @param obj

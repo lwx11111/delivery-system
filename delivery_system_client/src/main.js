@@ -7,6 +7,7 @@ import axios from 'axios'
 import store from './store/index'
 import dataJson from "../public/config.json";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import './permission' // permission control
 
 const app = createApp(App);
 app.config.globalProperties.$axios = axios;

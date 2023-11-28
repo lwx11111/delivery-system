@@ -25,6 +25,15 @@
                                       @keyup.enter.native="getData">
                                 </el-input>
                             </el-form-item>
+                            <el-form-item
+                                label="选择父级分类"
+                                prop="isParentId">
+                                <el-select v-model="data.formList.parentId" placeholder="请选择" size="large">
+                                    <el-option v-for="(item, index) in data.parentCategoryList"
+                                               :label="item.name"
+                                               :value="item.id" />
+                                </el-select>
+                            </el-form-item>
                         </el-form>
                     </div>
                 </el-collapse-item>
@@ -40,35 +49,11 @@
                   新增
                 </el-button>
                 <el-button
-                        type="info"
-                        icon="Download"
-                        @click="downloadExcelTemplate()">
-                  下载模板
-                </el-button>
-                <el-button
-                        type="primary"
-                        icon="Upload"
-                        @click="uploadExcel()">
-                  导入
-                </el-button>
-                <el-button
                         type="warning"
                         icon="DocumentDelete"
                         @click="deleteDataMany()">
                   删除
                 </el-button>
-                <el-dropdown
-                        style="margin-left:8px;"
-                        split-button
-                        type="primary">
-                    更多功能
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item>功能1</el-dropdown-item>
-                            <el-dropdown-item>功能2</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
                 <div style="float:right;">
                     <el-button
                             type="primary"
@@ -106,7 +91,7 @@
                 <el-table-column
                         prop="id"
                         label="id"
-                        width="180"
+                        width="250"
                         align="center">
                 </el-table-column>
                 <el-table-column
@@ -122,16 +107,10 @@
                         align="center">
                 </el-table-column>
                 <el-table-column
-                        prop="picture"
-                        label="图片"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                <el-table-column
                         fixed="right"
                         label="操作"
                         align="center"
-                        width="400">
+                        width="300">
                     <template #default="scope">
                         <el-link
                                 style="margin-right: 20px"
@@ -182,7 +161,7 @@
     import Api from '@/api/api_category.js'
     import ItemDialog from './Item.vue'
     import { reactive, ref, defineProps, toRefs, onMounted} from 'vue'
-    import Upload from "../../../../utils/oss/upload.vue";
+    import Upload from "@/utils/oss/upload.vue";
     import { useStore } from "vuex";
     import { useRouter } from 'vue-router'
     import {ElMessage, ElMessageBox} from "element-plus";
@@ -202,7 +181,6 @@
         formList: {
             name: '',
             parentId: '',
-            picture: ''
         },
         // tableData:表格数据
         tableData: [],
@@ -229,6 +207,7 @@
     // Mounted
     onMounted(() => {
         getData();
+        getParentCategoryList();
         // window.onresize = () => {
         //     return (() => {
         //         data.screenHeight = window.innerHeight
@@ -246,6 +225,21 @@
     })
 
     // Methods
+
+    /**
+     * 父级分类店铺列表
+     */
+    const getParentCategoryList = () => {
+        let param = {
+            isParentId: true
+        }
+        Api.selpage4category(param).then(res => {
+            if (res.code === 200){
+                data.parentCategoryList = res.data.records;
+            }
+        })
+    }
+
     const getData = () => {
         // 查询方法
         // 查询参数

@@ -9,7 +9,7 @@
 </template>
 <script>
 
-import Api from "./api/test";
+import Api from "./api/auth";
 
     export default {
 

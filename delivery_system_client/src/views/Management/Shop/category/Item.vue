@@ -1,5 +1,6 @@
 <template>
     <el-dialog v-model="data.showDialog"
+               destroy-on-close
           width="90%"
           :title="data.operateTitle">
         <el-card style="border: 1px solid gold;"
@@ -14,52 +15,66 @@
                     <el-col :span="6">
                         <el-form-item
                                 label="分类名"
-                                prop="name">
+                                prop="name"
+                                label-width="150px">
                             <el-input
                                   v-model="data.item.name"
                                   :disabled="data.disabled">
                             </el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row v-if="data.type !== 'add' ">
+                    <el-col v-if="data.isParent === '1' " :span="6">
+                        <el-form-item
+                            label="父级分类名">
+                            <el-input
+                                v-model="data.item.parentName"
+                                :disabled="true">
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row v-else>
                     <el-col :span="6">
                         <el-form-item
-                                label="是否是父分类"
-                                prop="isParentId">
-                            <el-select v-model="data.item.isParentId" placeholder="请选择" size="large">
+                                label="是否有父级分类"
+                                prop="isParentId"
+                                label-width="150px">
+                            <!--绑定Boolean值无法渲染 Number只能渲染1次-->
+                            <el-select v-model="data.isParent"
+                                       placeholder="请选择"
+                                       :disabled="data.disabled"
+                                       size="large">
                                 <el-option label="是" value="1" />
                                 <el-option label="否" value="0" />
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col v-if="!data.item.isParentId" :span="6">
+                    <el-col v-if="data.isParent === '1' " :span="6">
                         <el-form-item
                                 label="选择父级分类"
                                 prop="isParentId">
-                            <el-select v-model="data.isParentId" class="m-2" placeholder="Select" size="large">
-                                <el-option label="是" value="true" />
-                                <el-option label="否" value="false" />
+                            <el-select v-model="data.item.parentId" placeholder="请选择" size="large">
+                                <el-option v-for="(item, index) in data.parentCategoryList"
+                                           :label="item.name"
+                                           :value="item.id" />
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
+                </el-row>
+                <el-row>
+                    <el-col>
                         <el-form-item
-                                label="父级分类"
-                                prop="parentId">
-                          <el-input
-                                  v-model="data.item.parentId"
-                                  :disabled="data.disabled">
-                          </el-input>
+                                label="图片"
+                                prop="picture"
+                                label-width="150px">
+                            <MinioUpload :file-list="data.fileList"
+                                         ref="uploadRef"
+                                         @uploadCallback="uploadCallback"
+                                         :limit="1"></MinioUpload>
                         </el-form-item>
                     </el-col>
-                    <el-row>
-                        <el-col>
-                            <el-form-item
-                                    label="图片"
-                                    prop="picture">
-                                <MinioUpload @uploadCallback="uploadCallback" :limit="1"></MinioUpload>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
                 </el-row>
                 <el-form-item>
                     <el-button
@@ -87,21 +102,35 @@
     import { useStore } from "vuex";
     import { useRouter } from 'vue-router'
     import {ElMessage, ElMessageBox} from "element-plus";
+    import StringUtil from '@/utils/StringUtil.js';
 
     const store = useStore();
     const router = useRouter()
-    import type { UploadProps, UploadUserFile } from 'element-plus'
     import MinioUpload from "../../../components/MinioUpload.vue";
     // Data
     const data = reactive({
+        // 是否有父级分类
+        isParent: '1',
+        // 父级分类
+        parentCategoryList:[
+            {
+                id: '1',
+                name: '11'
+            }
+        ],
+        // 上传的文件列表 { name: '',url: '',},
+        fileList: [],
         operateTitle: '新增',
-        backUrl: '/name/category/index',
+        backUrl: '/category/index',
         type: '',
         showBtn: true,
         disabled: false,
         id: 0,
-        item: {},
-          isParentId: true,
+        item: {
+            id: '',
+            name: '',
+            parentName: '',
+        },
         params: {
             id: '',
             name: '',
@@ -136,10 +165,27 @@
     })
 
     // Methods
+
+    /**
+     * 父级分类店铺列表
+     */
+    const getParentCategoryList = () => {
+        let param = {
+            isParentId: true
+        }
+        Api.selpage4category(param).then(res => {
+            if (res.code === 200){
+                data.parentCategoryList = res.data.records;
+            }
+        })
+    }
+
+    /**
+     *
+     * @param response
+     * @param url
+     */
     const uploadCallback = (response, url) => {
-        console.log("Father")
-        console.log(response)
-        console.log(url)
         data.item.picture = url
     }
 
@@ -149,6 +195,8 @@
         switch (data.type) {
             case 'add':
                 data.operateTitle = '新增'
+                data.showBtn = true
+                data.disabled = false
                 break
             case 'detail':
                 data.operateTitle = '详情'
@@ -157,6 +205,8 @@
                 break
             case 'update':
                 data.operateTitle = '修改'
+                data.showBtn = true
+                data.disabled = false
                 break
         }
 
@@ -176,9 +226,31 @@
             Api.sel4category(data.id).then(res => {
                 console.log(res)
                 if (res.code === 200){
+                    console.log(res)
                     data.item = res.data;
                     // 界面显示
                     data.showDialog = true;
+                    // 父级分类判断
+                    if (StringUtil.isEmpty(res.data.parentId)){
+                        data.isParent = '0';
+                    } else {
+                        data.isParent = '1';
+                        data.item.parentId = res.data.parentId;
+                        Api.sel4category(res.data.parentId).then(res => {
+                            if (res.code === 200){
+                                data.item.parentName = res.data.name;
+                            }
+                        })
+                    }
+                    // 上传图片
+                    if (!StringUtil.isEmpty(res.data.picture)){
+                        data.fileList = [
+                            {
+                                name: '123.jpg',
+                                url: res.data.picture,
+                            },
+                        ]
+                    }
                 } else {
                     ElMessage({
                       message: '获取数据失败，请重试',
@@ -190,6 +262,7 @@
         } else {
             // 界面显示
             data.showDialog = true;
+            getParentCategoryList();
         }
 
         //菜单界面生成时日志记录
@@ -212,10 +285,18 @@
     // 表单ref
     const itemForm = ref();
     const submitForm = (formName) => {
-
         // 表单验证
         itemForm.value.validate((valid, fields) => {
             if (valid) {
+                if (data.isParent === '1'){
+                    if(StringUtil.isEmpty(data.item.parentId)){
+                        ElMessage({
+                          message: '请选择父级分类',
+                          type: 'warning',
+                        })
+                        return;
+                    }
+                }
                 saveOrUpdate();
             } else {
                 ElMessage({
@@ -249,6 +330,7 @@
                 }
             })
         } else if (data.type === 'add') {
+            // 新增
             console.log(data.item)
             Api.add4category(data.item).then(res => {
                 console.log(res)
@@ -267,7 +349,12 @@
             })
         }
     }
-
+    // todo 关闭弹窗时删除文件 :before-close="handleClose"
+    const uploadRef = ref();
+    const handleClose = () => {
+        uploadRef.value.deleteFile();
+        done();
+    }
     //暴露state和play方法
     defineExpose({
         init,

@@ -3,12 +3,17 @@ package org.example.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import jakarta.servlet.http.HttpServletRequest;
+import org.example.dao.TestDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author 刘文轩
@@ -17,6 +22,9 @@ import java.util.ArrayList;
 @RestController
 @RequestMapping("/test")
 public class TestController {
+
+    @Autowired
+    private TestDao testDao;
 
     @PostMapping("/test")
     public void fun(@RequestBody String str){
@@ -39,5 +47,15 @@ public class TestController {
     public void fun3(@RequestBody String json){
         System.out.println("testLogin1====================");
         System.out.println(json);
+    }
+
+    /**
+     * 更新着装校验配置
+     * @return Wrapper
+     */
+    @PostMapping("/updateDressCheckConfig")
+    public void getDressCheckConfig(){
+        Integer a = testDao.testD();
+        System.out.println(a);
     }
 }

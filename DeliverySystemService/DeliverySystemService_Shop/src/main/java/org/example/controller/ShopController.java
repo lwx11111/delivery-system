@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.example.domain.shop.ShopItemVO;
 import org.example.web.SimpleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
@@ -31,6 +32,38 @@ public class ShopController {
     @Autowired
     private IShopService service;
 
+    @GetMapping("/listShopItemsByShopId/{id}")
+    @ResponseBody
+    @Operation(description = "根据商铺号查商铺物品")
+    public SimpleResponse listShopItemsByShopId(@PathVariable(name = "id") String id){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.listShopItemsByShopId(id));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    @PostMapping("/saveShopItems")
+    @ResponseBody
+    @Operation(description = "保存或更改商铺物品")
+    public SimpleResponse saveShopItems(@RequestBody List<ShopItemVO> shopItemVOList){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            service.saveShopItems(shopItemVOList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+
+
     @PostMapping
     @ResponseBody
     @Operation(description = "创建店铺信息")
@@ -39,6 +72,7 @@ public class ShopController {
         try {
             service.saveByParam(obj,obj.getParams());
         } catch (Exception e) {
+            e.printStackTrace();
             response.setCode(500);
             response.setMessage(e.getMessage());
         }

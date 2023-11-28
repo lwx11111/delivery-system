@@ -21,23 +21,23 @@ spring:
           uri: lb://order
           predicates:
             - Path=/order/**
-        # 权限系统网关
+#         权限系统网关
 #        - id: auth_gateway_route
 #          uri: lb://auth-gateway-lwx
 #          predicates:
-#            - Path=/api/auth-manager/**, /api/external/**
-        - id: auth-mananger-microservice-lwx
-          uri: lb://auth-mananger-microservice-lwx
-          predicates:
-            - Path=/auth-mananger-microservice-lwx
-#            - Path=/api/auth-manager/**
-            #          filters:
-            #            - StripPrefix=1
-        - id: auth-external-microservice-lwx
-          uri: lb://auth-external-microservice-lwx
-          predicates:
-            - Path=/api/external/**
-          filters:
-            - StripPrefix=1
+#            - Path=/auth-mananger-microservice-lwx, /api/external/**
+#        - id: auth-mananger-microservice-lwx
+#          uri: lb://auth-mananger-microservice-lwx
+#          predicates:
+#            - Path=/auth-mananger-microservice-lwx
+##            - Path=/api/auth-manager/**
+#            #          filters:
+#            #            - StripPrefix=1
+#        - id: auth-external-microservice-lwx
+#          uri: lb://auth-external-microservice-lwx
+#          predicates:
+#            - Path=/api/external/**
+#          filters:
+#            - StripPrefix=1
 
 

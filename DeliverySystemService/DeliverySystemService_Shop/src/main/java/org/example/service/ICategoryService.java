@@ -42,6 +42,7 @@ public interface ICategoryService extends IService<Category> {
      */
     void deleteBy(Map<String, String> params);
 
+    List<Map<String,Object>> listTreeCategory() throws Exception;
     /**
      * 根据条件查询
      *

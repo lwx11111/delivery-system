@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import cn.afterturn.easypoi.excel.annotation.Excel;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.alibaba.fastjson.annotation.JSONField;
+import io.swagger.models.auth.In;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -162,6 +163,8 @@ public class Shop extends Model<Shop> {
     @TableField(exist = false)
     private Map<String,String> params;
 
+    @TableField(exist = false)
+    private String[] categoryIds;
 
 //    @Override
 //    protected Serializable pkVal(){

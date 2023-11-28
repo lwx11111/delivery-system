@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.example.domain.shop.ShopItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import org.example.web.SimpleResponse;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.domain.shop.ShopItem;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.service.IShopItemService;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * </p>
  *
  * @author lwx20
- * @since 2023-10-27
+ * @since 2023-11-21
  */
 @RestController
 @Tag(name = "店铺物品表服务")
@@ -41,6 +41,7 @@ public class ShopItemController {
         } catch (Exception e) {
             response.setCode(500);
             response.setMessage(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
@@ -55,6 +56,7 @@ public class ShopItemController {
         } catch (Exception e) {
             response.setCode(500);
             response.setMessage(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
@@ -63,12 +65,13 @@ public class ShopItemController {
     @ResponseBody
     @Operation(description = "按ID删除店铺物品表")
     public SimpleResponse remove(@PathVariable(name = "id") Integer id){
-            SimpleResponse response = new SimpleResponse();
+        SimpleResponse response = new SimpleResponse();
         try {
         service.removeById(id);
         } catch (Exception e) {
             response.setCode(500);
             response.setMessage(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
@@ -83,6 +86,7 @@ public class ShopItemController {
         } catch (Exception e) {
             response.setCode(500);
             response.setMessage(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
@@ -97,6 +101,7 @@ public class ShopItemController {
         } catch (Exception e) {
             response.setCode(500);
             response.setMessage(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
@@ -125,6 +130,7 @@ public class ShopItemController {
         } catch (Exception e) {
             response.setCode(500);
             response.setMessage(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
@@ -167,8 +173,7 @@ public class ShopItemController {
 
     @PostMapping("/excel")
     @ResponseBody
-    public void excel(HttpServletResponse response, HttpServletRequest request,
-            @RequestBody Map<String, String> params) throws Exception {
+    public void excel(HttpServletResponse response, HttpServletRequest request, @RequestBody Map<String, String> params) throws Exception {
         service.excel(response, request, params);
     }
 }

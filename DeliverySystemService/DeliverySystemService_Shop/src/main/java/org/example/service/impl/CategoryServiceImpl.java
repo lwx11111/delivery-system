@@ -23,8 +23,11 @@ import cn.afterturn.easypoi.excel.imports.ExcelImportService;
 import java.io.InputStream;
 
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -36,9 +39,6 @@ import java.util.Map;
  */
 @Service
 public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> implements ICategoryService {
-
-    //@Autowired
-    //private JdbcTemplate jdbcTemplate;
 
     @Override
     public void saveByParam(Category obj,Map<String, String> params){
@@ -136,6 +136,34 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         workbook.write(response.getOutputStream());
     }
 
+    @Override
+    public List<Map<String,Object>> listTreeCategory() throws Exception {
+        // 所有的数据
+        List<Category> all = baseMapper.selectList(null);
+        // 父类数据
+        List<Category> parent = all.stream().filter(category -> category.getParentId() == null).collect(Collectors.toList());
+        // 子类数据
+        List<Category> children = all.stream().filter(category -> category.getParentId() != null).collect(Collectors.toList());
+        List<Map<String, Object>> result = Lists.newArrayList();
+        for (Category category : parent) {
+            Map<String,Object> temp = new HashMap<>();
+            temp.put("value", category.getId());
+            temp.put("label", category.getName());
+            List<Map<String,Object>> childList = new ArrayList<>();
+            for (Category child : children) {
+                if (category.getId().equals(child.getParentId())) {
+                    Map<String,Object> tempChild = new HashMap<>();
+                    tempChild.put("value", child.getId());
+                    tempChild.put("label", child.getName());
+                    childList.add(tempChild);
+                }
+            }
+            temp.put("children", childList);
+            result.add(temp);
+        }
+        return result;
+    }
+
     /**
      * 定义数据查询条件
      * @param params
@@ -155,7 +183,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
                 query.eq("id",entry.getValue());
             }
             if("name".equals(entry.getKey())){
-                query.eq("name",entry.getValue());
+                query.like("name",entry.getValue());
             }
             if("parentId".equals(entry.getKey())){
                 query.eq("parent_id",entry.getValue());
