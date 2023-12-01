@@ -70,3 +70,7 @@ Caused by: java.net.ConnectException: Connection timed out: no further informati
 
 11.28 管理界面的物品分类
 动态创建对象来记录，后端根据categoryName分组处理，类似groupName
+
+11.30 订单服务
+修改物品json保存方式为中间表
+DDD模式重构订单服务？

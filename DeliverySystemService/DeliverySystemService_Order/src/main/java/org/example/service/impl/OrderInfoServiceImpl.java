@@ -3,14 +3,22 @@ package org.example.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.example.dao.OrderShopItemMapper;
 import org.example.domain.order.OrderInfo;
 import org.example.dao.OrderInfoMapper;
 import org.example.domain.order.OrderItem;
+import org.example.domain.order.OrderShopItem;
+import org.example.domain.shop.Shop;
+import org.example.domain.shop.ShopItem;
+import org.example.domain.shop.ShopItemVO;
+import org.example.feign.ShopFeignApi;
 import org.example.service.IOrderInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.example.web.SimpleResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
@@ -18,6 +26,9 @@ import cn.afterturn.easypoi.excel.entity.ExportParams;
 import org.apache.poi.ss.usermodel.Workbook;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import com.google.common.collect.Lists;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
@@ -26,6 +37,8 @@ import cn.afterturn.easypoi.excel.imports.ExcelImportService;
 import java.io.InputStream;
 import org.example.utils.PageUtils;
 
+import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -39,27 +52,84 @@ import java.util.Map;
  */
 @Service
 public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo> implements IOrderInfoService {
+    @Autowired
+    private OrderInfoMapper orderInfoMapper;
+
+    @Autowired
+    private OrderShopItemMapper orderShopItemMapper;
+
+    @Autowired
+    private ShopFeignApi shopFeignApi;
+
+    private OrderInfo getAssociatedData(OrderInfo orderInfo) throws Exception {
+        if (orderInfo.getId() == null) {
+            throw new Exception("id不能为空");
+        }
+        // 查询订单物品
+        Map<String, String> param = new HashMap<>();
+        param.put("id", orderInfo.getId());
+        List<OrderItem> orderItems =  this.listOrderItemById(param);
+        orderInfo.setOrderItems(orderItems);
+        if (orderInfo.getShopId() == null) {
+            throw new Exception("shopId不能为空");
+        }
+        // 查询商铺信息
+        SimpleResponse simpleResponse = shopFeignApi.select(orderInfo.getShopId());
+        if  (simpleResponse.getCode() == 200) {
+            // LinkedHashMap To Object
+            Shop shop = JSON.parseObject(JSON.toJSONString(simpleResponse.getData()), Shop.class);
+            orderInfo.setShop(shop);
+        } else {
+            throw new Exception("查询商铺信息失败");
+        }
+        return orderInfo;
+    }
+    @Override
+    public OrderInfo getById(Serializable id) {
+        System.out.println("getById:"+id);
+        OrderInfo orderInfo = baseMapper.selectById(id);
+        try {
+            orderInfo = this.getAssociatedData(orderInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return orderInfo;
+    }
 
     @Override
-    public void saveByParam(OrderInfo obj,Map<String, String> params){
-        Long shopId = obj.getShopId();
-        System.out.println("shopId:"+shopId);
-        for(OrderItem orderItem: obj.getOrderItems()){
-            System.out.println("orderItem:"+orderItem);
+    @Transactional(rollbackFor = Exception.class)
+    public void saveByParam(OrderInfo obj,Map<String, String> params) throws Exception{
+        if  (obj.getOrderItems() != null) {
+            // 先保存订单基本信息
+            this.save(obj);
+            String orderId = obj.getId();
+            // 再保存订单商品信息
+            for(OrderItem orderItem: obj.getOrderItems()){
+                OrderShopItem orderShopItem = new OrderShopItem();
+                orderShopItem.setShopItemId(orderItem.getShopItem().getId());
+                orderShopItem.setOrderId(orderId);
+                orderShopItem.setAmount(orderItem.getAmount());
+                System.out.println("orderShopItem:"+orderShopItem);
+                // todo 批量插入
+                orderShopItemMapper.insert(orderShopItem);
+                // todo 更新库存
+            }
+            // 废弃的Json操作
+//            String json = JSON.toJSONString(obj.getOrderItems());
+//            obj.setShopItem(json);
+//            JSONArray jsonArray = JSON.parseArray(json);
+//            System.out.println("jsonArray:"+jsonArray);
+//            for(int i=0;i<jsonArray.size();i++){
+//                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
+//                System.out.println("jsonObject1:"+jsonObject1);
+//                OrderItem orderItem = JSON.toJavaObject(jsonObject1,OrderItem.class);
+//                System.out.println("orderItem:"+orderItem);
+//            }
+
+            // todo 通知商家
+        } else {
+            throw new Exception("订单商品不能为空");
         }
-        String json = JSON.toJSONString(obj.getOrderItems());
-        obj.setShopItem(json);
-        JSONArray jsonArray = JSON.parseArray(json);
-        System.out.println("jsonArray:"+jsonArray);
-        for(int i=0;i<jsonArray.size();i++){
-            JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-            System.out.println("jsonObject1:"+jsonObject1);
-            OrderItem orderItem = JSON.toJavaObject(jsonObject1,OrderItem.class);
-            System.out.println("orderItem:"+orderItem);
-            // todo 更新库存
-        }
-        // todo 通知商家
-        this.save(obj);
     }
 
     @Override
@@ -82,10 +152,30 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     @Override
-    public IPage<OrderInfo> selectPage(Map<String, String> params) {
+    public IPage<OrderInfo> selectPage(Map<String, String> params) throws Exception{
         Page<OrderInfo> page = PageUtils.pageHandler(params);
         QueryWrapper<OrderInfo> query = getQuery(params);
         IPage<OrderInfo> result = this.page(page, query);
+
+        for (OrderInfo orderInfo : result.getRecords()) {
+            // 查询订单物品
+            Map<String, String> param = new HashMap<>();
+            param.put("id", orderInfo.getId());
+            List<OrderItem> orderItems =  this.listOrderItemById(param);
+            orderInfo.setOrderItems(orderItems);
+            // 查询商铺信息
+            SimpleResponse simpleResponse = shopFeignApi.select(orderInfo.getShopId());
+            System.out.println("simpleResponse:"+simpleResponse);
+
+            if  (simpleResponse.getCode() == 200) {
+                // LinkedHashMap To Object
+                Shop shop = JSON.parseObject(JSON.toJSONString(simpleResponse.getData()), Shop.class);
+                System.out.println("shop:"+shop);
+                orderInfo.setShop(shop);
+            }
+        }
+
+
         return result;
     }
 
@@ -205,4 +295,11 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
         return  query;
     }
+
+    @Override
+    public List<OrderItem> listOrderItemById(Map<String, String> params) throws Exception {
+        List<OrderItem> orderItems = orderInfoMapper.listOrderItemById(params);
+        return orderItems;
+    }
+
 }

@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.dao.OrderInfoMapper">
-
+    <!-- OrderItemList -->
+    <resultMap id="OrderItemMap" type="org.example.domain.order.OrderItem">
+        <result column="amount" property="amount"></result>
+        <!--        一对一关联 外键-->
+        <association property="shopItem" javaType="org.example.domain.shop.ShopItem">
+            <result column="name" property="name"></result>
+            <result column="picture" property="picture"></result>
+            <result column="description" property="description"></result>
+            <result column="price" property="price"></result>
+            <result column="category_name" property="categoryName"></result>
+        </association>
+    </resultMap>
 
     <!-- 分页查询-自定义sql-Wrapper -->
     <select id="selpageCustomSqlByWrapper" resultType="org.example.domain.order.OrderInfo">
@@ -12,6 +23,31 @@
     <select id="selpageCustomSqlByMap" resultType="org.example.domain.order.OrderInfo">
         select * from order_info t where id=#{params.id} and name=#{params.name}
     </select>
+
+
+
+    <select id="listOrderItemById" resultMap="OrderItemMap">
+        SELECT name, picture, description, price,category_name, amount
+        FROM shop_item i
+        INNER JOIN order_shop_item s on s.shop_item_id = i.id
+        INNER JOIN order_info o on o.id = s.order_id
+        <where>
+            <if test="params.id != null and params.id != ''">
+                and o.id = #{params.id}
+            </if>
+            <if test="params.userId != null and params.userId != ''">
+                and o.user_id = #{params.userId}
+            </if>
+            <if test="params.shopId != null and params.shopId != ''">
+                and o.shop_id = #{params.shopId}
+            </if>
+            <if test="params.deliveryRiderId != null and params.deliveryRiderId != ''">
+                and o.delivery_rider_id = #{params.deliveryRiderId}
+            </if>
+        </where>
+    </select>
+
+
 
 
 </mapper>

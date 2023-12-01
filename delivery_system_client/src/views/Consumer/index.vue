@@ -5,14 +5,14 @@
             <el-col
                 :span="24"
                 style="background: #DAA520; height: 50px">
-                外卖 地址 消息
+                <h1>外卖</h1>
+<!--                地址 消息-->
             </el-col>
         </el-row>
         <!-- 搜索框-->
         <el-row style="margin-top: 10px; margin-bottom: 10px;">
-            <el-col :span="12">
+            <el-col :span="24">
                 <el-input v-model="data.params.name"
-                          style="width: 490px;"
                           placeholder="请输入">
                     <template #prepend>
                         <el-button :icon="Search" />

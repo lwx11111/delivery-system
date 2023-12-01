@@ -66,14 +66,6 @@ public class ShopItem extends Model<ShopItem> {
     private String description;
 
     /**
-    * 分类id
-    */
-    @Schema(description = "分类id")
-    @Excel(name = "分类id")
-    @TableField("item_category_id")
-    private String itemCategoryId;
-
-    /**
     * 价格
     */
     @Schema(description = "价格")

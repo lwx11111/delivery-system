@@ -1,25 +1,29 @@
 <template>
     <div class="common-layout">
         <!--店铺信息和图片-->
-        <el-row style="border: 1px solid red">
-            <el-col :span="20"
-                    style="border: 1px solid red">
-                <div>{{data.shop.name}}</div>
-                <div>{{data.shop.name}}</div>
-            </el-col>
-            <el-col :span="4"
-                    style="border: 1px solid red">
-                <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
-            </el-col>
-        </el-row>
+        <el-card style="margin-bottom: 10px">
+            <el-row>
+                <el-col :span="20">
+                    <div>{{data.shop.name}}</div>
+                    <div>{{data.shop.name}}</div>
+                </el-col>
+                <el-col :span="4">
+                    <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                </el-col>
+            </el-row>
+        </el-card>
+
         <!--店铺描述-->
-        <el-row style="border: 1px solid red">
-            <el-col style="border: 1px solid red">
-                <div>{{data.shop.description}}</div>
-            </el-col>
-        </el-row>
+        <el-card style="margin-bottom: 10px">
+            <el-row>
+                <el-col>
+                    <div>{{data.shop.description}}</div>
+                </el-col>
+            </el-row>
+        </el-card>
+
         <!--店铺内容-->
-        <el-tabs v-model="data.tabName" class="demo-tabs" @tab-click="handleClick">
+        <el-tabs v-model="data.tabName" @tab-click="handleClick">
             <el-tab-pane label="点菜" name="order">
                 <el-row>
                     <!-- 分类列表-->
@@ -36,25 +40,20 @@
                     </el-col>
                     <!--菜品列表-->
                     <el-col :span="20">
-                        <el-scrollbar height="400px" style="padding: 10px">
+                        <el-scrollbar height="50%" style=" border:1px solid red; padding: 10px">
                             <el-space direction="vertical">
-                                <!--                                                @click="toShopItemDetail(key)"-->
-                                <el-card v-for="(item, key) in data.shopItemList"
-                                >
+                                <!--@click="toShopItemDetail(key)"-->
+                                <el-card v-for="(item, key) in data.shopItemList">
                                     <el-row>
-                                        <el-col
-                                                :span="11"
-                                                style="border: 1px solid red; margin-right: 5px">
+                                        <el-col :span="11"
+                                                style="margin-right: 5px">
                                             <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
                                         </el-col>
-                                        <el-col
-                                                :span="12"
-                                                style="border: 1px solid red">
+                                        <el-col :span="12">
                                             <el-row>
-                                                                <span
-                                                                        style="font-size: 20px;font-weight: bold;border: 1px solid red">
-                                                                    {{item.name}}
-                                                                </span>
+                                                <span style="font-size: 20px;font-weight: bold;">
+                                                    {{item.name}}
+                                                </span>
                                             </el-row>
                                             <el-row>{{item.price}}</el-row>
                                             <el-row>
@@ -90,12 +89,15 @@
             </el-tab-pane>
         </el-tabs>
         <!--购物车-->
-        <div>
-            总金额：<span v-text="data.totalAmount"></span>
-            <div @click="submitOrder">
-                提交订单
+        <el-card>
+            <div>
+                总金额：<span v-text="data.totalAmount"></span>
+                <div @click="submitOrder">
+                    提交订单
+                </div>
             </div>
-        </div>
+        </el-card>
+
         <!--菜品详情组件-->
 <!--        <ShopItemDetail></ShopItemDetail>-->
     </div>
@@ -141,13 +143,13 @@ const data = reactive({
     },
     // el-tab 选中的name
     tabName: 'order',
-    // 菜品分类列表
+    // todo 菜品分类列表
     shopItemCategoryList: [],
     // 菜品列表
     shopItemList: [],
     // 总价
     totalAmount: 0,
-    // 订单
+    // 订单 key为shopItemId, value为数量
     order: new Map(),
     // 发送的订单信息
     orderInfo: {
@@ -181,7 +183,6 @@ const data = reactive({
 onMounted(() => {
     data.shop.id = route.query.shopId;
     data.params.shopId = route.query.shopId;
-    console.log(route.query.shopId)
     getShop();
     getShopItemList();
     getShopItemCategoryList();
@@ -191,7 +192,6 @@ onMounted(() => {
 
 const getShop = () => {
     ApiShop.sel4shop(data.shop.id).then(res => {
-        console.log(res)
         if (res.code === 200){
             data.shop = res.data;
         }
@@ -200,7 +200,6 @@ const getShop = () => {
 // 菜品列表
 const getShopItemList = () => {
     ApiShopItem.selpage4shopitem(data.params).then(res => {
-        console.log(res)
         if (res.code === 200){
             data.shopItemList = res.data.records;
         }
@@ -210,7 +209,6 @@ const getShopItemList = () => {
 // 菜品的分类列表
 const getShopItemCategoryList  = () => {
     ApiShopItemCategory.selpage4shopitemcategory(data.params).then(res => {
-        console.log(res)
         if (res.code === 200){
             data.shopItemCategoryList = res.data.records;
         }
@@ -228,8 +226,6 @@ const addCart = (key) => {
     }
     //总价
     data.totalAmount += data.shopItemList[key].price
-    console.log(data.order)
-    console.log(data.totalAmount)
 }
 // 减少物品到购物车
 const subCart = (key) => {
@@ -246,13 +242,11 @@ const subCart = (key) => {
     }
     //总价
     data.totalAmount -= data.shopItemList[key].price
-    console.log(data.order)
-    console.log(data.totalAmount)
 }
 
 // 提交订单
 const submitOrder = () => {
-    console.log(data.shop)
+
     // 封装参数
     data.orderInfo.packingCharges = data.shop.packingCharges
     data.orderInfo.deliveryCharge = data.shop.deliveryCharge
@@ -267,7 +261,6 @@ const submitOrder = () => {
     })
     console.log(data.orderInfo)
     ApiOrder.add4order(data.orderInfo).then(res => {
-        console.log(res)
         if (res.code === 200){
             ElMessageBox.alert('下单成功', '提示', {
                 confirmButtonText: '确定',
@@ -301,7 +294,7 @@ const toShopItemDetail = (key) => {
     })
 }
 const handleClick = (tab: TabsPaneContext, event: Event) => {
-    console.log(tab, event)
+    // console.log(tab, event)
 }
 </script>
 

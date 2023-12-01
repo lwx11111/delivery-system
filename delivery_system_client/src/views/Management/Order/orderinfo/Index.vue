@@ -1,377 +1,288 @@
 <template>
-  <div>
-    <el-card style="margin: 10px; border: 1px solid gold">
-      <!-- 查询条件 -->
-      <el-collapse
-              accordion
-              v-model="data.activeName"
-              class="card-bg">
-        <el-collapse-item name="1">
-          <template #title>
-            <div class="innerHeader">
-              管理
+    <div>
+        <el-card style="margin: 10px; border: 1px solid gold">
+            <!-- 查询条件 -->
+            <el-collapse
+                    accordion
+                    v-model="data.activeName"
+                    class="card-bg">
+                <el-collapse-item name="1">
+                    <template #title>
+                        <div class="innerHeader">
+                          点单信息管理
+                        </div>
+                    </template>
+                    <div style="display: flex;"
+                         class="card-search">
+                        <el-form :inline="true"
+                                 :model="data.formList"
+                                 size="default"
+                                 label-width="100px">
+                            <el-form-item label="订单ID">
+                                <el-input placeholder="请输入订单ID"
+                                          v-model="data.formList.id"
+                                          style="width: 200px"
+                                          @keyup.enter.native="getData">
+                                </el-input>
+                            </el-form-item>
+                            <el-form-item label="店铺ID">
+                                <el-input placeholder="请输入店铺ID"
+                                            v-model="data.formList.shopId"
+                                            style="width: 200px"
+                                            @keyup.enter.native="getData">
+                                  </el-input>
+                            </el-form-item>
+                            <el-form-item label="骑手ID">
+                                <el-input placeholder="请输入骑手ID"
+                                            v-model="data.formList.deliveryRiderId"
+                                            style="width: 200px"
+                                            @keyup.enter.native="getData">
+                                  </el-input>
+                            </el-form-item>
+                            <el-form-item label="用户ID">
+                                <el-input placeholder="请输入用户ID"
+                                            v-model="data.formList.userId"
+                                            style="width: 200px"
+                                            @keyup.enter.native="getData">
+                                  </el-input>
+                            </el-form-item>
+                        </el-form>
+                    </div>
+                </el-collapse-item>
+            </el-collapse>
+        </el-card>
+        <el-card style="margin: 10px; border: 1px solid gold">
+            <!-- 操作按钮区 -->
+            <div style="margin:10px 0;">
+                <el-button
+                        type="success"
+                        icon="DocumentAdd"
+                        @click="addData()">
+                  新增
+                </el-button>
+                <el-button
+                        type="info"
+                        icon="Download"
+                        @click="downloadExcelTemplate()">
+                  下载模板
+                </el-button>
+                <el-button
+                        type="primary"
+                        icon="Upload"
+                        @click="uploadExcel()">
+                  导入
+                </el-button>
+                <el-button
+                        type="warning"
+                        icon="DocumentDelete"
+                        @click="deleteDataMany()">
+                  删除
+                </el-button>
+                <el-dropdown
+                        style="margin-left:8px;"
+                        split-button
+                        type="primary">
+                    更多功能
+                    <template #dropdown>
+                        <el-dropdown-menu>
+                            <el-dropdown-item>功能1</el-dropdown-item>
+                            <el-dropdown-item>功能2</el-dropdown-item>
+                        </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+                <div style="float:right;">
+                    <el-button
+                          type="primary"
+                          @click="queryData()"
+                          icon="Search"
+                          :loading="data.isSearch">
+                    查询
+                    </el-button>
+                    <el-button
+                          @click="resetData()"
+                          icon="Close">
+                    清空
+                    </el-button>
+                    <el-button
+                          @click="excelData()">
+                    导出数据
+                    </el-button>
+                </div>
             </div>
-          </template>
-          <div
-                  style="display: flex;"
-                  class="card-search">
-            <el-form
-                    :inline="true"
-                    :model="data.formList"
-                    size="default"
-                    label-width="100px">
-              <el-form-item label="店铺ID">
-                <el-input
-                        placeholder="请输入店铺ID"
-                      v-model="data.formList.shopId"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="配送骑手">
-                <el-input
-                        placeholder="请输入配送骑手"
-                      v-model="data.formList.deliveryRiderId"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="用户ID">
-                <el-input
-                        placeholder="请输入用户ID"
-                      v-model="data.formList.userId"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="物品JSON">
-                <el-input
-                        placeholder="请输入物品JSON"
-                      v-model="data.formList.shopItem"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="打包费">
-                <el-input
-                        placeholder="请输入打包费"
-                      v-model="data.formList.packingCharges"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="配送费">
-                <el-input
-                        placeholder="请输入配送费"
-                      v-model="data.formList.deliveryCharge"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="总金额">
-                <el-input
-                        placeholder="请输入总金额"
-                      v-model="data.formList.totalCharge"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="期望时间">
-                <el-input
-                        placeholder="请输入期望时间"
-                      v-model="data.formList.expectedTime"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="配送地址">
-                <el-input
-                        placeholder="请输入配送地址"
-                      v-model="data.formList.location"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="配送服务">
-                <el-input
-                        placeholder="请输入配送服务"
-                      v-model="data.formList.deliveryService"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="下单时间">
-                <el-input
-                        placeholder="请输入下单时间"
-                      v-model="data.formList.orderTime"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="状态">
-                <el-input
-                        placeholder="请输入状态"
-                      v-model="data.formList.status"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="支付方式">
-                <el-input
-                        placeholder="请输入支付方式"
-                      v-model="data.formList.paymentMethod"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="备注">
-                <el-input
-                        placeholder="请输入备注"
-                      v-model="data.formList.remark"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-              <el-form-item label="餐具数量">
-                <el-input
-                        placeholder="请输入餐具数量"
-                      v-model="data.formList.tableware"
-                      style="width: 200px"
-                      @keyup.enter.native="getData">
-                </el-input>
-              </el-form-item>
-            </el-form>
-          </div>
-        </el-collapse-item>
-      </el-collapse>
-    </el-card>
-    <el-card style="margin: 10px; border: 1px solid gold">
-      <!-- 操作按钮区 -->
-      <div style="margin:10px 0;">
-        <el-button
-                type="success"
-                icon="DocumentAdd"
-                @click="addData()">
-          新增
-        </el-button>
-        <el-button
-                type="info"
-                icon="Download"
-                @click="downloadExcelTemplate()">
-          下载模板
-        </el-button>
-        <el-button
-                type="primary"
-                icon="Upload"
-                @click="uploadExcel()">
-          导入
-        </el-button>
-        <el-button
-                type="warning"
-                icon="DocumentDelete"
-                @click="deleteDataMany()">
-          删除
-        </el-button>
-        <el-dropdown
-                style="margin-left:8px;"
-                split-button
-                type="primary">
-          更多功能
-          <template #dropdown>
-            <el-dropdown-menu>
-              <el-dropdown-item>功能1</el-dropdown-item>
-              <el-dropdown-item>功能2</el-dropdown-item>
-            </el-dropdown-menu>
-          </template>
-        </el-dropdown>
-        <div style="float:right;">
-          <el-button
-                  type="primary"
-                  @click="queryData()"
-                  icon="Search"
-                  :loading="data.isSearch">
-            查询
-          </el-button>
-          <el-button
-                  @click="resetData()"
-                  icon="Close">
-            清空
-          </el-button>
-          <el-button
-                  @click="excelData()">
-            导出数据
-          </el-button>
-        </div>
-      </div>
 
-      <!-- 表格呈现 -->
-      <el-table
-              :data="data.tableData"
-              :height="data.screenHeight - data.otherHeight"
-              tooltip-effect="dark"
-              style="width:100%"
-              stripe
-              size="default"
-              border
-              @selection-change="selectionChanged">
-        <el-table-column
-                type="selection"
-                width="60">
-        </el-table-column>
-        <el-table-column
-                prop="id"
-                label="id"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="shopId"
-                label="店铺ID"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="deliveryRiderId"
-                label="配送骑手"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="userId"
-                label="用户ID"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="shopItem"
-                label="物品JSON"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="packingCharges"
-                label="打包费"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="deliveryCharge"
-                label="配送费"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="totalCharge"
-                label="总金额"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="expectedTime"
-                label="期望时间"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="location"
-                label="配送地址"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="deliveryService"
-                label="配送服务"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="orderTime"
-                label="下单时间"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="status"
-                label="状态"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="paymentMethod"
-                label="支付方式"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="remark"
-                label="备注"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                prop="tableware"
-                label="餐具数量"
-                width="180"
-                align="center">
-        </el-table-column>
-        <el-table-column
-                fixed="right"
-                label="操作"
-                align="center"
-                width="400">
-          <template #default="scope">
-            <el-link
-                    style="margin-right: 20px"
-                    @click="toUpdate(scope)"
-                    type="primary"
-                    size="small"
-                    :underline="false">
-              更新
-            </el-link>
-            <el-link
-                    style="margin-right: 20px"
-                    @click="toDetail(scope)"
-                    type="primary"
-                    size="small"
-                    :underline="false">
-              查看详情
-            </el-link>
-            <el-link
-                    @click="toDelete(scope)"
-                    type="primary"
-                    size="small"
-                    :underline="false">
-              删除
-            </el-link>
-          </template>
-        </el-table-column>
-      </el-table>
-      <!--        @size-change="handleSizeChange"-->
-      <!--        @current-change="handleCurrentChange"-->
-      <el-pagination
-              v-model:current-page="data.pageConfig.currentPage"
-              v-model:page-size="data.pageConfig.pageSize"
-              class="customPage mt-10"
-              background
-              :page-sizes="[10, 20, 50]"
-              :current-page="data.pageConfig.currentPage"
-              :page-size="data.pageConfig.pageSize"
-              :total="data.pageConfig.total"
-              layout="sizes,total, ->, prev, pager, next"
-      />
-    </el-card>
-    <ItemDialog ref="itemDialog" :type="data.type"></ItemDialog>
-    <Upload ref="uploadExcelRef" @callback="uploadExcelCallback"></Upload>
-  </div>
+            <!-- 表格呈现 -->
+            <el-table
+                  :data="data.tableData"
+                  :height="data.screenHeight - data.otherHeight"
+                  tooltip-effect="dark"
+                  style="width:100%"
+                  stripe
+                  size="default"
+                  border
+                  @selection-change="selectionChanged">
+                <el-table-column
+                        type="selection"
+                        width="60">
+                </el-table-column>
+                 <el-table-column
+                        prop="id"
+                        label="id"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="shopId"
+                        label="店铺ID"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="deliveryRiderId"
+                        label="配送骑手"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="userId"
+                        label="用户ID"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="packingCharges"
+                        label="打包费"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="deliveryCharge"
+                        label="配送费"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="totalCharge"
+                        label="总金额"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="expectedTime"
+                        label="期望时间"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="location"
+                        label="配送地址"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="deliveryService"
+                        label="配送服务"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="orderTime"
+                        label="下单时间"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="status"
+                        label="状态"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="paymentMethod"
+                        label="支付方式"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="remark"
+                        label="备注"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                 <el-table-column
+                        prop="tableware"
+                        label="餐具数量"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                <el-table-column
+                        fixed="right"
+                        label="操作"
+                        align="center"
+                        width="400">
+                    <template #default="scope">
+                        <el-link
+                                style="margin-right: 20px"
+                                @click="showOrderItemDialog(scope)"
+                                type="primary"
+                                size="small"
+                                :underline="false">
+                            编辑物品
+                        </el-link>
+                        <el-link
+                                style="margin-right: 20px"
+                                @click="toUpdate(scope)"
+                                type="primary"
+                                size="small"
+                                :underline="false">
+                          更新
+                        </el-link>
+                        <el-link
+                                style="margin-right: 20px"
+                                @click="toDetail(scope)"
+                                type="primary"
+                                size="small"
+                                :underline="false">
+                          查看详情
+                        </el-link>
+                        <el-link
+                                @click="toDelete(scope)"
+                                type="primary"
+                                size="small"
+                                :underline="false">
+                          删除
+                        </el-link>
+                    </template>
+                </el-table-column>
+              </el-table>
+
+            <el-pagination
+                      v-model:current-page="data.pageConfig.currentPage"
+                      v-model:page-size="data.pageConfig.pageSize"
+                      class="customPage mt-10"
+                      background
+                      :page-sizes="[10, 20, 50]"
+                      :current-page="data.pageConfig.currentPage"
+                      :page-size="data.pageConfig.pageSize"
+                      :total="data.pageConfig.total"
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      layout="sizes,total, ->, prev, pager, next">
+              </el-pagination>
+        </el-card>
+        <OrderItemDialog ref="orderItemDialog"></OrderItemDialog>
+        <ItemDialog ref="itemDialog" :type="data.type"></ItemDialog>
+        <Upload ref="uploadExcelRef" @callback="uploadExcelCallback"></Upload>
+    </div>
 </template>
 <script lang="ts" setup>
-    import Api from '@/api/api_orderinfo.js'
+    import Api from '@/api/Order/api_orderinfo.js'
     import ItemDialog from './Item.vue'
     import { reactive, ref, defineProps, toRefs, onMounted} from 'vue'
     import Upload from "@/utils/oss/upload.vue";
     import { useStore } from "vuex";
     import { useRouter } from 'vue-router'
     import {ElMessage, ElMessageBox} from "element-plus";
+    import OrderItemDialog from "./orderItemDialog.vue";
 
     const store = useStore();
     const router = useRouter()
@@ -386,6 +297,7 @@
         selectedRows: {}, // selectedRows:选中行对象
         // formList:搜索条件对象 分页控制对象
         formList: {
+            id:'',
             shopId: '',
             deliveryRiderId: '',
             userId: '',
@@ -498,7 +410,7 @@
             const blobUrl = URL.createObjectURL(blob)
             const a = document.createElement('a')
             a.href = blobUrl
-            a.download = 'OrderInfo.xls'
+            a.download = '点单信息.xls'
             a.click()
             window.URL.revokeObjectURL(blobUrl)
         })
@@ -584,7 +496,7 @@
             const blobUrl = URL.createObjectURL(blob)
             const a = document.createElement('a')
             a.href = blobUrl
-            a.download = 'OrderInfo.xls'
+            a.download = '点单信息.xls'
             a.click()
             window.URL.revokeObjectURL(blobUrl)
         })
@@ -680,6 +592,12 @@
         data.pageConfig.pageSize = val
         getData()
     }
+
+    const orderItemDialog = ref();
+    const showOrderItemDialog = (scope) => {
+        orderItemDialog.value.init(scope.row.id);
+    }
+
 
     const activated = () => {
         getData()

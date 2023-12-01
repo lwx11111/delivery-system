@@ -1,13 +1,12 @@
 <template>
-    <div style="border: 1px solid red">
+    <div>
         <el-row v-if="props.isQueryParent">
             <!--父级分类-->
-            <el-col
-                    @click="toCategoryList(key, true)"
+            <el-col @click="toCategoryList(key, true)"
                     :span="4"
-                    style="margin: 10px; border: 1px solid red"
+                    style="margin: 10px;"
                     v-for="(item,key) in data.parentCategoryList">
-                <el-image style="height: 40px;border-radius: 50%"
+                <el-image style="height: 60px;border-radius: 50%"
                           src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
                 <div>{{item.name}}</div>
             </el-col>
@@ -21,7 +20,7 @@
                     v-for="(item,key) in data.categoryList">
                 <el-image style="height: 40px;border-radius: 50%"
                           src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
-                <div style="border: 1px solid red">{{item.name}}</div>
+                <div>{{item.name}}</div>
             </el-col>
         </el-row>
     </div>

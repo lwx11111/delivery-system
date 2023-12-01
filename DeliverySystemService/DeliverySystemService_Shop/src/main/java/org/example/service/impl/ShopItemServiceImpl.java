@@ -162,9 +162,6 @@ public class ShopItemServiceImpl extends ServiceImpl<ShopItemMapper, ShopItem> i
             if("description".equals(entry.getKey())){
                 query.eq("description",entry.getValue());
             }
-            if("itemCategoryId".equals(entry.getKey())){
-                query.eq("item_category_id",entry.getValue());
-            }
             if("price".equals(entry.getKey())){
                 query.eq("price",entry.getValue());
             }

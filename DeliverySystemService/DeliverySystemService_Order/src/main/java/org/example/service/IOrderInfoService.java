@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.domain.order.OrderItem;
+import org.example.domain.shop.ShopItem;
+import org.example.domain.shop.ShopItemVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -25,7 +28,7 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @param params
      * @return: void
      */
-    void saveByParam(OrderInfo obj,Map<String, String> params);
+    void saveByParam(OrderInfo obj,Map<String, String> params) throws Exception;
 
     /**
      * 根据参数更新
@@ -56,7 +59,7 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @param params
      * @return: IPage<OrderInfo>
     */
-    IPage<OrderInfo> selectPage(Map<String, String> params);
+    IPage<OrderInfo> selectPage(Map<String, String> params) throws Exception;
 
     /**
      * 分页查询-自定义sql-Wrapper
@@ -99,4 +102,6 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @return: void
     */
     void excel(HttpServletResponse response, HttpServletRequest request, Map<String, String> params) throws Exception;
+
+    List<OrderItem> listOrderItemById(Map<String, String> params) throws Exception;
 }

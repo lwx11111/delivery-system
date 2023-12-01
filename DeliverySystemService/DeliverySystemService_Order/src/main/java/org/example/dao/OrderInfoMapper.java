@@ -8,6 +8,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.example.domain.order.OrderItem;
+import org.example.domain.shop.ShopItem;
+import org.example.domain.shop.ShopItemVO;
+
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +25,7 @@ import java.util.Map;
  */
 @Mapper
 public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
-
+    List<OrderItem> listOrderItemById(@Param("params") Map<String, String> params);
     /**
      * 分页查询-自定义sql-Wrapper
      *

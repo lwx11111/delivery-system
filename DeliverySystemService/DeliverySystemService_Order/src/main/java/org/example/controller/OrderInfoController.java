@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.example.domain.shop.ShopItemVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import org.example.web.SimpleResponse;
@@ -31,6 +32,11 @@ public class OrderInfoController {
     @Autowired
     private IOrderInfoService service;
 
+    /**
+     *
+     * @param obj
+     * @return
+     */
     @PostMapping
     @ResponseBody
     @Operation(description = "创建")
@@ -39,6 +45,7 @@ public class OrderInfoController {
         try {
             service.saveByParam(obj,obj.getParams());
         } catch (Exception e) {
+            e.printStackTrace();
             response.setCode(500);
             response.setMessage(e.getMessage());
         }
@@ -48,7 +55,7 @@ public class OrderInfoController {
     @PutMapping("/{id}")
     @ResponseBody
     @Operation(description = "更新")
-    public SimpleResponse update(@PathVariable(name = "id") Integer id,@RequestBody OrderInfo obj){
+    public SimpleResponse update(@PathVariable(name = "id") String id,@RequestBody OrderInfo obj){
         SimpleResponse response = new SimpleResponse();
         try {
             service.updateByParam(obj,obj.getParams());
@@ -62,7 +69,7 @@ public class OrderInfoController {
     @DeleteMapping("/{id}")
     @ResponseBody
     @Operation(description = "按ID删除")
-    public SimpleResponse remove(@PathVariable(name = "id") Integer id){
+    public SimpleResponse remove(@PathVariable(name = "id") String id){
             SimpleResponse response = new SimpleResponse();
         try {
         service.removeById(id);
@@ -76,7 +83,7 @@ public class OrderInfoController {
     @GetMapping("/{id}")
     @Operation(description = "按ID查询")
     @ResponseBody
-    public SimpleResponse select(@PathVariable(name = "id") Integer id) {
+    public SimpleResponse select(@PathVariable(name = "id") String id) {
         SimpleResponse response = new SimpleResponse();
         try {
             response.setData(service.getById(id));
@@ -91,7 +98,7 @@ public class OrderInfoController {
     @PostMapping("/dels")
     @ResponseBody
     @Operation(description = "按ID删除多个")
-    public SimpleResponse removes(@RequestBody List<Integer> ids){
+    public SimpleResponse removes(@RequestBody List<String> ids){
         SimpleResponse response = new SimpleResponse();
         try {
             service.removeByIds(ids);
@@ -124,6 +131,7 @@ public class OrderInfoController {
             IPage<OrderInfo> page = service.selectPage(params);
             response.setData(page);
         } catch (Exception e) {
+            e.printStackTrace();
             response.setCode(500);
             response.setMessage(e.getMessage());
         }
@@ -193,6 +201,23 @@ public class OrderInfoController {
         }
         return response;
     }
+
+    @PostMapping("/listOrderItemById")
+    @Operation(description = "查询订单的物品")
+    @ResponseBody
+    public SimpleResponse listOrderItemById(@RequestBody Map<String, String> params) {
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.listOrderItemById(params));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+
 
 }
 

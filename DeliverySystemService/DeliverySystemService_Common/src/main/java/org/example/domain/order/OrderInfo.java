@@ -36,19 +36,24 @@ public class OrderInfo extends Model<OrderInfo> {
 
     @Excel(name = "id")
     @TableId(value = "id", type = IdType.ASSIGN_ID)
-    private Long id;
+    private String id;
 
     @Excel(name = "shopId")
     @TableField("shop_id")
-    private Long shopId;
+    private String shopId;
+
+    @Schema(description = "用户ID")
+    @Excel(name = "用户ID")
+    @TableField("user_id")
+    private String userId;
 
     /**
-    * 物品JSON
-    */
-    @Schema(description = "物品JSON")
-    @Excel(name = "物品JSON")
-    @TableField("shop_item")
-    private String shopItem;
+     * 配送骑手
+     */
+    @Schema(description = "配送骑手")
+    @Excel(name = "配送骑手")
+    @TableField("delivery_rider_id")
+    private String deliveryRiderId;
 
     /**
     * 打包费
@@ -93,14 +98,6 @@ public class OrderInfo extends Model<OrderInfo> {
     private String deliveryService;
 
     /**
-    * 配送骑手
-    */
-    @Schema(description = "配送骑手")
-    @Excel(name = "配送骑手")
-    @TableField("delivery_rider_id")
-    private String deliveryRiderId;
-
-    /**
     * 下单时间
     */
     @Schema(description = "下单时间")
@@ -140,11 +137,6 @@ public class OrderInfo extends Model<OrderInfo> {
     @Excel(name = "餐具数量")
     @TableField("tableware")
     private String tableware;
-
-    @Schema(description = "用户ID")
-    @Excel(name = "用户ID")
-    @TableField("user_id")
-    private Integer userId;
 
     @TableField(exist = false)
     private Shop shop;
