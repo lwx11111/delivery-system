@@ -6,7 +6,6 @@
                 :span="24"
                 style="background: #DAA520; height: 50px">
                 <h1>外卖</h1>
-<!--                地址 消息-->
             </el-col>
         </el-row>
         <!-- 搜索框-->
@@ -23,8 +22,8 @@
                 </el-input>
             </el-col>
         </el-row>
-        <!--分类-->
-        <CategoryInfo :isParent="true"></CategoryInfo>
+        <!--todo 分类-->
+        <CategoryInfo></CategoryInfo>
         <!-- 筛选 todo 背景变色-->
         <ScreeningList></ScreeningList>
         <!--商品信息-->
@@ -36,14 +35,14 @@
 import { reactive, ref, onMounted, toRefs } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
-
 import ApiShop from '../../api/api_shop.js'
-const store = useStore();
-const router = useRouter()
 import { Search } from '@element-plus/icons-vue'
 import ShopCardList from "./Shop/components/shopCardList.vue";
 import ScreeningList from "./Shop/components/screeningList.vue";
 import CategoryInfo from "./Shop/components/categoryInfo.vue";
+
+const store = useStore();
+const router = useRouter()
 // Data
 const data = reactive({
     // 店铺信息
@@ -83,25 +82,11 @@ const handleSelect = (key, keyPath) => {
  */
 const getShopList = () => {
     ApiShop.selpage4shop(data.params).then(res => {
+        // console.log(res)
         if (res.code === 200){
             data.shopList = res.data.records;
         }
     })
-    // Api.listShopByParams(params).then(res=> {
-    //     if (res.code === 200){
-    //         data.tableData = res.data.records
-    //         data.pageConfig.total = res.data.total
-    //         data.isSearch = false
-    //     }
-    //
-    //     // 日志记录
-    //     // data.OperatorLogParam.operateContent = JSON.stringify(params)
-    //     // data.OperatorLogParam.operateFeatures = '查询列表'
-    //     // data.OperatorLogParam.operateType = LogType.Query
-    //     // data.OperatorLogParam.operateState = '成功'
-    //     // OperatorLog.setOperationLog(this.OperatorLogParam)
-    //
-    // })
 }
 
 /**
@@ -116,7 +101,6 @@ const toShopDetail = (key) => {
         }
     })
 }
-
 </script>
 
 <style scoped>

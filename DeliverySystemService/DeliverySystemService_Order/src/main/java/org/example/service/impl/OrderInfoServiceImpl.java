@@ -68,8 +68,12 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         // 查询订单物品
         Map<String, String> param = new HashMap<>();
         param.put("id", orderInfo.getId());
-        List<OrderItem> orderItems =  this.listOrderItemById(param);
+        List<OrderItem> orderItems = this.listOrderItemById(param);
+        for(OrderItem orderItem: orderItems){
+            System.out.println("orderItem:"+orderItem);
+        }
         orderInfo.setOrderItems(orderItems);
+
         if (orderInfo.getShopId() == null) {
             throw new Exception("shopId不能为空");
         }
@@ -84,8 +88,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         }
         return orderInfo;
     }
+
     @Override
-    public OrderInfo getById(Serializable id) {
+    public OrderInfo getOrderInfoById(String id) throws Exception {
         System.out.println("getById:"+id);
         OrderInfo orderInfo = baseMapper.selectById(id);
         try {
@@ -299,6 +304,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Override
     public List<OrderItem> listOrderItemById(Map<String, String> params) throws Exception {
         List<OrderItem> orderItems = orderInfoMapper.listOrderItemById(params);
+        System.out.println("===========================");
+        System.out.println("orderItems:"+ orderItems.size());
         return orderItems;
     }
 

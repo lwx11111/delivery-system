@@ -221,5 +221,23 @@ public class ShopController {
         }
         return response;
     }
+
+    @PostMapping("/listShopWithShopItemByUserId")
+    @Operation(description = "分页查询-根据用户ID查询店铺和对应的物品信息-购物车、收藏")
+    @ResponseBody
+    public SimpleResponse listShopWithShopItemByUserId(@RequestBody Map<String, String> params) {
+        // @RequestBody String id ====> ' "id" '
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.listShopWithShopItemByUserId(params));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+
 }
 

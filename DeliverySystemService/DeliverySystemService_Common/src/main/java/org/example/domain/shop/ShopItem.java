@@ -81,6 +81,13 @@ public class ShopItem extends Model<ShopItem> {
     @TableField("category_name")
     private String categoryName;
 
+    /**
+     * 适配购物车的字段，todo 优化
+     */
+    @TableField(exist = false)
+    private Integer amount;
+
+
     @TableField(exist = false)
     private Map<String,String> params;
 

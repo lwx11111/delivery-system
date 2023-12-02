@@ -9,6 +9,7 @@ import org.example.dao.ShopMapper;
 import org.example.domain.shop.ShopCategory;
 import org.example.domain.shop.ShopItem;
 import org.example.domain.shop.ShopItemVO;
+import org.example.domain.shop.vo.ShopWithItemVO;
 import org.example.service.IShopService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -53,8 +54,19 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     @Autowired
     private ShopItemMapper shopItemMapper;
 
+    // 商铺基础信息表
     @Autowired
     private ShopMapper shopMapper;
+
+    @Override
+    public List<ShopWithItemVO> listShopWithShopItemByUserId(Map<String,String> params) throws Exception {
+        String userId = params.get("userId");
+        Integer type = Integer.parseInt(params.get("type") == null ? "0" : params.get("type"));
+        if (StringUtils.isBlank(userId)) {
+            throw new Exception("用户id不能为空");
+        }
+        return shopMapper.listShopWithShopItemByUserId(userId,type);
+    }
 
     @Override
     public List<ShopItemVO> listShopItemsByShopId(String id) throws Exception {

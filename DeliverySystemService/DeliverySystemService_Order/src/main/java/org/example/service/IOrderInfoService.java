@@ -10,6 +10,7 @@ import org.example.domain.shop.ShopItem;
 import org.example.domain.shop.ShopItemVO;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +23,7 @@ import java.util.Map;
  * @since 2023-10-31
  */
 public interface IOrderInfoService extends IService<OrderInfo> {
+
     /**
      * 根据参数保存
      * @param obj
@@ -104,4 +106,6 @@ public interface IOrderInfoService extends IService<OrderInfo> {
     void excel(HttpServletResponse response, HttpServletRequest request, Map<String, String> params) throws Exception;
 
     List<OrderItem> listOrderItemById(Map<String, String> params) throws Exception;
+
+    OrderInfo getOrderInfoById(String id) throws Exception;
 }

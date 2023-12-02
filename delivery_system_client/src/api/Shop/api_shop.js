@@ -3,6 +3,13 @@ const serverName = '/shop'
 
 
 export default {
+  listShopWithShopItemByUserId(params) {
+    return request({
+      url: serverName + '/shop/listShopWithShopItemByUserId',
+      data: params,
+      method: 'post',
+    })
+  },
 
   // 分页查询
   selpage4shop(data) {

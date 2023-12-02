@@ -13,7 +13,7 @@ const AfterSale = () => import("@/views/Consumer/Order/afterSale.vue")
 const PersonalIndex = () => import("@/views/Consumer/Personal/index.vue")
 const UserDetail = () => import("@/views/Consumer/Personal/userDetail.vue")
 const ShoppingCart = () => import("@/views/Consumer/Personal/cart.vue")
-
+const Collection = () => import("@/views/Consumer/Personal/collection.vue")
 const consumerRouter = {
         path: '/Consumer',
         component: PageFrame,
@@ -77,6 +77,11 @@ const consumerRouter = {
                 path: '/Consumer/Personal/shoppingCart',
                 component: ShoppingCart,
                 name: 'ShoppingCart',
+            },
+            {
+                path: '/Consumer/Personal/collection',
+                component: Collection,
+                name: 'Collection',
             },
             {
                 path: '/Consumer/Personal/userDetail',

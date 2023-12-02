@@ -9,6 +9,7 @@ import java.util.List;
 /**
  * @Author 刘文轩
  * @Date 2023/11/28 17:45
+ * 用于店铺内物品展示
  */
 @Data
 @AllArgsConstructor

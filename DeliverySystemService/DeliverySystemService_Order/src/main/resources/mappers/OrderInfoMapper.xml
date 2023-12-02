@@ -3,6 +3,7 @@
 <mapper namespace="org.example.dao.OrderInfoMapper">
     <!-- OrderItemList -->
     <resultMap id="OrderItemMap" type="org.example.domain.order.OrderItem">
+        <id column="id"></id>
         <result column="amount" property="amount"></result>
         <!--        一对一关联 外键-->
         <association property="shopItem" javaType="org.example.domain.shop.ShopItem">
@@ -27,7 +28,7 @@
 
 
     <select id="listOrderItemById" resultMap="OrderItemMap">
-        SELECT name, picture, description, price,category_name, amount
+        SELECT s.id,name, picture, description, price,category_name, amount
         FROM shop_item i
         INNER JOIN order_shop_item s on s.shop_item_id = i.id
         INNER JOIN order_info o on o.id = s.order_id

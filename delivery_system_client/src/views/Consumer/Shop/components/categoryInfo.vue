@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-row v-if="props.isQueryParent">
+        <el-row>
             <!--父级分类-->
             <el-col @click="toCategoryList(key, true)"
                     :span="4"
@@ -37,6 +37,11 @@ import ApiCategory from '../../../../api/api_category.js'
 
 // Props
 const props = defineProps({
+    parentId: {
+        type: Number,
+        default: 0,
+        required: false
+    },
     // 不传值默认全部，传值则显示对应的分类
     categoryId: {
         type: Number,
@@ -73,6 +78,18 @@ const data = reactive({
 
 // Mounted
 onMounted(() => {
+    if (props.parentId) {
+        getCategoryList();
+    } else {
+        getParentCategoryList();
+        getCategoryList();
+    }
+    /**
+     * 默认大小分类都展示
+         * 如果点击子分类，只展示对应店铺
+         * 如果点击父分类，展示子分类列表和对应店铺
+     * 展示子分类列表，需要传入父分类id
+     */
     if (props.isQueryParent) {
         getParentCategoryList();
     }
@@ -90,7 +107,7 @@ const getParentCategoryList = () => {
     let param = {
         isParentId: true
     }
-    if (props.isParentId){
+    if (props.parentId){
         param.categoryId = props.categoryId
     }
     ApiCategory.selpage4category(param).then(res => {

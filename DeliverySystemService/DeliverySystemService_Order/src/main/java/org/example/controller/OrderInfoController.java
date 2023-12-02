@@ -86,7 +86,7 @@ public class OrderInfoController {
     public SimpleResponse select(@PathVariable(name = "id") String id) {
         SimpleResponse response = new SimpleResponse();
         try {
-            response.setData(service.getById(id));
+            response.setData(service.getOrderInfoById(id));
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);

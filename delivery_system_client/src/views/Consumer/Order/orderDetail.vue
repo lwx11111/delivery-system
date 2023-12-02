@@ -4,7 +4,7 @@
         <h1>点单完成</h1>
     </el-row>
     <!-- 操作-->
-    <el-card>
+    <el-card style="margin-bottom: 10px">
 <!--        标语-->
         <el-row>
             <div>期待再次关联</div>
@@ -47,11 +47,11 @@
         </el-row>
     </el-card>
     <!--理赔-->
-    <el-card>
+    <el-card style="margin-bottom: 10px">
         理赔
     </el-card>
     <!--点单金额-->
-    <el-card>
+    <el-card style="margin-bottom: 10px">
         <!--头部店铺信息-->
         <el-row @click="toShopDetail">
             {{data.order.shop.name}}
@@ -59,7 +59,8 @@
         <el-divider></el-divider>
         <!-- 物品列表 -->
         <el-row v-for="item in data.order.orderItems"
-                @click="toShopDetail">
+                @click="toShopDetail"
+                style="margin-bottom: 5px">
             <el-col :span="4">
                 <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
             </el-col>

@@ -40,17 +40,19 @@
                     </el-col>
                     <!--菜品列表-->
                     <el-col :span="20">
-                        <el-scrollbar height="50%" style=" border:1px solid red; padding: 10px">
+                        <!--todo 高度-->
+                        <el-scrollbar height="300px" style=" border:1px solid red; padding: 10px">
                             <el-space direction="vertical">
                                 <!--@click="toShopItemDetail(key)"-->
                                 <el-card v-for="(item, key) in data.shopItemList">
                                     <el-row>
                                         <el-col :span="11"
+                                                @click="toShopItemDetail(key)"
                                                 style="margin-right: 5px">
                                             <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
                                         </el-col>
                                         <el-col :span="12">
-                                            <el-row>
+                                            <el-row @click="toShopItemDetail(key)">
                                                 <span style="font-size: 20px;font-weight: bold;">
                                                     {{item.name}}
                                                 </span>
@@ -61,7 +63,7 @@
                                                          @click="subCart(key)">
                                                     <Remove />
                                                 </el-icon>
-                                                {{data.sum}}
+                                                {{data.order.get(item.id)}}
                                                 <el-icon size="20px"
                                                          @click="addCart(key)">
                                                     <CirclePlus />
@@ -115,6 +117,7 @@ import ApiShopItemCategory from '../../../api/api_shopItemCategory.js'
 import ApiOrder from '../../../api/api_order.js'
 import ShopItemDetail from "./shopItemDetail.vue";
 import { Search, CirclePlus, Remove } from '@element-plus/icons-vue'
+import ShopCardList from "./components/shopCardList.vue";
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
@@ -233,9 +236,10 @@ const subCart = (key) => {
     const id = data.shopItemList[key].id
     // 维护order值
     if (data.order.has(id)){
-        data.order.set(id, data.order.get(id) - 1)
         if (data.order.get(id) === 0){
             data.order.delete(id)
+        } else {
+            data.order.set(id, data.order.get(id) - 1)
         }
     } else {
         data.order.set(id, 0)
@@ -246,7 +250,6 @@ const subCart = (key) => {
 
 // 提交订单
 const submitOrder = () => {
-
     // 封装参数
     data.orderInfo.packingCharges = data.shop.packingCharges
     data.orderInfo.deliveryCharge = data.shop.deliveryCharge

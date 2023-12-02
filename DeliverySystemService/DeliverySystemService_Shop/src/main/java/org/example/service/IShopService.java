@@ -1,12 +1,14 @@
 package org.example.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.apache.ibatis.annotations.Param;
 import org.example.domain.shop.Shop;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.domain.shop.ShopItemVO;
+import org.example.domain.shop.vo.ShopWithItemVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -21,6 +23,8 @@ import java.util.Map;
  * @since 2023-10-04
  */
 public interface IShopService extends IService<Shop> {
+    List<ShopWithItemVO> listShopWithShopItemByUserId(Map<String,String> params) throws Exception;
+
     List<ShopItemVO> listShopItemsByShopId(String id) throws Exception;
     void saveShopItems(List<ShopItemVO> shopItemVOList) throws Exception;
     /**

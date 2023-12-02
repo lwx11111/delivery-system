@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.example.domain.shop.vo.ShopWithItemVO;
 
 import java.util.List;
 import java.util.Map;
@@ -49,4 +50,5 @@ public interface ShopMapper extends BaseMapper<Shop> {
      */
     List<Shop> listShopsByCategoryId(@Param("categoryId") String categoryId, @Param("isParentId") Boolean isParentId) throws Exception;
 
+    List<ShopWithItemVO> listShopWithShopItemByUserId(@Param("userId") String userId, @Param("type") Integer type) throws Exception;
 }
