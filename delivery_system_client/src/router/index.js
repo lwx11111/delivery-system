@@ -9,7 +9,8 @@ import Login from '@/login/index.vue';
 import managementRouter from "@/router/Management/index";
 // 消费者端
 import consumerRouter from "@/router/Consumer/index";
-
+// 商家端
+import merchantRouter from "@/router/Merchant/index";
 // 模块化路由
 const routes = [
   {
@@ -19,6 +20,7 @@ const routes = [
   },
   managementRouter,
   consumerRouter,
+  merchantRouter
 ]
 
 // 创建路由对象

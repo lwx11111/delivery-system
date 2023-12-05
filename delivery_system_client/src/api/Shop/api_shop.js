@@ -59,7 +59,6 @@ export default {
     })
   },
 
-
   // 删除多条
   dels4shop(ids) {
     return request({

@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import org.example.domain.shop.Shop;
+import org.example.enums.OrderStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -122,6 +123,9 @@ public class OrderInfo extends Model<OrderInfo> {
     @Excel(name = "状态")
     @TableField("status")
     private Integer status;
+
+    @TableField(exist = false)
+    private OrderStatus orderStatus;
 
     @Schema(description = "支付方式")
     @Excel(name = "支付方式")

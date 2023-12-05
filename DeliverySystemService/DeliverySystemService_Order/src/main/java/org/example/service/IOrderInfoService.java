@@ -23,6 +23,10 @@ import java.util.Map;
  * @since 2023-10-31
  */
 public interface IOrderInfoService extends IService<OrderInfo> {
+    void orderPay(Map<String,String> params) throws Exception;
+    void orderTaking(Map<String,String> params) throws Exception;
+    void orderDelivery(Map<String,String> params) throws Exception;
+    void orderReceive(Map<String,String> params) throws Exception;
 
     /**
      * 根据参数保存

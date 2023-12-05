@@ -32,6 +32,81 @@ public class OrderInfoController {
     @Autowired
     private IOrderInfoService service;
 
+    // ======================================= 订单状态 =======================================
+
+    @PostMapping("/orderPay")
+    @ResponseBody
+    public SimpleResponse orderPay(@RequestBody Map<String,String> params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            service.orderPay(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * 商家接单
+     * @param params
+     * @return
+     */
+    @PostMapping("/orderTaking")
+    @ResponseBody
+    public SimpleResponse orderTaking(@RequestBody Map<String,String> params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            service.orderTaking(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * 骑手配送
+     * @param params
+     * @return
+     */
+    @PostMapping("/orderDelivery")
+    @ResponseBody
+    public SimpleResponse orderDelivery(@RequestBody Map<String,String> params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            service.orderDelivery(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * 确认收货
+     * @param params
+     * @return
+     */
+    @PostMapping("/orderReceive")
+    @ResponseBody
+    public SimpleResponse orderReceive(@RequestBody Map<String,String> params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            service.orderReceive(params);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    // ============================= 订单基本操作 =============================
+
     /**
      *
      * @param obj

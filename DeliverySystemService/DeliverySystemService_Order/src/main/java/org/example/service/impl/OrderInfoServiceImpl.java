@@ -3,6 +3,7 @@ package org.example.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import jakarta.annotation.Resource;
 import org.example.dao.OrderShopItemMapper;
 import org.example.domain.order.OrderInfo;
 import org.example.dao.OrderInfoMapper;
@@ -11,12 +12,14 @@ import org.example.domain.order.OrderShopItem;
 import org.example.domain.shop.Shop;
 import org.example.domain.shop.ShopItem;
 import org.example.domain.shop.ShopItemVO;
+import org.example.enums.OrderStatus;
 import org.example.feign.ShopFeignApi;
 import org.example.service.IOrderInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.example.service.OrderStatusService;
 import org.example.web.SimpleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -60,6 +63,60 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     @Autowired
     private ShopFeignApi shopFeignApi;
+
+    /**
+     * 订单状态
+     */
+    @Autowired
+    private OrderStatusService orderStatusService;
+
+    @Override
+    public void orderPay(Map<String,String> params) throws Exception {
+        //
+        String orderId = params.get("orderId");
+        if (StringUtils.isBlank(orderId)) {
+            throw new Exception("orderId不能为空");
+        }
+        // 修改订单状态信息
+        orderStatusService.pay(orderId);
+    }
+
+    @Override
+    public void orderTaking(Map<String, String> params) throws Exception {
+        String orderId = params.get("orderId");
+        if (StringUtils.isBlank(orderId)) {
+            throw new Exception("orderId不能为空");
+        }
+        //
+        OrderInfo orderInfo = this.getById(orderId);
+        orderInfo.setOrderStatus(OrderStatus.WAIT_TAKING);
+        // 修改订单状态信息
+        orderStatusService.taking(orderInfo);
+    }
+
+    @Override
+    public void orderDelivery(Map<String, String> params) throws Exception {
+        String orderId = params.get("orderId");
+        if (StringUtils.isBlank(orderId)) {
+            throw new Exception("orderId不能为空");
+        }
+        //
+        OrderInfo orderInfo = this.getById(orderId);
+        // 修改订单状态信息
+        orderStatusService.deliver(orderInfo);
+    }
+
+    @Override
+    public void orderReceive(Map<String, String> params) throws Exception {
+        String orderId = params.get("orderId");
+        if (StringUtils.isBlank(orderId)) {
+            throw new Exception("orderId不能为空");
+        }
+        //
+        OrderInfo orderInfo = this.getById(orderId);
+        // 修改订单状态信息
+        orderStatusService.receive(orderInfo);
+    }
 
     private OrderInfo getAssociatedData(OrderInfo orderInfo) throws Exception {
         if (orderInfo.getId() == null) {
@@ -107,6 +164,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         if  (obj.getOrderItems() != null) {
             // 先保存订单基本信息
             this.save(obj);
+            // 保存订单状态信息
+            obj = orderStatusService.create(obj);
             String orderId = obj.getId();
             // 再保存订单商品信息
             for(OrderItem orderItem: obj.getOrderItems()){

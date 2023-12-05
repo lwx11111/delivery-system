@@ -93,7 +93,21 @@
                         'funName': '消费端',
                         'url': '/Consumer/index',
                         // 'icon': '&#xe720;'
-                    }
+                    },
+                    {
+                        'funId': '1',
+                        'funName': '商家端-商铺',
+                        'url': '/Merchant/Shop/index',
+                        // 'icon': '&#xe720;'
+                    },
+                    {
+                        'funId': '1',
+                        'funName': '商家端-订单',
+                        'url': '/Merchant/Order/index',
+                        // 'icon': '&#xe720;'
+                    },
+
+
                 ]
             }
         },

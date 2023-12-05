@@ -74,3 +74,17 @@ Caused by: java.net.ConnectException: Connection timed out: no further informati
 11.30 订单服务
 修改物品json保存方式为中间表
 DDD模式重构订单服务？
+
+
+12.02 商家：
+- 店铺
+- - 注册
+- - 修改信息、分类信息
+
+- - 物品
+- - - 增删改查
+
+- 订单
+- - 接受-完成-拒绝
+- - 在处理
+- - 已完成

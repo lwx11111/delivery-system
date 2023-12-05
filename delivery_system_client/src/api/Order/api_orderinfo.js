@@ -3,6 +3,22 @@ const serverName = '/order'
 
 
 export default {
+  orderTaking(data) {
+    return request({
+        url: serverName + '/order/orderTaking',
+        method: 'post',
+        data: data
+    })
+  },
+
+  orderPay(data) {
+    return request({
+        url: serverName + '/order/orderPay',
+        method: 'post',
+        data: data
+    })
+  },
+
   listOrderItemById(data) {
     return request({
       url: serverName + '/order/listOrderItemById',
