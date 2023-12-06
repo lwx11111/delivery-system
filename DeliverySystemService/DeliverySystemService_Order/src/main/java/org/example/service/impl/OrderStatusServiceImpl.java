@@ -1,135 +1,166 @@
 package org.example.service.impl;
 
+import org.example.domain.OrderStatusDomain;
+import org.example.dao.OrderStatusMapper;
+import org.example.service.IOrderStatusService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import jakarta.annotation.Resource;
-import org.apache.commons.lang3.StringUtils;
-import org.example.dao.OrderInfoMapper;
-import org.example.domain.order.OrderInfo;
-import org.example.enums.OrderStatus;
-import org.example.enums.OrderStatusChangeEvent;
-import org.example.service.OrderStatusService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.Message;
-import org.springframework.messaging.support.MessageBuilder;
-import org.springframework.statemachine.StateMachine;
-import org.springframework.statemachine.persist.StateMachinePersister;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.StringUtils;
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import org.apache.poi.ss.usermodel.Workbook;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.web.multipart.MultipartFile;
+import com.google.common.collect.Lists;
+import cn.afterturn.easypoi.excel.entity.ImportParams;
+import cn.afterturn.easypoi.excel.imports.ExcelImportService;
 
+import java.io.InputStream;
+import org.example.utils.PageUtils;
+
+import java.util.List;
 import java.util.Map;
 
 /**
- * @Author 刘文轩
- * @Date 2023/12/4 16:40
- * 订单状态修改类 采用设计模式
+ * <p>
+ * 点单状态流程表 服务实现类
+ * </p>
+ *
+ * @author lwx20
+ * @since 2023-12-06
  */
 @Service
-public class OrderStatusServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo> implements OrderStatusService {
+public class OrderStatusServiceImpl extends ServiceImpl<OrderStatusMapper, OrderStatusDomain> implements IOrderStatusService {
 
-    @Resource
-    private StateMachine<OrderStatus, OrderStatusChangeEvent> orderStateMachine;
-
-    @Autowired
-    private StateMachinePersister<OrderStatus, OrderStatusChangeEvent, OrderInfo> persister;
-
-    /**
-     * 订单状态初始化
-     * @param order
-     * @return
-     */
     @Override
-    public OrderInfo create(OrderInfo order) {
-        order.setStatus(OrderStatus.WAIT_PAYMENT.getValue());
-        return order;
-    }
-
-    /**
-     * 发送订单支付事件
-     */
-    @Override
-    public OrderInfo pay(String orderId) {
-        // 获得订单信息
-        OrderInfo order = baseMapper.selectById(orderId);
-        order.setOrderStatus(OrderStatus.WAIT_PAYMENT);
-        System.out.println("线程名称：" + Thread.currentThread().getName() + " 尝试支付，订单号：" + orderId);
-        // 发送支付事件
-        Message message = MessageBuilder.withPayload(OrderStatusChangeEvent.PAYED).
-                setHeader("order", order).build();
-        if (!sendEvent(message, order)) {
-            System.out.println("线程名称：" + Thread.currentThread().getName() + " 支付失败, 状态异常，订单号：" + orderId);
-        }
-        return order;
-    }
-
-    /**
-     * 商家接单
-     * @param order
-     * @return
-     */
-    @Override
-    public OrderInfo taking(OrderInfo order) throws Exception {
-        System.out.println("线程名称：" + Thread.currentThread().getName() + " 尝试商家接单，订单号：" + order.getId());
-        // 发送接单事件
-        Message message = MessageBuilder.withPayload(OrderStatusChangeEvent.TAKING).
-                setHeader("order", order).build();
-        if (!sendEvent(message, order)) {
-            System.out.println("线程名称：" + Thread.currentThread().getName() + " 接单失败, 状态异常，订单号：" + order.getId());
-        }
-        return order;
-    }
-
-    /**
-     * 骑手配送
-     * @param order
-     * @return
-     */
-    @Override
-    public OrderInfo deliver(OrderInfo order) {
-        System.out.println("线程名称：" + Thread.currentThread().getName() + " 尝试发货，订单号：" + order.getId());
-        Message message = MessageBuilder.withPayload(OrderStatusChangeEvent.DELIVERY).
-                setHeader("order", order).build();
-        if (!sendEvent(message, order)) {
-            System.out.println("线程名称：" + Thread.currentThread().getName() + " 发货失败，状态异常，订单号：" + order.getId());
-        }
-        return order;
+    public void saveByParam(OrderStatusDomain obj, Map<String, String> params){
+        this.save(obj);
     }
 
     @Override
-    public OrderInfo receive(OrderInfo order) {
-        System.out.println("线程名称：" + Thread.currentThread().getName() + " 尝试收货，订单号：" +  order.getId());
-        Message message = MessageBuilder.withPayload(OrderStatusChangeEvent.TAKING).
-                setHeader("order", order).build();
-        if (!sendEvent(message, order)) {
-            System.out.println("线程名称：" + Thread.currentThread().getName() + " 收货失败，状态异常，订单号：" + order.getId());
-        }
-        return order;
+    public void updateByParam(OrderStatusDomain obj, Map<String, String> params){
+        this.updateById(obj);
     }
 
-
-    /**
-     * 发送订单状态转换事件
-     *
-     * @param message
-     * @param order
-     * @return
-     */
-    private synchronized boolean sendEvent(Message<OrderStatusChangeEvent> message, OrderInfo order) {
-        boolean result = false;
-        System.out.println(message);
-        try {
-            orderStateMachine.start();
-//            //尝试恢复状态机状态
-            persister.restore(orderStateMachine, order);
-            //添加延迟用于线程安全测试
-//            Thread.sleep(1000);
-            System.out.println("llllllllll");
-            result = orderStateMachine.sendEvent(message);
-            //持久化状态机状态
-            persister.persist(orderStateMachine, order);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            orderStateMachine.stop();
+    @Override
+    public void deleteBy(Map<String, String> params) {
+        QueryWrapper<OrderStatusDomain> query = new QueryWrapper<>();
+        if(!query.isEmptyOfWhere()) {
+            remove(query);
         }
+    }
+
+    @Override
+    public List<OrderStatusDomain> selectBy(Map<String, String> params) {
+        QueryWrapper<OrderStatusDomain> query = new QueryWrapper<>();
+        return list(query);
+    }
+
+    @Override
+    public IPage<OrderStatusDomain> selectPage(Map<String, String> params) {
+        Page<OrderStatusDomain> page = PageUtils.pageHandler(params);
+        QueryWrapper<OrderStatusDomain> query = getQuery(params);
+        IPage<OrderStatusDomain> result = this.page(page, query);
         return result;
+    }
+
+    @Override
+    public IPage<OrderStatusDomain> selpageCustomSqlByWrapper(Map<String, String> params) {
+        Page<OrderStatusDomain> page = PageUtils.pageHandler(params);
+        QueryWrapper<OrderStatusDomain> query = getQuery(params);
+        IPage<OrderStatusDomain> result = this.baseMapper.selpageCustomSqlByWrapper(page, query);
+        return result;
+    }
+
+    @Override
+    public IPage<OrderStatusDomain> selpageCustomSqlByMap(Map<String, String> params) {
+        Page<OrderStatusDomain> page = PageUtils.pageHandler(params);
+        IPage<OrderStatusDomain> result = this.baseMapper.selpageCustomSqlByMap(page, params);
+        return result;
+    }
+
+    /**
+     * 下载excel模板
+     *
+     * @param response HttpServletResponse
+     * @param request  HttpServletRequest
+     * @return: void
+    */
+    @Override
+    public void downloadExcelTemplate(HttpServletResponse response, HttpServletRequest request) throws Exception{
+        List<OrderStatusDomain> data = Lists.newArrayList();
+        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(null, "OrderStatus"), OrderStatusDomain.class, data);
+        String fileName = String.format("OrderStatus_%d.xls", System.currentTimeMillis());
+        response.setHeader("Content-Disposition", "attachment;Filename="+ fileName);
+        response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
+    }
+
+    /**
+     * 导入数据
+     * @param file
+     * @throws Exception
+     */
+    @Override
+    public void uploadExcel(MultipartFile file) throws Exception {
+        InputStream inputStream = file.getInputStream();
+        ImportParams params = new ImportParams();
+        // bean 导入
+        List<OrderStatusDomain> dataList = new ExcelImportService().importExcelByIs(inputStream, OrderStatusDomain.class, params, false).getList();
+        this.saveBatch(dataList);
+        // map 导入
+        // List<Map<String, Object>> maps = ExcelImportUtil.importExcel(inputStream, Map.class, params);
+        // System.out.println("maps = " + maps);
+    }
+
+    @Override
+    public void excel(HttpServletResponse response, HttpServletRequest request, Map<String, String> params) throws Exception{
+        QueryWrapper<OrderStatusDomain> query = new QueryWrapper<>();
+        List<OrderStatusDomain> data = list(query);
+        Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(null, "OrderStatus"),
+        OrderStatusDomain.class, data);
+        String fileName = String.format("OrderStatus_%d.xls", System.currentTimeMillis());
+        response.setHeader("Content-Disposition", "attachment;Filename="+ fileName);
+        response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
+    }
+
+    /**
+     * 定义数据查询条件
+     * @param params
+     * @return
+     */
+    private  QueryWrapper<OrderStatusDomain> getQuery(Map<String, String> params){
+        QueryWrapper<OrderStatusDomain> query  = new QueryWrapper<>();
+        if(params==null||params.size()<1) {
+            return  query;
+        }
+        for (Map.Entry<String, String> entry:params.entrySet()){
+            if(StringUtils.isBlank(entry.getValue())){
+                continue;
+            }
+            if("id".equals(entry.getKey())){
+                query.eq("id",entry.getValue());
+            }
+            if("orderId".equals(entry.getKey())){
+                query.eq("order_id",entry.getValue());
+            }
+            if("status".equals(entry.getKey())){
+                query.eq("status",entry.getValue());
+            }
+            if("name".equals(entry.getKey())){
+                query.eq("name",entry.getValue());
+            }
+            if("statusTime".equals(entry.getKey())){
+                query.eq("status_time",entry.getValue());
+            }
+        }
+        return  query;
     }
 }

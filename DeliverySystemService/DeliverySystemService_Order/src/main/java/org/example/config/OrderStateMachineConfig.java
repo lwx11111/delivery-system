@@ -59,16 +59,9 @@ public class OrderStateMachineConfig extends StateMachineConfigurerAdapter<Order
      */
     @Override
     public void configure(StateMachineStateConfigurer<OrderStatus, OrderStatusChangeEvent> states) throws Exception {
-//        Set<Integer> orderStatusSet = new HashSet<Integer>();
-//        // 遍历enum
-//        for (OrderStatus day : OrderStatus.values()) {
-//            orderStatusSet.add(day.getValue());
-//        }
-
         states
                 .withStates()
                 .initial(OrderStatus.WAIT_PAYMENT)
-//                .states(orderStatusSet);
                 .states(EnumSet.allOf(OrderStatus.class));
     }
 
@@ -90,7 +83,33 @@ public class OrderStateMachineConfig extends StateMachineConfigurerAdapter<Order
                 .event(OrderStatusChangeEvent.DELIVERY)
                 .and()
                 .withExternal().source(OrderStatus.WAIT_RECEIVE).target(OrderStatus.FINISH)
-                .event(OrderStatusChangeEvent.RECEIVED);
+                .event(OrderStatusChangeEvent.RECEIVED)
+                // 消费者取消
+                .source(OrderStatus.WAIT_PAYMENT)
+                .target(OrderStatus.CONSUMER_CANCEL)
+                .event(OrderStatusChangeEvent.CANCEL)
+                .and().withExternal()
+                .source(OrderStatus.WAIT_TAKING)
+                .target(OrderStatus.CONSUMER_CANCEL)
+                .event(OrderStatusChangeEvent.CANCEL)
+                .and().withExternal()
+                .source(OrderStatus.WAIT_DELIVER)
+                .target(OrderStatus.CONSUMER_CANCEL)
+                .event(OrderStatusChangeEvent.CANCEL)
+                .and().withExternal()
+                .source(OrderStatus.WAIT_RECEIVE)
+                .target(OrderStatus.CONSUMER_CANCEL)
+                .event(OrderStatusChangeEvent.CANCEL)
+                // 商家取消
+                .and().withExternal()
+                .source(OrderStatus.WAIT_TAKING)
+                .target(OrderStatus.SHOP_CANCEL)
+                .event(OrderStatusChangeEvent.UNTAKING)
+                // 消费者退款
+                .and().withExternal()
+                .source(OrderStatus.FINISH)
+                .target(OrderStatus.REFUND)
+                .event(OrderStatusChangeEvent.REFUND);
     }
 
     /**
@@ -110,7 +129,7 @@ public class OrderStateMachineConfig extends StateMachineConfigurerAdapter<Order
             @Override
             public StateMachineContext<Object, Object> read(OrderInfo order) throws Exception {
                 //此处直接获取Order中的状态，其实并没有进行持久化读取操作，通过这一步获取状态
-                return new DefaultStateMachineContext<>(order.getOrderStatus(), null, null, null);
+                return new DefaultStateMachineContext<>(OrderStatus.getByKey(order.getStatus()), null, null, null);
             }
         });
     }

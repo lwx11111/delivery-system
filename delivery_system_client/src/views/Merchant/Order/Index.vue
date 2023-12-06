@@ -173,13 +173,13 @@
                                 :underline="false">
                             接单
                         </el-link>
-                        <el-link v-if="data.tableData[scope.$index].status === 1"
+                        <el-link v-if="data.tableData[scope.$index].status === 2"
                                  style="margin-right: 20px"
-                                 @click="orderPay(scope)"
+                                 @click="orderUntaking(scope)"
                                  type="primary"
                                  size="small"
                                  :underline="false">
-                            支付
+                            取消接单
                         </el-link>
                         <el-link
                                 style="margin-right: 20px"
@@ -274,8 +274,6 @@
         // dialog
         type: '',
     })
-    // 解构抛出 直接使用
-    // const { type} = toRefs(data)
 
     // Mounted
     onMounted(() => {
@@ -288,11 +286,12 @@
             orderId: scope.row.id
         }
         Api.orderTaking(param).then(res => {
-            if (res.code === 200){
+            if (res.code === 200 && res.data === true){
                 ElMessage({
                     type: 'success',
                     message: '接单成功',
                 })
+                getData();
             } else {
                 ElMessage({
                     type: 'warning',
@@ -302,24 +301,42 @@
         })
     }
 
-    const orderPay = (scope) => {
-        const param = {
-            orderId: scope.row.id
-        }
-        Api.orderPay(param).then(res => {
-            if (res.code === 200){
-                ElMessage({
-                    type: 'success',
-                    message: '支付成功',
-                })
-            } else {
-                ElMessage({
-                    type: 'warning',
-                    message: '支付失败，请重试',
-                })
+    const orderUntaking = (scope) => {
+        // 提示确认
+        ElMessageBox.confirm(
+            '确认不接单？',
+            '警告',
+            {
+                confirmButtonText: '确认删除',
+                cancelButtonText: '取消',
+                type: 'warning',
             }
+        ).then(() => {
+            const param = {
+                orderId: scope.row.id
+            }
+            Api.orderUntaking(param).then(res => {
+                if (res.code === 200 && res.data === true){
+                    ElMessage({
+                        type: 'success',
+                        message: '取消接单成功',
+                    })
+                    getData();
+                } else {
+                    ElMessage({
+                        type: 'warning',
+                        message: '取消接单失败，请重试',
+                    })
+                }
+            })
+        }).catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '已取消',
+            })
         })
     }
+
     const getData = () => {
         // 查询方法
         // 查询参数
@@ -350,33 +367,6 @@
                 data.isSearch = false
             }
         })
-    }
-    // 添加记录
-    const itemDialog = ref();
-    const addData = () => {
-        data.type = "add";
-        itemDialog.value.init(null,data.type);
-    }
-    // 下载模板
-    const downloadExcelTemplate = () => {
-        const params = {}
-        Api.downloadExcelTemplate(params).then(data => {
-            console.log(data)
-            const blob = new Blob([data], { type: 'application/vnd.ms-excel' })
-            const blobUrl = URL.createObjectURL(blob)
-            const a = document.createElement('a')
-            a.href = blobUrl
-            a.download = '点单信息.xls'
-            a.click()
-            window.URL.revokeObjectURL(blobUrl)
-        })
-    }
-
-    // 导入数据
-    const uploadExcelRef = ref();
-    const uploadExcel = () => {
-        // const uploadExcelUrl = Api.uploadExcelUrl();
-        uploadExcelRef.value.init(this.SHOP_SERVER + '/orderinfo/uploadExcel');
     }
 
     const deleteDataMany = () => {
@@ -414,13 +404,6 @@
                             message: '删除失败',
                         })
                     }
-
-                    // 日志记录
-                    // this.OperatorLogParam.operateContent = JSON.stringify(dataids)
-                    // this.OperatorLogParam.operateFeatures = '删除记录'
-                    // this.OperatorLogParam.operateType = LogType.Query
-                    // this.OperatorLogParam.operateState = '成功'
-                    // OperatorLog.setOperationLog(this.OperatorLogParam)
                 })
             }).catch(() => {
                 ElMessage({
@@ -457,40 +440,13 @@
             window.URL.revokeObjectURL(blobUrl)
         })
     }
-    /**
-     导入后的回调方法
-     @param action: put/delete， put=上传，delete=删除
-     @param status: true/false，true=成功，false=失败
-     @param groupId: 附件组ID
-     @param response: 响应内容
-     **/
-    const uploadExcelCallback = (action, status, groupId, response) =>{
-        console.log("Success")
-        // if (action === 'put' && status) {
-        //     this.$notify({
-        //         type: 'success',
-        //         title: '导入成功',
-        //         message: response.message,
-        //         duration: 5000
-        //     })
-        // } else {
-        //     this.$notify({
-        //         type: 'error',
-        //         title: '导入失败',
-        //         message: response.message,
-        //         duration: 5000
-        //     })
-        // }
-    }
+
     const selectionChanged = (val: number) => {
         // 选中行变化事件
         data.selectedRows = val
     }
 
-    const toUpdate = (scope) => {
-        data.type = "update"
-        itemDialog.value.init(scope.row.id, data.type);
-    }
+    const itemDialog = ref();
     const toDetail = (scope) => {
         data.type = "detail"
         itemDialog.value.init(scope.row.id, data.type);
@@ -522,13 +478,6 @@
                     })
                 }
             })
-
-            // 日志记录
-            // this.OperatorLogParam.operateContent = JSON.stringify(dataids)
-            // this.OperatorLogParam.operateFeatures = '删除记录'
-            // this.OperatorLogParam.operateType = LogType.Query
-            // this.OperatorLogParam.operateState = '成功'
-            // OperatorLog.setOperationLog(this.OperatorLogParam)
         }).catch(() => {
             ElMessage({
                 type: 'info',
@@ -552,11 +501,6 @@
     const orderItemDialog = ref();
     const showOrderItemDialog = (scope) => {
         orderItemDialog.value.init(scope.row.id);
-    }
-
-
-    const activated = () => {
-        getData()
     }
 
 </script>

@@ -3,6 +3,16 @@ const serverName = '/order'
 
 
 export default {
+  // ========================================== 订单状态
+
+  orderPay(data) {
+    return request({
+      url: serverName + '/order/orderPay',
+      method: 'post',
+      data: data
+    })
+  },
+
   orderTaking(data) {
     return request({
         url: serverName + '/order/orderTaking',
@@ -11,11 +21,27 @@ export default {
     })
   },
 
-  orderPay(data) {
+  orderUntaking(data) {
     return request({
-        url: serverName + '/order/orderPay',
-        method: 'post',
-        data: data
+      url: serverName + '/order/orderUntaking',
+      method: 'post',
+      data: data
+    })
+  },
+
+  orderCancel(data) {
+    return request({
+      url: serverName + '/order/orderCancel',
+      method: 'post',
+      data: data
+    })
+  },
+
+  orderRefund(data) {
+    return request({
+      url: serverName + '/order/orderRefund',
+      method: 'post',
+      data: data
     })
   },
 

@@ -167,7 +167,7 @@ const data = reactive({
         location: '1',
         deliveryService: '1',
         orderTime: '2023-01-01 00:00:00',
-        status: '1',
+        status: '0',
         paymentMethod: '1',
         remark: '1',
         tableware: '1',
@@ -255,6 +255,8 @@ const submitOrder = () => {
     data.orderInfo.deliveryCharge = data.shop.deliveryCharge
     data.orderInfo.shopId = data.shop.id
     data.orderInfo.totalCharge = data.totalAmount
+    // 订单初始状态1
+    data.orderInfo.status = '1';
     // 物品信息
     data.order.forEach((value, key) => {
         data.orderInfo.orderItems.push({
@@ -265,11 +267,15 @@ const submitOrder = () => {
     console.log(data.orderInfo)
     ApiOrder.add4order(data.orderInfo).then(res => {
         if (res.code === 200){
-            ElMessageBox.alert('下单成功', '提示', {
+            console.log(res.data)
+            ElMessageBox.alert('创建订单成功', '提示', {
                 confirmButtonText: '确定',
                 callback: action => {
                     router.push({
-                        path: '/Consumer/Order/index'
+                        path: '/Consumer/Order/orderPay',
+                        query: {
+                            orderId: res.data
+                        }
                     })
                 }
             });

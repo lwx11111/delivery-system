@@ -1,44 +1,31 @@
 package org.example.service;
 
-import org.example.domain.order.OrderInfo;
+import org.example.domain.OrderStatusDomain;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.domain.order.OrderItem;
-import org.example.domain.shop.ShopItem;
-import org.example.domain.shop.ShopItemVO;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 /**
  * <p>
- *  服务类
+ * 点单状态流程表 服务类
  * </p>
  *
  * @author lwx20
- * @since 2023-10-31
+ * @since 2023-12-06
  */
-public interface IOrderInfoService extends IService<OrderInfo> {
-    // ================================ 订单状态 ================================
-    Boolean orderPay(Map<String,String> params) throws Exception;
-    Boolean orderTaking(Map<String,String> params) throws Exception;
-    Boolean orderDelivery(Map<String,String> params) throws Exception;
-    Boolean orderReceive(Map<String,String> params) throws Exception;
-    Boolean orderUntaking(Map<String,String> params) throws Exception;
-    Boolean orderCancel(Map<String,String> params) throws Exception;
-    Boolean orderRefund(Map<String,String> params) throws Exception;
-
+public interface IOrderStatusService extends IService<OrderStatusDomain> {
     /**
      * 根据参数保存
      * @param obj
      * @param params
      * @return: void
      */
-    String saveByParam(OrderInfo obj,Map<String, String> params) throws Exception;
+    void saveByParam(OrderStatusDomain obj, Map<String, String> params);
 
     /**
      * 根据参数更新
@@ -46,7 +33,7 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @param params
      * @return: void
      */
-    void updateByParam(OrderInfo obj,Map<String, String> params);
+    void updateByParam(OrderStatusDomain obj, Map<String, String> params);
     /**
      * 根据条件删除
      *
@@ -59,33 +46,33 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * 根据条件查询
      *
      * @param params
-     * @return: List<OrderInfo>
+     * @return: List<OrderStatus>
      */
-     List<OrderInfo> selectBy(Map<String, String> params);
+     List<OrderStatusDomain> selectBy(Map<String, String> params);
 
     /**
      * 分页查询
      *
      * @param params
-     * @return: IPage<OrderInfo>
+     * @return: IPage<OrderStatus>
     */
-    IPage<OrderInfo> selectPage(Map<String, String> params) throws Exception;
+    IPage<OrderStatusDomain> selectPage(Map<String, String> params);
 
     /**
      * 分页查询-自定义sql-Wrapper
      *
      * @param params
-     * @return: IPage<OrderInfo>
+     * @return: IPage<OrderStatus>
     */
-    IPage<OrderInfo> selpageCustomSqlByWrapper(Map<String, String> params);
+    IPage<OrderStatusDomain> selpageCustomSqlByWrapper(Map<String, String> params);
 
     /**
      * 分页查询-自定义sql-Map
      *
      * @param params
-     * @return: IPage<OrderInfo>
+     * @return: IPage<OrderStatus>
     */
-    IPage<OrderInfo> selpageCustomSqlByMap(Map<String, String> params);
+    IPage<OrderStatusDomain> selpageCustomSqlByMap(Map<String, String> params);
 
     /**
      * 下载excel模板
@@ -112,8 +99,4 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @return: void
     */
     void excel(HttpServletResponse response, HttpServletRequest request, Map<String, String> params) throws Exception;
-
-    List<OrderItem> listOrderItemById(Map<String, String> params) throws Exception;
-
-    OrderInfo getOrderInfoById(String id) throws Exception;
 }

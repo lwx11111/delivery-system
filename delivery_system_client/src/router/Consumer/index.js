@@ -9,6 +9,7 @@ const ShopItemDetail = () => import("@/views/Consumer/Shop/shopItemDetail.vue");
 const OrderIndex = () =>  import("@/views/Consumer/Order/index.vue")
 const OrderDetail = () => import("@/views/Consumer/Order/orderDetail.vue")
 const AfterSale = () => import("@/views/Consumer/Order/afterSale.vue")
+const OrderPay = () => import("@/views/Consumer/Order/orderPay.vue")
 // Personal
 const PersonalIndex = () => import("@/views/Consumer/Personal/index.vue")
 const UserDetail = () => import("@/views/Consumer/Personal/userDetail.vue")
@@ -66,6 +67,11 @@ const consumerRouter = {
                 path: '/Consumer/Order/afterSale',
                 component: AfterSale,
                 name: 'AfterSale',
+            },
+            {
+                path: '/Consumer/Order/orderPay',
+                component: OrderPay,
+                name: 'OrderPay',
             },
             //个人中心
             {

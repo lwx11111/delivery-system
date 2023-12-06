@@ -39,7 +39,7 @@ public class OrderInfoController {
     public SimpleResponse orderPay(@RequestBody Map<String,String> params){
         SimpleResponse response = new SimpleResponse();
         try {
-            service.orderPay(params);
+            response.setData(service.orderPay(params));
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);
@@ -58,7 +58,7 @@ public class OrderInfoController {
     public SimpleResponse orderTaking(@RequestBody Map<String,String> params){
         SimpleResponse response = new SimpleResponse();
         try {
-            service.orderTaking(params);
+            response.setData(service.orderTaking(params));
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);
@@ -77,7 +77,7 @@ public class OrderInfoController {
     public SimpleResponse orderDelivery(@RequestBody Map<String,String> params){
         SimpleResponse response = new SimpleResponse();
         try {
-            service.orderDelivery(params);
+            response.setData(service.orderDelivery(params));
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);
@@ -96,7 +96,64 @@ public class OrderInfoController {
     public SimpleResponse orderReceive(@RequestBody Map<String,String> params){
         SimpleResponse response = new SimpleResponse();
         try {
-            service.orderReceive(params);
+            response.setData(service.orderReceive(params));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * 商家拒绝接单
+     * @param params
+     * @return
+     */
+    @PostMapping("/orderUntaking")
+    @ResponseBody
+    public SimpleResponse orderUntaking(@RequestBody Map<String,String> params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.orderUntaking(params));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * 消费者取消订单
+     * @param params
+     * @return
+     */
+    @PostMapping("/orderCancel")
+    @ResponseBody
+    public SimpleResponse orderCancel(@RequestBody Map<String,String> params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.orderCancel(params));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * 消费者退款
+     * @param params
+     * @return
+     */
+    @PostMapping("/orderRefund")
+    @ResponseBody
+    public SimpleResponse orderRefund(@RequestBody Map<String,String> params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.orderRefund(params));
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);
@@ -118,7 +175,7 @@ public class OrderInfoController {
     public SimpleResponse save(@RequestBody OrderInfo obj){
         SimpleResponse response = new SimpleResponse();
         try {
-            service.saveByParam(obj,obj.getParams());
+            response.setData(service.saveByParam(obj,obj.getParams()));
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);
