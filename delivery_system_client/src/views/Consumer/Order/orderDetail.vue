@@ -54,34 +54,36 @@
     <el-card style="margin-bottom: 10px">
         <!--头部店铺信息-->
         <el-row @click="toShopDetail">
-            {{data.order.shop.name}}
+            <h1>{{data.order.shop.name}}</h1>
         </el-row>
         <el-divider></el-divider>
         <!-- 物品列表 -->
         <el-row v-for="item in data.order.orderItems"
                 @click="toShopDetail"
                 style="margin-bottom: 5px">
-            <el-col :span="4">
+            <el-col :span="6">
                 <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
             </el-col>
-            <el-col :span="16">
+            <el-col :span="4">
                 {{item.shopItem.name}}
-                {{item.amount}}
             </el-col>
             <el-col :span="4">
-                {{item.shopItem.price}}
+                数量：{{item.amount}}
+            </el-col>
+            <el-col :span="4">
+                价格：{{item.shopItem.price}}￥
             </el-col>
         </el-row>
         <el-divider></el-divider>
         <!--订单基本信息-金额 -->
         <el-row>
-            打包费: {{data.order.packingCharges}}
+            打包费: {{data.order.packingCharges}}￥
         </el-row>
         <el-row>
-            配送费: {{data.order.deliveryCharge}}
+            配送费: {{data.order.deliveryCharge}}￥
         </el-row>
         <el-row>
-            总金额： {{data.order.totalCharge}}
+            总金额：{{data.order.totalCharge}}￥
         </el-row>
     </el-card>
     <!--订单详细信息-->
@@ -122,7 +124,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted, toRefs } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { useStore } from "vuex";
 import { useRouter, useRoute } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
@@ -197,8 +199,6 @@ const data = reactive({
         shopId:"1",
         userId:"1",
     },
-
-
     // 骑手信息
     rider: {},
     // 用户信息
@@ -208,9 +208,6 @@ const data = reactive({
     }
 
 })
-// 解构抛出 直接使用
-// const { type} = toRefs(data)
-
 // Mounted
 onMounted(() => {
     data.order.id = route.query.orderId;

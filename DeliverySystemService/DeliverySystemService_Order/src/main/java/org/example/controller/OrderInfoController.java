@@ -165,6 +165,24 @@ public class OrderInfoController {
     // ============================= 订单基本操作 =============================
 
     /**
+     * 骑手订单
+     * @param params
+     * @return
+     */
+    @PostMapping("/listOrderByRiderId")
+    @ResponseBody
+    public SimpleResponse listOrderByRiderId(@RequestBody Map<String,String> params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.listOrderByRiderId(params));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+    /**
      *
      * @param obj
      * @return

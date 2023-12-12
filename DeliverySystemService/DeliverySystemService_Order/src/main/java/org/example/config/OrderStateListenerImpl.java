@@ -1,5 +1,6 @@
 package org.example.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.example.dao.OrderInfoMapper;
 import org.example.dao.OrderStatusMapper;
 import org.example.domain.OrderStatusDomain;
@@ -22,6 +23,7 @@ import java.util.Date;
  */
 @Component("orderStateListener")
 @WithStateMachine(name = "orderStateMachine")
+@Slf4j
 public class OrderStateListenerImpl{
     /**
      * 订单基本信息数据库操作
@@ -71,6 +73,8 @@ public class OrderStateListenerImpl{
     public boolean takingTransition(Message<OrderStatusChangeEvent> message) {
         OrderInfo order = (OrderInfo) message.getHeaders().get("order");
         try {
+            // 分配给附近骑手
+            order.setRiderId("1");
             // 修改状态
             order.setStatus(OrderStatus.WAIT_DELIVER.getValue());
             orderInfoMapper.updateById(order);
@@ -81,7 +85,6 @@ public class OrderStateListenerImpl{
             orderStatus.setStatusTime(LocalDateTime.now());
             orderStatus.setOrderId(order.getId());
             orderStatusMapper.insert(orderStatus);
-            System.out.println("支付，状态机反馈信息：" + message.getHeaders().toString());
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,6 +97,7 @@ public class OrderStateListenerImpl{
         OrderInfo order = (OrderInfo) message.getHeaders().get("order");
         try {
             // 修改状态
+
             order.setStatus(OrderStatus.WAIT_RECEIVE.getValue());
             orderInfoMapper.updateById(order);
             // 保存订单状态流转信息
@@ -158,7 +162,6 @@ public class OrderStateListenerImpl{
     @OnTransition(source = {"WAIT_PAYMENT","WAIT_TAKING","WAIT_DELIVER","WAIT_RECEIVE"},target = "CONSUMER_CANCEL")
     public boolean cancelTransition(Message<OrderStatusChangeEvent> message){
         OrderInfo order = (OrderInfo) message.getHeaders().get("order");
-        System.out.println("11111111111111111111111111111111111");
         try {
             // 修改状态
             order.setStatus(OrderStatus.CONSUMER_CANCEL.getValue());

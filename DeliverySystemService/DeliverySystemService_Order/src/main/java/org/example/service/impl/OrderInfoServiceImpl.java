@@ -1,11 +1,13 @@
 package org.example.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import jakarta.annotation.Resource;
 import org.example.dao.OrderShopItemMapper;
 import org.example.domain.order.OrderInfo;
 import org.example.dao.OrderInfoMapper;
 import org.example.domain.order.OrderItem;
 import org.example.domain.order.OrderShopItem;
+import org.example.domain.order.vo.OrderRiderVO;
 import org.example.domain.shop.Shop;
 import org.example.feign.ShopFeignApi;
 import org.example.service.IOrderInfoService;
@@ -32,6 +34,7 @@ import cn.afterturn.easypoi.excel.imports.ExcelImportService;
 import java.io.InputStream;
 import org.example.utils.PageUtils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +55,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Autowired
     private OrderShopItemMapper orderShopItemMapper;
 
-    @Autowired
+    @Resource
     private ShopFeignApi shopFeignApi;
 
     /**
@@ -143,6 +146,29 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         OrderInfo orderInfo = this.getById(orderId);
         // 修改订单状态信息
         return orderStateService.orderRefund(orderInfo);
+    }
+
+    @Override
+    public List<OrderRiderVO> listOrderByRiderId(Map<String, String> params) throws Exception {
+        String riderId = params.get("id");
+        if (StringUtils.isBlank(riderId)) {
+            throw new Exception("riderId不能为空");
+        }
+        // 查询订单信息
+        Map<String, Object> queryParams = new HashMap<>();
+        queryParams.put("rider_id", riderId);
+        List<OrderInfo> list = baseMapper.selectByMap(queryParams);
+        // 查询对应商铺信息
+        List<OrderRiderVO> orderRiderVOList = new ArrayList<>();
+        for (OrderInfo orderInfo : list) {
+            OrderRiderVO orderRider = new OrderRiderVO(orderInfo);
+            SimpleResponse simpleResponse = shopFeignApi.select(orderInfo.getShopId());
+            Shop shop = JSON.parseObject(JSON.toJSONString(simpleResponse.getData()), Shop.class);
+            orderRider.setShopName(shop.getName());
+            orderRider.setShopLocation(shop.getLocation());
+            orderRiderVOList.add(orderRider);
+        }
+        return orderRiderVOList;
     }
 
     private OrderInfo getAssociatedData(OrderInfo orderInfo) throws Exception {

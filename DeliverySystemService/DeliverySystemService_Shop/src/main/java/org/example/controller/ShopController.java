@@ -158,6 +158,7 @@ public class ShopController {
             IPage<Shop> page = service.selectPage(params);
             response.setData(page);
         } catch (Exception e) {
+            e.printStackTrace();
             response.setCode(500);
             response.setMessage(e.getMessage());
         }

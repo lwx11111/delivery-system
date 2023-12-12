@@ -4,8 +4,7 @@
         <el-card style="margin-bottom: 10px">
             <el-row>
                 <el-col :span="20">
-                    <div>{{data.shop.name}}</div>
-                    <div>{{data.shop.name}}</div>
+                    <h1>{{data.shop.name}}</h1>
                 </el-col>
                 <el-col :span="4">
                     <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
@@ -24,6 +23,7 @@
 
         <!--店铺内容-->
         <el-tabs v-model="data.tabName" @tab-click="handleClick">
+            <!--选择物品界面-->
             <el-tab-pane label="点菜" name="order">
                 <el-row>
                     <!-- 分类列表-->
@@ -38,12 +38,12 @@
                             </el-space>
                         </el-scrollbar>
                     </el-col>
+
                     <!--菜品列表-->
                     <el-col :span="20">
                         <!--todo 高度-->
-                        <el-scrollbar height="300px" style=" border:1px solid red; padding: 10px">
+                        <el-scrollbar height="500px" style="padding: 10px">
                             <el-space direction="vertical">
-                                <!--@click="toShopItemDetail(key)"-->
                                 <el-card v-for="(item, key) in data.shopItemList">
                                     <el-row>
                                         <el-col :span="11"
@@ -57,9 +57,11 @@
                                                     {{item.name}}
                                                 </span>
                                             </el-row>
-                                            <el-row>{{item.price}}</el-row>
+                                            <el-row>{{item.price}}￥</el-row>
+                                            <!--减少添加按钮-->
                                             <el-row>
                                                 <el-icon size="20px"
+                                                         v-if="data.order.has(item.id)"
                                                          @click="subCart(key)">
                                                     <Remove />
                                                 </el-icon>
@@ -76,6 +78,17 @@
                         </el-scrollbar>
                     </el-col>
                 </el-row>
+
+                <!--购物车-->
+                <el-card>
+                    <div>
+                        总金额：<span v-text="data.totalAmount"></span>
+                        <el-button @click="submitOrder()"
+                                   style="background: gold">
+                            提交订单
+                        </el-button>
+                    </div>
+                </el-card>
             </el-tab-pane>
             <el-tab-pane label="Config" name="second">Config</el-tab-pane>
             <el-tab-pane label="评价" name="shopComment">Role</el-tab-pane>
@@ -90,34 +103,28 @@
                 </div>
             </el-tab-pane>
         </el-tabs>
-        <!--购物车-->
-        <el-card>
-            <div>
-                总金额：<span v-text="data.totalAmount"></span>
-                <div @click="submitOrder">
-                    提交订单
-                </div>
-            </div>
-        </el-card>
 
         <!--菜品详情组件-->
-<!--        <ShopItemDetail></ShopItemDetail>-->
+        <ShopItemDetail @set-order-info="setOrderInfo"
+                        :order="data.order"
+                        :total-amount="data.totalAmount"
+                        ref="shopItemDetailRef">
+        </ShopItemDetail>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted, toRefs } from 'vue'
+import { reactive, watch, onMounted, ref } from 'vue'
 import { useStore } from "vuex";
 import { useRouter, useRoute } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
-import ApiCategory from '../../../api/api_category.js'
-import ApiShop from '../../../api/api_shop.js'
-import ApiShopItem from '../../../api/api_shop_item.js'
-import ApiShopItemCategory from '../../../api/api_shopItemCategory.js'
-import ApiOrder from '../../../api/api_order.js'
-import ShopItemDetail from "./shopItemDetail.vue";
+import ApiShop from '@/api/Shop/api_shop.js'
+import ApiShopItem from '@/api/Shop/api_shop_item.js'
+import ApiShopItemCategory from '@/api/Shop/api_shopItemCategory.js'
+import ApiOrder from '@/api/Order/api_orderinfo.js'
 import { Search, CirclePlus, Remove } from '@element-plus/icons-vue'
-import ShopCardList from "./components/shopCardList.vue";
+import ShopItemDetail from "./shopItemDetail.vue";
+
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
@@ -179,8 +186,6 @@ const data = reactive({
         pageSize: 10
     },
 })
-// 解构抛出 直接使用
-// const { type} = toRefs(data)
 
 // Mounted
 onMounted(() => {
@@ -192,7 +197,6 @@ onMounted(() => {
 })
 
 // Methods
-
 const getShop = () => {
     ApiShop.sel4shop(data.shop.id).then(res => {
         if (res.code === 200){
@@ -217,6 +221,7 @@ const getShopItemCategoryList  = () => {
         }
     })
 }
+
 // 添加物品到购物车
 const addCart = (key) => {
     // 物品ID
@@ -230,22 +235,21 @@ const addCart = (key) => {
     //总价
     data.totalAmount += data.shopItemList[key].price
 }
+
 // 减少物品到购物车
 const subCart = (key) => {
     // 物品ID
     const id = data.shopItemList[key].id
     // 维护order值
-    if (data.order.has(id)){
-        if (data.order.get(id) === 0){
+    if (data.order.has(id)) {
+        if ((data.order.get(id) - 1) === 0){
             data.order.delete(id)
         } else {
             data.order.set(id, data.order.get(id) - 1)
         }
-    } else {
-        data.order.set(id, 0)
+        //总价
+        data.totalAmount -= data.shopItemList[key].price
     }
-    //总价
-    data.totalAmount -= data.shopItemList[key].price
 }
 
 // 提交订单
@@ -265,7 +269,7 @@ const submitOrder = () => {
         })
     })
     console.log(data.orderInfo)
-    ApiOrder.add4order(data.orderInfo).then(res => {
+    ApiOrder.add4orderinfo(data.orderInfo).then(res => {
         if (res.code === 200){
             console.log(res.data)
             ElMessageBox.alert('创建订单成功', '提示', {
@@ -284,27 +288,50 @@ const submitOrder = () => {
         }
     })
 }
-// 跳转到菜品详情
+
+// 打开菜品详情Dialog
+const shopItemDetailRef = ref();
 const toShopItemDetail = (key) => {
-    // map -> json 需要先转object
-    let mapObj = Object.create(null);
-    for (let[k,v] of data.order) {
-        mapObj[k] = v;
-    }
-    const mapJson = JSON.stringify(mapObj)
-    // 路由跳转
-    router.push({
-        path: '/Consumer/shopItemDetail',
-        query: {
-            shopItemInfo: JSON.stringify(data.shopItemList[key]),
-            order: mapJson,
-            totalAmount: data.totalAmount
-        }
-    })
+    // 物品ID
+    const id = data.shopItemList[key].id
+    console.log(key)
+    shopItemDetailRef.value.init(id);
+
+    // // map -> json 需要先转object
+    // let mapObj = Object.create(null);
+    // for (let[k,v] of data.order) {
+    //     mapObj[k] = v;
+    // }
+    // const mapJson = JSON.stringify(mapObj)
+    // // 路由跳转
+    // router.push({
+    //     path: '/Consumer/shopItemDetail',
+    //     query: {
+    //         shopItemInfo: JSON.stringify(data.shopItemList[key]),
+    //         order: mapJson,
+    //         totalAmount: data.totalAmount
+    //     }
+    // })
+}
+
+/**
+ * 回调函数
+ * @param order
+ * @param totalAmount
+ */
+const setOrderInfo = (order,totalAmount) => {
+    data.order = order;
+    data.totalAmount = totalAmount;
 }
 const handleClick = (tab: TabsPaneContext, event: Event) => {
     // console.log(tab, event)
 }
+
+// Watch
+// 解决路由参数变化时，页面不刷新的问题
+watch(route, (to, from) => {
+    router.go(0)
+})
 </script>
 
 <style scoped>

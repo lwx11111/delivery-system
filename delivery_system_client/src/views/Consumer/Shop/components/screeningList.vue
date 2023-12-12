@@ -1,10 +1,11 @@
 <template>
-    <!-- 筛选 todo 背景变色-->
     <div>
         <el-row>
             <el-scrollbar>
                 <div class="scrollbar-flex-content">
-                    <p v-for="(item, index) in data.screeningList" class="scrollbar-demo-item"
+                    <p v-for="(item, index) in data.screeningList"
+                       ref="myElement"
+                       class="scrollbar-demo-item"
                        @click="getShopListByScreening(index)">
                         {{ item }}
                     </p>
@@ -15,7 +16,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted, toRefs } from 'vue'
+import { reactive, onMounted, ref } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 
@@ -38,8 +39,20 @@ onMounted(() => {
  * todo 根据筛选条件查询店铺
  * @param index
  */
+const emit = defineEmits(['getScreeningIndex'])
+const myElement = ref()
 const getShopListByScreening = (index) => {
-    data.params.screeningType = index;
+    emit('getScreeningIndex',index)
+    console.log(myElement)
+    // 改变背景颜色
+    for (let i = 0; i < myElement.value.length; i++) {
+        if (i !== index){
+            myElement.value[i].style.backgroundColor = 'white'
+        } else {
+            myElement.value[index].style.backgroundColor = 'grey'
+        }
+    }
+
 }
 
 

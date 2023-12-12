@@ -26,6 +26,7 @@ public interface IShopService extends IService<Shop> {
     List<ShopWithItemVO> listShopWithShopItemByUserId(Map<String,String> params) throws Exception;
 
     List<ShopItemVO> listShopItemsByShopId(String id) throws Exception;
+
     void saveShopItems(List<ShopItemVO> shopItemVOList) throws Exception;
     /**
      * 根据参数保存

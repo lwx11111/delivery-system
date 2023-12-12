@@ -21,6 +21,22 @@ export default {
     })
   },
 
+  orderDeliver(data) {
+    return request({
+        url: serverName + '/order/orderDeliver',
+        method: 'post',
+        data: data
+    })
+  },
+
+  orderReceive(data) {
+    return request({
+      url: serverName + '/order/orderReceive',
+      method: 'post',
+      data: data
+    })
+  },
+
   orderUntaking(data) {
     return request({
       url: serverName + '/order/orderUntaking',
@@ -48,6 +64,14 @@ export default {
   listOrderItemById(data) {
     return request({
       url: serverName + '/order/listOrderItemById',
+      method: 'post',
+      data: data
+    })
+  },
+
+  listOrderByRiderId(data) {
+    return request({
+      url: serverName + '/order/listOrderByRiderId',
       method: 'post',
       data: data
     })
@@ -133,6 +157,23 @@ export default {
       data: params,
       responseType: 'arraybuffer'
     })
-  }
+  },
+
+  submitOrder(params) {
+    return request({
+      url: serverName + '/order/submitOrder',
+      method: 'post',
+      data: params
+    })
+  },
+
+  // 申请售后
+  afterSale(params) {
+    return request({
+      url: serverName + '/order/afterSale',
+      method: 'post',
+      data: params
+    })
+  },
 
 }

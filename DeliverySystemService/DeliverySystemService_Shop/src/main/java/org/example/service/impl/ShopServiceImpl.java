@@ -265,6 +265,26 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
             if("itemCategory".equals(entry.getKey())){
                 query.eq("item_category",entry.getValue());
             }
+            // 特殊筛选
+            if("screening".equals(entry.getKey())){
+                switch (entry.getValue()) {
+                    // 高分优先
+                    case "0" -> query.orderByDesc("score");
+
+                    // 销量优先
+                    case "1" -> query.orderByDesc("sales_volume");
+
+                    // 起送价最低
+                    case "2" -> query.orderByAsc("min_price");
+
+                    // 配送费最低
+                    case "3" -> query.orderByAsc("delivery_charge");
+                    default -> {
+                        break;
+                    }
+                }
+
+            }
         }
         return  query;
     }
@@ -280,8 +300,12 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         Integer pageNum = Integer.parseInt(params.get("pageNum"));
         Boolean isParentId = Boolean.parseBoolean(params.get("isParentId"));
         String categoryId = params.get("categoryId");
+        String name = params.get("name");
+        String screening = params.get("screening");
+
         PageHelper.startPage(pageNum, pageSize);
-        List<Shop> list = shopMapper.listShopsByCategoryId(categoryId, isParentId);
+        // todo 如何优化
+        List<Shop> list = shopMapper.listShopsByCategoryId(categoryId, isParentId,name,screening);
         PageInfo<Shop> pageInfo = new PageInfo<>(list);
 
         Page<Shop> page = new Page<>();

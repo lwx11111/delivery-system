@@ -15,16 +15,36 @@
     <select id="listShopsByCategoryId" resultType="org.example.domain.shop.Shop">
         select *
         from shop join shop_category on shop.id = shop_category.shop_id
-        <if test="isParentId">
-            where shop_category.category_id in (
-            SELECT id
-            from category
-            where parent_id = #{categoryId}
-            )
-        </if>
-        <if test="!isParentId">
-            where shop_category.category_id = #{categoryId}
-        </if>
+        <where>
+            <if test="isParentId">
+                shop_category.category_id in (
+                SELECT id
+                from category
+                where parent_id = #{categoryId}
+                )
+            </if>
+            <if test="!isParentId">
+                shop_category.category_id = #{categoryId}
+            </if>
+            <if test="name != null and name != '' ">
+                and shop.name like concat('%',#{name},'%')
+            </if>
+            <if test="screening != null and screening != '' ">
+                <!-- == '' 不行， ‘ == “” ’可以 -->
+                <if test='screening == "0" '>
+                    order by shop.score desc
+                </if>
+                <if test='screening == "1" '>
+                    order by shop.sales_volume desc
+                </if>
+                <if test='screening == "2" '>
+                    order by shop.min_price asc
+                </if>
+                <if test='screening == "3" '>
+                    order by shop.delivery_charge asc
+                </if>
+            </if>
+        </where>
     </select>
 
     <resultMap id="ShopWithShopItemMap" type="org.example.domain.shop.vo.ShopWithItemVO">

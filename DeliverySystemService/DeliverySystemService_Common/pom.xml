@@ -11,6 +11,11 @@
     <artifactId>DeliverySystemService_Common</artifactId>
 
     <dependencies>
+        <!--引入spring-boot-starter-web,支持web开发-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
         <!--hutool-->
         <dependency>
             <groupId>cn.hutool</groupId>

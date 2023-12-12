@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.domain.order.OrderItem;
+import org.example.domain.order.vo.OrderRiderVO;
 import org.example.domain.shop.ShopItem;
 import org.example.domain.shop.ShopItemVO;
 import org.springframework.web.multipart.MultipartFile;
@@ -32,6 +33,7 @@ public interface IOrderInfoService extends IService<OrderInfo> {
     Boolean orderCancel(Map<String,String> params) throws Exception;
     Boolean orderRefund(Map<String,String> params) throws Exception;
 
+    List<OrderRiderVO> listOrderByRiderId(Map<String,String> params) throws Exception;
     /**
      * 根据参数保存
      * @param obj

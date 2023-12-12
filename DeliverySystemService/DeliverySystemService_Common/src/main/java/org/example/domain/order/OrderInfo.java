@@ -52,8 +52,8 @@ public class OrderInfo extends Model<OrderInfo> {
      */
     @Schema(description = "配送骑手")
     @Excel(name = "配送骑手")
-    @TableField("delivery_rider_id")
-    private String deliveryRiderId;
+    @TableField("rider_id")
+    private String riderId;
 
     /**
     * 打包费

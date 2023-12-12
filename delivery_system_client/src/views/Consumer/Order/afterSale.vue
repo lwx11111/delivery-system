@@ -1,60 +1,46 @@
 <template>
-    <div class="common-layout">
-        <el-container>
-            <el-header style="border: 1px solid red">Header</el-header>
-            <el-container>
-                <el-aside width="200px"></el-aside>
-                <el-container>
-                    <el-main class="main" style="background: #FFFAFA">
-                        <!--商铺和菜品信息-->
-                        <el-card>
-                            <el-row>
-                                <el-col :span="16">
-                                    {{data.shop.name}}
-                                </el-col>
-                                <el-col :span="16">
-                                    <el-icon><ArrowRight></ArrowRight></el-icon>
-                                </el-col>
-                                <el-col :span="16">
-                                    <el-icon><ArrowRight></ArrowRight></el-icon>
-                                </el-col>
-                            </el-row>
-                            <el-row v-for="item in data.orderItemList">
-                                <el-col :span="4">
-                                    <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
-                                </el-col>
-                                <el-col :span="20">
-                                    {{item.name}}
-                                </el-col>
-                            </el-row>
-                        </el-card>
-                        <!--原因选择-->
-                        <el-card>
-                            <el-row>
-                                请选择原因
-                            </el-row>
-                            <el-row>
-                                <el-radio-group v-model="data.reason">
-                                    <el-row> <el-radio label="1" size="large">商家缺货</el-radio></el-row>
-                                    <el-row> <el-radio label="2" size="large">商家少送物品</el-radio></el-row>
-                                    <el-row> <el-radio label="3" size="large">商家送错物品</el-radio></el-row>
-                                    <el-row> <el-radio label="4" size="large">口味不佳</el-radio></el-row>
-                                    <el-row> <el-radio label="5" size="large">餐品与描述不符</el-radio></el-row>
-                                    <el-row> <el-radio label="6" size="large">送太慢了</el-radio></el-row>
-                                    <el-row> <el-radio label="7" size="large">餐品洒漏</el-radio></el-row>
-                                    <el-row> <el-radio label="8" size="large">餐品有异物</el-radio></el-row>
-                                    <el-row> <el-radio label="9" size="large">变质</el-radio></el-row>
-                                </el-radio-group>
-                            </el-row>
-                        </el-card>
-                        <el-button @click="submit">申请售后</el-button>
-                    </el-main>
-                </el-container>
-                <el-aside width="200px"></el-aside>
-            </el-container>
-        </el-container>
-        <el-footer style="border: 1px solid red">Footer</el-footer>
-    </div>
+    <!--商铺和菜品信息-->
+    <el-card>
+        <el-row>
+            <el-col :span="16">
+                {{data.shop.name}}
+            </el-col>
+            <el-col :span="16">
+                <el-icon><ArrowRight></ArrowRight></el-icon>
+            </el-col>
+            <el-col :span="16">
+                <el-icon><ArrowRight></ArrowRight></el-icon>
+            </el-col>
+        </el-row>
+        <el-row v-for="item in data.orderItemList">
+            <el-col :span="4">
+                <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+            </el-col>
+            <el-col :span="20">
+                {{item.name}}
+            </el-col>
+        </el-row>
+    </el-card>
+    <!--原因选择-->
+    <el-card>
+        <el-row>
+            请选择原因
+        </el-row>
+        <el-row>
+            <el-radio-group v-model="data.reason">
+                <el-row> <el-radio label="1" size="large">商家缺货</el-radio></el-row>
+                <el-row> <el-radio label="2" size="large">商家少送物品</el-radio></el-row>
+                <el-row> <el-radio label="3" size="large">商家送错物品</el-radio></el-row>
+                <el-row> <el-radio label="4" size="large">口味不佳</el-radio></el-row>
+                <el-row> <el-radio label="5" size="large">餐品与描述不符</el-radio></el-row>
+                <el-row> <el-radio label="6" size="large">送太慢了</el-radio></el-row>
+                <el-row> <el-radio label="7" size="large">餐品洒漏</el-radio></el-row>
+                <el-row> <el-radio label="8" size="large">餐品有异物</el-radio></el-row>
+                <el-row> <el-radio label="9" size="large">变质</el-radio></el-row>
+            </el-radio-group>
+        </el-row>
+    </el-card>
+    <el-button @click="submit">申请售后</el-button>
 </template>
 
 <script lang="ts" setup>
@@ -63,9 +49,8 @@ import { useStore } from "vuex";
 import { useRouter, useRoute } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
 
-import ApiOrder from '../../../api/api_order.js'
-import ApiShop from '../../../api/api_shop.js'
-import ApiShopItem from '../../../api/api_shop_item.js'
+import ApiOrder from '@/api/Order/api_orderinfo.js'
+import ApiShop from '@/api/Shop/api_shop.js'
 
 import { ArrowRight, ChatDotRound } from '@element-plus/icons-vue'
 const store = useStore();
@@ -117,8 +102,6 @@ const data = reactive({
     // 售后原因
     reason: '',
 })
-// 解构抛出 直接使用
-// const { type} = toRefs(data)
 
 // Mounted
 onMounted(() => {

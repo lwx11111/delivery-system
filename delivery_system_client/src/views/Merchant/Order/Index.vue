@@ -285,6 +285,7 @@
         const param = {
             orderId: scope.row.id
         }
+        console.log(param)
         Api.orderTaking(param).then(res => {
             if (res.code === 200 && res.data === true){
                 ElMessage({

@@ -65,47 +65,53 @@
                         'url': '/homePage',
                         // 'icon': '&#xe720;'
                     },
-                    {
-                        'funId': '1',
-                        'funName': '商铺管理',
-                        'url': '/Management/shopinfo/index',
-                        // 'icon': '&#xe720;'
-                    },
-                    {
-                        'funId': '1',
-                        'funName': '商铺分类管理',
-                        'url': '/Management/category/index',
-                    },
-                    {
-                        'funId': '1',
-                        'funName': '收藏管理',
-                        'url': '/Management/collection/index',
-                        // 'icon': '&#xe720;'
-                    },
-                    {
-                        'funId': '1',
-                        'funName': '订单管理',
-                        'url': '/Management/orderinfo/index',
-                        // 'icon': '&#xe720;'
-                    },
-                    {
-                        'funId': '1',
-                        'funName': '消费端',
-                        'url': '/Consumer/index',
-                        // 'icon': '&#xe720;'
-                    },
-                    {
-                        'funId': '1',
-                        'funName': '商家端-商铺',
-                        'url': '/Merchant/Shop/index',
-                        // 'icon': '&#xe720;'
-                    },
-                    {
-                        'funId': '1',
-                        'funName': '商家端-订单',
-                        'url': '/Merchant/Order/index',
-                        // 'icon': '&#xe720;'
-                    },
+                    // {
+                    //     'funId': '1',
+                    //     'funName': '商铺管理',
+                    //     'url': '/Management/shopinfo/index',
+                    //     // 'icon': '&#xe720;'
+                    // },
+                    // {
+                    //     'funId': '1',
+                    //     'funName': '商铺分类管理',
+                    //     'url': '/Management/category/index',
+                    // },
+                    // {
+                    //     'funId': '1',
+                    //     'funName': '收藏管理',
+                    //     'url': '/Management/collection/index',
+                    //     // 'icon': '&#xe720;'
+                    // },
+                    // {
+                    //     'funId': '1',
+                    //     'funName': '订单管理',
+                    //     'url': '/Management/orderinfo/index',
+                    //     // 'icon': '&#xe720;'
+                    // },
+                    // {
+                    //     'funId': '1',
+                    //     'funName': '消费端',
+                    //     'url': '/Consumer/index',
+                    //     // 'icon': '&#xe720;'
+                    // },
+                    // {
+                    //     'funId': '1',
+                    //     'funName': '商家端-商铺',
+                    //     'url': '/Merchant/Shop/index',
+                    //     // 'icon': '&#xe720;'
+                    // },
+                    // {
+                    //     'funId': '1',
+                    //     'funName': '商家端-订单',
+                    //     'url': '/Merchant/Order/index',
+                    //     // 'icon': '&#xe720;'
+                    // },
+                    // {
+                    //     'funId': '1',
+                    //     'funName': '骑手端',
+                    //     'url': '/Rider/Order/index',
+                    //     // 'icon': '&#xe720;'
+                    // },
 
 
                 ]
@@ -140,6 +146,7 @@
         mounted() {
             leftMenuApi().then(response => {
                 this.menuData = response.data;
+                console.log(response)
                 const findFun = this.menuData.find(fun => fun.funName === '系统管理');
                 if (findFun !== undefined) {
                   this.openeds.push(findFun.funId);

@@ -12,14 +12,28 @@
                         </span>
                     </el-row>
                     <el-row>
-                        <span style="font-size: 15px;">{{item.score}}分</span>
-                        <span style="font-size: 15px;">月售{{item.salesVolume}}</span>
+                        <el-col :span="10">
+                            <span style="font-size: 15px;">{{item.score}}分</span>
+                        </el-col>
+                        <el-col :span="10">
+                            <span style="font-size: 15px;">月售{{item.salesVolume}}</span>
+                        </el-col>
                     </el-row>
                     <el-row>
-                        <span>起送 ￥{{item.minPrice}}</span>
-                        <span>配送 ￥{{item.deliveryCharge}}</span>
-                        <span>40分钟</span>
-                        <span>2.2km</span>
+                        <el-col :span="10">
+                            <span>起送 ￥{{item.minPrice}}</span>
+                        </el-col>
+                        <el-col :span="10">
+                            <span>配送 ￥{{item.deliveryCharge}}</span>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="10">
+                            <span>40分钟</span>
+                        </el-col>
+                        <el-col :span="10">
+                            <span>2.2km</span>
+                        </el-col>
                     </el-row>
                 </el-col>
             </el-row>
@@ -28,12 +42,12 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted, toRefs } from 'vue'
+import { reactive, onMounted,defineProps } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
+
 const store = useStore();
 const router = useRouter()
-import { defineProps } from 'vue'
 
 // Props
 const props = defineProps({

@@ -48,7 +48,10 @@ public interface ShopMapper extends BaseMapper<Shop> {
      * @param categoryId
      * @return
      */
-    List<Shop> listShopsByCategoryId(@Param("categoryId") String categoryId, @Param("isParentId") Boolean isParentId) throws Exception;
+    List<Shop> listShopsByCategoryId(@Param("categoryId") String categoryId,
+                                     @Param("isParentId") Boolean isParentId,
+                                     @Param("name") String name,
+                                     @Param("screening") String screening) throws Exception;
 
     List<ShopWithItemVO> listShopWithShopItemByUserId(@Param("userId") String userId, @Param("type") Integer type) throws Exception;
 }
