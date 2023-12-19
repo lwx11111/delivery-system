@@ -10,10 +10,10 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @EnableDiscoveryClient
 @EnableFeignClients
 @MapperScan(basePackages = "org.example.dao")
-public class Shop
+public class ShopApp
 {
     public static void main( String[] args )
     {
-        SpringApplication.run(Shop.class);
+        SpringApplication.run(ShopApp.class);
     }
 }

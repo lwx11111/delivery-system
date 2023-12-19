@@ -14,7 +14,8 @@
       <module>DeliverySystemService_UAA</module>
       <module>DeliverySystemService_Gateway</module>
       <module>DeliverySystemService_Common</module>
-      <module>DeliverySystemService_File</module>
+      <module>DeliverySystemService_Basic</module>
+    <module>DeliverySystemService_Comment</module>
   </modules>
 
   <parent>

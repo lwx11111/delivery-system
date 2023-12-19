@@ -4,23 +4,18 @@
         <h2>我的收藏</h2>
     </el-row>
   <!--商铺信息-->
-    <ShopItemList :shops="data.shops"></ShopItemList>
-  <!--操作-->
-    <el-row>
-        <el-button>再来一单</el-button>
-        <el-button>评价</el-button>
-    </el-row>
+    <ShopCardList :shop-list="data.shops"></ShopCardList>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted, toRefs } from 'vue'
+import { reactive, onMounted } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
-import ApiShop from '@/api/Shop/api_shop.js'
+import ApiCollection from "@/api/Shop/api_collection";
 const store = useStore();
 const router = useRouter()
 
-import ShopItemList from "../Shop/components/shopItemList.vue";
+import ShopCardList from "../Shop/components/shopCardList.vue";
 import {ElMessage} from "element-plus";
 // Data
 const data = reactive({
@@ -30,25 +25,7 @@ const data = reactive({
         name: 'lwx'
     },
     // 店铺信息
-    shops: [
-        {
-            shop:{
-                id: '',
-                name : '',
-                picture : '',
-            },
-            shopItems: [
-                {
-                    description: "1",
-                    name: "物品1",
-                    picture: "1",
-                    price: 1,
-                    amount: 1,
-
-                },
-            ]
-        },
-    ]
+    shops: []
 })
 
 // Mounted
@@ -64,12 +41,11 @@ const getCollections = () => {
     }
     const params = {
         userId: data.user.id,
-        type : 1
     }
-    ApiShop.listShopWithShopItemByUserId(params).then((res) => {
+    ApiCollection.listShopByCollection(params).then((res) => {
+        console.log(res)
         if (res.code === 200) {
             data.shops = res.data
-            console.log(data.shops)
         } else {
             ElMessage.error(res.message)
         }

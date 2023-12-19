@@ -5,6 +5,7 @@ import qs from 'qs';
 export function leftMenuApi(data) {
   return request({
     url: '/auth-manager-microservice-lwx/' + 'v1/function/left-menu',
+    // url: '/manager/' + 'v1/function/left-menu',
     method: 'post',
     data: data
   })
@@ -95,6 +96,7 @@ export function listFunResTypesApi(funId) {
 export function pagePermApi(url) {
   return request({
     url: '/auth-manager-microservice-lwx/' + 'v1/function/page-perm',
+    // url: '/manager/' + 'v1/function/page-perm',
     method: 'post',
     data: qs.stringify({url})
   })

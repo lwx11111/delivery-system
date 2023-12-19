@@ -73,22 +73,25 @@
                            @click="orderCancel(key)">取消订单</el-button>
                 <el-button v-if="item.status === 5"
                            @click="orderRefund(key)">退款</el-button>
-                <el-button>再来一单</el-button>
-                <el-button>评价</el-button>
+                <el-button v-if="item.status === 5">再来一单</el-button>
+                <el-button v-if="item.status === 5 && item.status !== 51"
+                           @click="toComment(key)">评价</el-button>
             </el-row>
         </el-card>
     </div>
+    <PublishComment ref="commentDialog"></PublishComment>
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, } from 'vue'
+import {reactive, onMounted, ref,} from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import {ElMessage, ElMessageBox, TabsPaneContext} from "element-plus";
-import { Search } from '@element-plus/icons-vue'
+import {Comment, Search} from '@element-plus/icons-vue'
 import Api from '@/api/Order/api_orderinfo.js'
 import ApiDict from '@/api/Common/api_sysdict.js'
 import OrderCardList from "./components/orderCardList.vue";
+import PublishComment from "../Comment/publishComment.vue";
 
 const store = useStore();
 const router = useRouter()
@@ -183,6 +186,11 @@ onMounted(() => {
 })
 
 // Methods
+
+const commentDialog = ref();
+const toComment = (key) => {
+    commentDialog.value.init(data.orderList[key].id);
+}
 
 /**
  * 获取订单状态字典

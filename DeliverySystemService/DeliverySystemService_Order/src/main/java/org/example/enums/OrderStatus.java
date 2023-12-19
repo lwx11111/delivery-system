@@ -13,6 +13,7 @@ public enum OrderStatus {
     WAIT_DELIVER(3,"待发货"),
     WAIT_RECEIVE(4,"待收货"),
     FINISH(5,"订单结束"),
+    COMMENT(51,"订单评论"),
     CONSUMER_CANCEL(6,"消费者取消"),
     SHOP_CANCEL(7,"商家取消"),
     REFUND(8,"退款");

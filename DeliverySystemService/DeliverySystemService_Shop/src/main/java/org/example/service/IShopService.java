@@ -23,6 +23,8 @@ import java.util.Map;
  * @since 2023-10-04
  */
 public interface IShopService extends IService<Shop> {
+    Shop getShopByOrderId(String orderId) throws Exception;
+
     List<ShopWithItemVO> listShopWithShopItemByUserId(Map<String,String> params) throws Exception;
 
     List<ShopItemVO> listShopItemsByShopId(String id) throws Exception;

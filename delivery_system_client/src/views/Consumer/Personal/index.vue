@@ -37,8 +37,12 @@
     <!--订单操作-->
     <el-card>
         <el-row>
-            <h1>订单</h1>
-            查看全部
+            <el-col :span="20">
+                <h1>订单</h1>
+            </el-col>
+            <el-col :span="4">
+                <h1 @click="toOrderIndex()">查看全部</h1>
+            </el-col>
         </el-row>
         <el-row>
             <el-col :span="4"

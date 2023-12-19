@@ -10,6 +10,8 @@ const OrderInfoIndex = () => import('@/views/Management/Order/orderinfo/Index.vu
 const ShopInfoIndex = () => import('@/views/Management/Shop/shopinfo/Index.vue')
 const ShopInfoItem = () => import('@/views/Management/Shop/shopinfo/Item.vue')
 const ShopItem = () => import('@/views/Management/Shop/shopitem.vue')
+const CommentIndex = () => import('@/views/Management/Comment/comment/Index.vue')
+
 const managementRouter =
 {
     path: '/',
@@ -79,6 +81,12 @@ const managementRouter =
             component: ShopItem,
             name: 'ShopItem',
         },
+        {
+            path: '/Management/Comment/comment/index',
+            component: CommentIndex,
+            name: 'CommentIndex',
+        },
+
 
     ]
 }

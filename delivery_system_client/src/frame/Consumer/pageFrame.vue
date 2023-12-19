@@ -39,7 +39,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted, toRefs } from 'vue'
+import {reactive, ref, onMounted, toRefs, computed} from 'vue'
 import { useStore } from "vuex";
 import { useRouter, useRoute } from 'vue-router'
 
@@ -71,6 +71,10 @@ const close = (key:string, keyPath: string[]) => {
 const handleSelect = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
 }
+
+const key = computed(() => {
+    return router
+})
 
 </script>
 

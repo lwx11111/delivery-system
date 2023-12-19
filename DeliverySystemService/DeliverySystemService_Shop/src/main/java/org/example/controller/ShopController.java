@@ -32,6 +32,20 @@ public class ShopController {
     @Autowired
     private IShopService service;
 
+    @GetMapping("/getShopByOrderId/{orderId}")
+    @ResponseBody
+    public SimpleResponse getShopByOrderId(@PathVariable(name = "orderId") String orderId){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.getShopByOrderId(orderId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
     @GetMapping("/listShopItemsByShopId/{id}")
     @ResponseBody
     @Operation(description = "根据商铺号查商铺物品")

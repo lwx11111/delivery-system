@@ -109,7 +109,12 @@ public class OrderStateMachineConfig extends StateMachineConfigurerAdapter<Order
                 .and().withExternal()
                 .source(OrderStatus.FINISH)
                 .target(OrderStatus.REFUND)
-                .event(OrderStatusChangeEvent.REFUND);
+                .event(OrderStatusChangeEvent.REFUND)
+                // 评论
+                .and().withExternal()
+                .source(OrderStatus.FINISH)
+                .target(OrderStatus.COMMENT)
+                .event(OrderStatusChangeEvent.COMMENT);
     }
 
     /**

@@ -1,116 +1,126 @@
 <template>
-    <div class="common-layout">
-        <!--店铺信息和图片-->
-        <el-card style="margin-bottom: 10px">
+    <!--店铺信息和图片-->
+    <el-card style="margin-bottom: 10px">
+        <el-row>
+            <el-col :span="20">
+                <h1>{{data.shop.name}}</h1>
+            </el-col>
+            <el-col :span="4">
+                <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+            </el-col>
+        </el-row>
+        <el-row>
+            <el-button v-if="!data.isCollected"
+                       @click="addCollection()">加入收藏</el-button>
+            <el-button v-else
+                       @click="cancelCollection()">取消收藏</el-button>
+        </el-row>
+    </el-card>
+
+    <!--店铺描述-->
+    <el-card style="margin-bottom: 10px">
+        <el-row>
+            <el-col>
+                <div>{{data.shop.description}}</div>
+            </el-col>
+        </el-row>
+    </el-card>
+
+    <!--店铺内容-->
+    <el-tabs v-model="data.tabName" @tab-click="handleClick">
+        <!--选择物品界面-->
+        <el-tab-pane label="点菜" name="order">
             <el-row>
+                <!-- 分类列表-->
+                <el-col :span="4"
+                        style="border-right: 1px solid red; " >
+                    <el-scrollbar height="400px" style="padding: 10px">
+                        <el-space direction="vertical">
+                            <el-card style="width: 90%; border: 1px solid red"
+                                     v-for="item in data.shopItemCategoryList">
+                                {{item.name}}
+                            </el-card>
+                        </el-space>
+                    </el-scrollbar>
+                </el-col>
+
+                <!--菜品列表-->
                 <el-col :span="20">
-                    <h1>{{data.shop.name}}</h1>
-                </el-col>
-                <el-col :span="4">
-                    <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
-                </el-col>
-            </el-row>
-        </el-card>
-
-        <!--店铺描述-->
-        <el-card style="margin-bottom: 10px">
-            <el-row>
-                <el-col>
-                    <div>{{data.shop.description}}</div>
-                </el-col>
-            </el-row>
-        </el-card>
-
-        <!--店铺内容-->
-        <el-tabs v-model="data.tabName" @tab-click="handleClick">
-            <!--选择物品界面-->
-            <el-tab-pane label="点菜" name="order">
-                <el-row>
-                    <!-- 分类列表-->
-                    <el-col :span="4"
-                            style="border-right: 1px solid red; " >
-                        <el-scrollbar height="400px" style="padding: 10px">
-                            <el-space direction="vertical">
-                                <el-card style="width: 90%; border: 1px solid red"
-                                         v-for="item in data.shopItemCategoryList">
-                                    {{item.name}}
-                                </el-card>
-                            </el-space>
-                        </el-scrollbar>
-                    </el-col>
-
-                    <!--菜品列表-->
-                    <el-col :span="20">
-                        <!--todo 高度-->
-                        <el-scrollbar height="500px" style="padding: 10px">
-                            <el-space direction="vertical">
-                                <el-card v-for="(item, key) in data.shopItemList">
-                                    <el-row>
-                                        <el-col :span="11"
-                                                @click="toShopItemDetail(key)"
-                                                style="margin-right: 5px">
-                                            <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
-                                        </el-col>
-                                        <el-col :span="12">
-                                            <el-row @click="toShopItemDetail(key)">
+                    <!--todo 高度-->
+                    <el-scrollbar height="500px" style="padding: 10px">
+                        <el-space direction="vertical">
+                            <el-card v-for="(item, key) in data.shopItemList">
+                                <el-row>
+                                    <el-col :span="11"
+                                            @click="toShopItemDetail(key)"
+                                            style="margin-right: 5px">
+                                        <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                                    </el-col>
+                                    <el-col :span="12">
+                                        <el-row @click="toShopItemDetail(key)">
                                                 <span style="font-size: 20px;font-weight: bold;">
                                                     {{item.name}}
                                                 </span>
-                                            </el-row>
-                                            <el-row>{{item.price}}￥</el-row>
-                                            <!--减少添加按钮-->
-                                            <el-row>
-                                                <el-icon size="20px"
-                                                         v-if="data.order.has(item.id)"
-                                                         @click="subCart(key)">
-                                                    <Remove />
-                                                </el-icon>
-                                                {{data.order.get(item.id)}}
-                                                <el-icon size="20px"
-                                                         @click="addCart(key)">
-                                                    <CirclePlus />
-                                                </el-icon>
-                                            </el-row>
-                                        </el-col>
-                                    </el-row>
-                                </el-card>
-                            </el-space>
-                        </el-scrollbar>
-                    </el-col>
-                </el-row>
+                                        </el-row>
+                                        <el-row>{{item.price}}￥</el-row>
+                                        <!--减少添加按钮-->
+                                        <el-row>
+                                            <el-icon size="20px"
+                                                     v-if="data.order.has(item.id)"
+                                                     @click="subCart(key)">
+                                                <Remove />
+                                            </el-icon>
+                                            {{data.order.get(item.id)}}
+                                            <el-icon size="20px"
+                                                     @click="addCart(key)">
+                                                <CirclePlus />
+                                            </el-icon>
+                                        </el-row>
+                                    </el-col>
+                                </el-row>
+                            </el-card>
+                        </el-space>
+                    </el-scrollbar>
+                </el-col>
+            </el-row>
 
-                <!--购物车-->
-                <el-card>
-                    <div>
-                        总金额：<span v-text="data.totalAmount"></span>
-                        <el-button @click="submitOrder()"
-                                   style="background: gold">
-                            提交订单
-                        </el-button>
-                    </div>
-                </el-card>
-            </el-tab-pane>
-            <el-tab-pane label="Config" name="second">Config</el-tab-pane>
-            <el-tab-pane label="评价" name="shopComment">Role</el-tab-pane>
-            <el-tab-pane label="店铺" name="shopInfo">
+            <!--购物车-->
+            <el-card>
                 <div>
-                    <el-row>
-                        {{data.shop.name}}
-                    </el-row>
-                    <el-row>
-                        {{data.shop.name}}
-                    </el-row>
+                    总金额：<span v-text="data.totalAmount"></span>
+                    <el-button @click="saveCart()"
+                               style="background: gold">
+                        加入购物车
+                    </el-button>
+                    <el-button @click="submitOrder()"
+                               style="background: gold">
+                        提交订单
+                    </el-button>
                 </div>
-            </el-tab-pane>
-        </el-tabs>
+            </el-card>
+        </el-tab-pane>
+        <el-tab-pane label="Config" name="second">Config</el-tab-pane>
+        <el-tab-pane label="评价" name="shopComment">
+            <CommentList :shop-id="data.shop.id"></CommentList>
+        </el-tab-pane>
+        <el-tab-pane label="店铺" name="shopInfo">
+            <div>
+                <el-row>
+                    {{data.shop.name}}
+                </el-row>
+                <el-row>
+                    {{data.shop.name}}
+                </el-row>
+            </div>
+        </el-tab-pane>
+    </el-tabs>
 
-        <!--菜品详情组件-->
-        <ShopItemDetail @set-order-info="setOrderInfo"
-                        :order="data.order"
-                        :total-amount="data.totalAmount"
-                        ref="shopItemDetailRef">
-        </ShopItemDetail>
-    </div>
+    <!--菜品详情组件-->
+    <ShopItemDetail @set-order-info="setOrderInfo"
+                    :order="data.order"
+                    :total-amount="data.totalAmount"
+                    ref="shopItemDetailRef">
+    </ShopItemDetail>
 </template>
 
 <script lang="ts" setup>
@@ -122,15 +132,19 @@ import ApiShop from '@/api/Shop/api_shop.js'
 import ApiShopItem from '@/api/Shop/api_shop_item.js'
 import ApiShopItemCategory from '@/api/Shop/api_shopItemCategory.js'
 import ApiOrder from '@/api/Order/api_orderinfo.js'
+import ApiCollection from '@/api/Shop/api_collection.js'
+import ApiCart from '@/api/Shop/api_cart.js'
 import { Search, CirclePlus, Remove } from '@element-plus/icons-vue'
 import ShopItemDetail from "./shopItemDetail.vue";
-
+import CommentList from "../Comment/commentList.vue";
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
 
 // Data
 const data = reactive({
+    // 收藏信息
+    isCollected: false,
     // 店铺信息
     shop: {
         id: '',
@@ -194,9 +208,55 @@ onMounted(() => {
     getShop();
     getShopItemList();
     getShopItemCategoryList();
+    isHaveCollection();
 })
 
 // Methods
+
+const cancelCollection = () => {
+    const param = {
+        shopId: data.shop.id,
+        userId: '1'
+    }
+    ApiCollection.cancelCollection(param).then(res => {
+        if (res.code === 200 ){
+            ElMessage.success('取消收藏成功')
+            location.reload()
+        } else {
+            ElMessage.error(res.msg)
+        }
+    })
+}
+
+const isHaveCollection = () => {
+    const param = {
+        shopId: data.shop.id,
+        userId: '1'
+    }
+    ApiCollection.isHaveCollection(param).then(res => {
+        if (res.code === 200){
+            data.isCollected = res.data;
+        } else {
+            ElMessage.error(res.msg)
+        }
+    })
+}
+
+const addCollection = () => {
+    const param = {
+        shopId: data.shop.id,
+        userId: '1'
+    }
+    ApiCollection.add4collection(param).then(res => {
+        if (res.code === 200){
+            ElMessage.success('收藏成功')
+            location.reload()
+        } else {
+            ElMessage.error(res.msg)
+        }
+    })
+}
+
 const getShop = () => {
     ApiShop.sel4shop(data.shop.id).then(res => {
         if (res.code === 200){
@@ -251,7 +311,43 @@ const subCart = (key) => {
         data.totalAmount -= data.shopItemList[key].price
     }
 }
-
+// 加入购物车
+const saveCart = () => {
+    // 是否选择物品
+    if (data.order.size === 0){
+        ElMessage.error('请选择物品')
+        return
+    }
+    // 物品信息
+    let shopItems = [];
+    data.order.forEach((value, key) => {
+        shopItems.push({
+            shopItemId: data.shopItemList[key].id,
+            amount: value
+        })
+    })
+    // 封装参数
+    let params = {
+        shopId: data.shop.id,
+        userId: '1',
+        shopItems: shopItems
+    }
+    console.log(params)
+    ApiCart.add4cart(params).then(res => {
+        if (res.code === 200){
+            ElMessageBox.alert('加入购物车成功', '提示', {
+                confirmButtonText: '去支付',
+                callback: action => {
+                    router.push({
+                        path: '/Consumer/Personal/cart'
+                    })
+                }
+            });
+        } else {
+            ElMessage.error(res.msg)
+        }
+    })
+}
 // 提交订单
 const submitOrder = () => {
     // 封装参数

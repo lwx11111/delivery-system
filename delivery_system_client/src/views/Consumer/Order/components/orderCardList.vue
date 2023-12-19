@@ -46,17 +46,19 @@
                 <el-button v-if="item.status === 5"
                            @click="orderRefund(key)">退款</el-button>
                 <el-button>再来一单</el-button>
-                <el-button>评价</el-button>
+                <el-button @click="toComment(key)">评价</el-button>
             </el-row>
         </el-card>
     </div>
+
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted,defineProps } from 'vue'
+import {reactive, onMounted, defineProps, ref} from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
+import PublishComment from "../../Comment/publishComment.vue";
 
 const store = useStore();
 const router = useRouter()
@@ -77,7 +79,10 @@ onMounted(() => {
 })
 
 // Methods
-
+const commentDialog = ref();
+const toComment = (key) => {
+    commentDialog.value.init(props.orderList[key].id);
+}
 // 打开订单详情界面
 const toOrderDetail = (key) => {
     router.push({

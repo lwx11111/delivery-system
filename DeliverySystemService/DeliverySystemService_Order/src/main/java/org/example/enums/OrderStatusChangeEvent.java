@@ -7,6 +7,6 @@ package org.example.enums;
  */
 public enum OrderStatusChangeEvent {
     //支付，商家接单，骑手配送，确认收货
-    PAYED,TAKING,DELIVERY, RECEIVED,CANCEL,UNTAKING,REFUND;
+    PAYED,TAKING,DELIVERY, RECEIVED,CANCEL,UNTAKING,REFUND,COMMENT;
 
 }

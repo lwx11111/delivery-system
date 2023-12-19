@@ -202,5 +202,27 @@ public class OrderStateListenerImpl{
             return false;
         }
     }
+
+    @OnTransition(source = "FINISH",target = "COMMENT")
+    public boolean commentTransition(Message<OrderStatusChangeEvent> message){
+        OrderInfo order = (OrderInfo) message.getHeaders().get("order");
+        try {
+            // 修改状态
+            order.setStatus(OrderStatus.COMMENT.getValue());
+            orderInfoMapper.updateById(order);
+            // 保存订单状态流转信息
+            OrderStatusDomain orderStatus = new OrderStatusDomain();
+            orderStatus.setStatus(OrderStatus.COMMENT.getValue());
+            orderStatus.setName("消费者评论");
+            orderStatus.setStatusTime(LocalDateTime.now());
+            orderStatus.setOrderId(order.getId());
+            orderStatusMapper.insert(orderStatus);
+            System.out.println("支付，状态机反馈信息：" + message.getHeaders().toString());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
 

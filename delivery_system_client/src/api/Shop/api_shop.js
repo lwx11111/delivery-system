@@ -3,6 +3,13 @@ const serverName = '/shop'
 
 
 export default {
+  getShopByOrderId(id) {
+    return request({
+      url: serverName + '/shop/getShopByOrderId/' + id,
+      method: 'get',
+    })
+  },
+
   listShopWithShopItemByUserId(params) {
     return request({
       url: serverName + '/shop/listShopWithShopItemByUserId',

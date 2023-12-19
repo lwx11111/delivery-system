@@ -59,6 +59,19 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     private ShopMapper shopMapper;
 
     @Override
+    public Shop getShopByOrderId(String orderId) throws Exception {
+        // 校验
+        if (orderId == null){
+            throw new Exception("order id");
+        }
+        Shop shop = shopMapper.getShopByOrderId(orderId);
+        if (shop == null){
+            throw new Exception("shop not found");
+        }
+        return shop;
+    }
+
+    @Override
     public List<ShopWithItemVO> listShopWithShopItemByUserId(Map<String,String> params) throws Exception {
         String userId = params.get("userId");
         Integer type = Integer.parseInt(params.get("type") == null ? "0" : params.get("type"));

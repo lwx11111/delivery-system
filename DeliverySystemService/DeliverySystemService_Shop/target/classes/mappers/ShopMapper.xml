@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.dao.ShopMapper">
+    <select id="getShopByOrderId" resultType="org.example.domain.shop.Shop">
+        select s.id,s.name,s.picture
+        from shop s
+        inner join order_info o on o.shop_id = s.id
+        where o.id = #{orderId}
+    </select>
+
     <!-- 分页查询-自定义sql-Wrapper -->
     <select id="selpageCustomSqlByWrapper" resultType="org.example.domain.shop.Shop">
         select * from shop t ${ew.customSqlSegment}

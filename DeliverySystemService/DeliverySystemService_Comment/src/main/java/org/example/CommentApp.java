@@ -5,19 +5,17 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.statemachine.config.EnableStateMachine;
 
-/**
- * Hello world!
- *
- */
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
 @MapperScan(basePackages = "org.example.dao")
-public class FileApp
+@EnableStateMachine
+public class CommentApp
 {
     public static void main( String[] args )
     {
-        SpringApplication.run(FileApp.class);
+        SpringApplication.run(CommentApp.class);
     }
 }

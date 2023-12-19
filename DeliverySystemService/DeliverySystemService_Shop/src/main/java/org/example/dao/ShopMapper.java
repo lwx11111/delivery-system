@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @Mapper
 public interface ShopMapper extends BaseMapper<Shop> {
-
+    Shop getShopByOrderId(@Param("orderId") String orderId);
     /**
      * 分页查询-自定义sql-Wrapper
      *

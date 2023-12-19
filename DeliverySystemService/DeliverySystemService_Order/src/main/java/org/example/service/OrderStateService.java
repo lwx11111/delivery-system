@@ -22,5 +22,4 @@ public interface OrderStateService {
     Boolean orderCancel(OrderInfo orderInfo);
     Boolean orderRefund(OrderInfo orderInfo);
 
-
 }

@@ -107,7 +107,6 @@ public class OrderStateServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInf
 
     @Override
     public Boolean orderRefund(OrderInfo order) {
-        System.out.println("LWXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         System.out.println("线程名称：" + Thread.currentThread().getName() + " 尝试收货，订单号：" +  order.getId());
         Boolean result = sendEvent(OrderStatusChangeEvent.REFUND, order);
         if (!result) {
