@@ -2,7 +2,7 @@
   <div>
       <el-card style="margin: 10px; border: 1px solid gold">
           <h1>
-              首页
+              404
           </h1>
       </el-card>
       <el-card style="margin: 10px; border: 1px solid gold"></el-card>
@@ -15,7 +15,6 @@ import ItemDialog from "@/views/Merchant/Order/Item.vue";
 
 export default {
 
-    name: "homePage",
     components: {ItemDialog},
 
     mounted() {

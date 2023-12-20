@@ -1,56 +1,38 @@
 <template>
-    <div class="sidebar-logo-container" :class="{'collapse':true}">
-        <transition name="sidebarLogoFade">
-          <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-            <img alt="name" v-if="logo" src="../../assets/icon-logo-small.png" class="sidebar-logo">
-            <h1 v-else class="sidebar-title">{{ appName ==='' ? 'LWX' : appName }} </h1>
-          </router-link>
-          <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-              <img alt="name" src="../../assets/icon-logo-small.png" class="sidebar-logo">
-              <div style="float: left">
-                <h1 class="sidebar-title"> {{appName}} </h1>
-                <div class="sub-title">{{ appName }}</div>
-              </div>
-          </router-link>
-        </transition>
+    <div class="sidebar-logo-container">
+        <router-link class="sidebar-logo-link" to="/">
+            <img alt="name" src="../../assets/icon-logo-small.png" class="sidebar-logo">
+            <div style="float: left">
+                <h1 class="sidebar-title"> {{ data.appName}} </h1>
+                <div class="sub-title">{{ data.appName }}</div>
+            </div>
+        </router-link>
     </div>
 </template>
 
-<script>
-  // import {mapGetters} from 'vuex'
+<script lang="js" setup>
+import { useStore } from 'vuex'
+import {getCurrentInstance, onMounted, reactive, ref} from "vue";
+import { useRouter } from "vue-router";
 
-  export default {
-    name: 'SidebarLogo',
-    props: {
-      collapse: {
-        type: Boolean,
-        required: true
-      }
-    },
-    data() {
-      return {
-        appName: '',
-        logo: 'guo'
-      }
-    },
-    // computed: {
-    //   // ...mapGetters([
-    //     'appId',
-    //     'appName'
-    //   ])
-    // },
-    created() {
-        this.appName = this.APP_NAME;
-      // getApi(getActiveAppId()).then(response => {
-      //   this.app = response.data;
-      // this.$store.commit('account/SET_ACCOUNTID', this.account.accountId);
-      // })
-    }
-  }
+const store = useStore();
+const router = useRouter()
+
+const data = reactive({
+    appName: '',
+})
+
+
+// Mounted
+const currentInstance = getCurrentInstance();
+onMounted(() => {
+    // 使用getCurrentInstanceAPI获取全局对象方法一 从globalProperties中可以获取到所有的全局变量
+    const globalProperties = currentInstance?.appContext.config.globalProperties
+    data.appName = globalProperties.APP_NAME;
+})
 </script>
 
 <style lang="scss" scoped>
-  //@import "../../style/variables.scss";
 
   .sidebarLogoFade-enter-active {
     transition: opacity 1.5s;
@@ -66,7 +48,7 @@
     width: 100%;
     height: 50px;
     /*line-height: 50px;*/
-    background: $menuBg;
+    //background: $menuBg;
     /*text-align: center;*/
     overflow: hidden;
     margin-left: 10px;
@@ -86,7 +68,7 @@
       & .sidebar-title {
         display: inline-block;
         margin: 0px 0px 0px 10px;
-        color: #fff;
+        color: #ffd04b;
         font-weight: 600;
         line-height: 28px;
         font-size: 16px;
@@ -95,7 +77,7 @@
       }
 
       & .sub-title {
-        color: rgba(255, 255, 255, 0.65);
+        color: #ffd04b;
         font-size: 13px;
         text-align: center;
         height: 18px;

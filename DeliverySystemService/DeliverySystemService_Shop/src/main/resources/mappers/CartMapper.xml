@@ -12,6 +12,7 @@
     <!-- 分页查询-自定义sql-Wrapper -->
     <select id="selpageCustomSqlByWrapper" resultType="org.example.domain.Cart">
         select * from cart t ${ew.customSqlSegment}
+
     </select>
 
     <!-- 分页查询-自定义sql-Map -->

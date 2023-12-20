@@ -345,7 +345,7 @@
     </div>
 </template>
 <script lang="ts" setup>
-    import Api from '@/api/api_shop.js'
+    import Api from '@/api/Shop/api_shop.js'
     import ItemDialog from './Item.vue'
     import { reactive, ref, defineProps, toRefs, onMounted} from 'vue'
     import Upload from "@/utils/oss/upload.vue";

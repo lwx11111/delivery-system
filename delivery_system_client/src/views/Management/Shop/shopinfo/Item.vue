@@ -207,8 +207,8 @@
 
 </template>
 <script lang="ts" setup>
-    import Api from '@/api/api_shop.js'
-    import ApiCategory from '@/api/api_category.js'
+    import Api from '@/api/Shop/api_shop.js'
+    import ApiCategory from '@/api/Shop/api_category.js'
     import { reactive, ref, onMounted, toRefs } from 'vue'
     import { useStore } from "vuex";
     import { useRouter } from 'vue-router'

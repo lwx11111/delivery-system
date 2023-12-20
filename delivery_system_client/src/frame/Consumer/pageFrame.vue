@@ -7,8 +7,8 @@
                          @close="close"
                          default-active="/Consumer/index"
                          @select="handleSelect"
-                        @open="open"
-                        mode="horizontal">
+                         @open="open"
+                         mode="horizontal">
                     <el-menu-item index="/Consumer/index">外卖</el-menu-item>
                     <el-sub-menu index="2">
                         <template #title>Workspace</template>
@@ -24,7 +24,8 @@
                     <el-main style="background: #FFFAFA">
                         <router-view v-slot="{ Component }" :key="key" >
                             <transition name="fade-transform" mode="out-in">
-                                <keep-alive :include="cachedViews">
+<!--                                :include="cachedViews"-->
+                                <keep-alive>
                                     <component :is="Component" />
                                 </keep-alive>
                             </transition>

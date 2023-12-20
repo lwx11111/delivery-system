@@ -15,7 +15,7 @@
       <module>DeliverySystemService_Gateway</module>
       <module>DeliverySystemService_Common</module>
       <module>DeliverySystemService_Basic</module>
-    <module>DeliverySystemService_Comment</module>
+      <module>DeliverySystemService_Comment</module>
   </modules>
 
   <parent>

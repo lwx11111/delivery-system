@@ -4,14 +4,14 @@ import { getToken, setToken } from '@/utils/auth/auth' // get token from cookie
 import getPageTitle from '@/utils/auth/get-page-title.js'
 import { pagePermApi } from '@/api/function'
 
-const whiteList = ['/login'] // no redirect whitelist
+const whiteList = ['/login','/register'] // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
+    console.log("Permission")
     // 设置页面标题
     document.title = getPageTitle(to.meta.title)
 
     const query = to.query
-    console.log(query)
     if (query.hasOwnProperty('token')) {
         setToken(query.token);
     }
@@ -21,12 +21,10 @@ router.beforeEach(async (to, from, next) => {
         if (to.path === '/login') {
             next({path: '/'})
         } else {
-            console.log(to.path)
             //判断当前用户是否拥有此页面的访问权限
             const path = to.path;
             // next();
             await pagePermApi(path).then(response => {
-                console.log(response)
                 if (response.data === true) {
                     next();
                 } else {

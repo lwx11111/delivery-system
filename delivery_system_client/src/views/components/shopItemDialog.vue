@@ -83,7 +83,7 @@
     </el-dialog>
 </template>
 <script lang="ts" setup>
-    import Api from '@/api/api_shop.js'
+    import Api from '@/api/Shop/api_shop.js'
     import { reactive, ref, onMounted } from 'vue'
     import { useStore } from "vuex";
     import { useRouter } from 'vue-router'

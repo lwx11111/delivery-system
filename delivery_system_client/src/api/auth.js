@@ -18,6 +18,22 @@ export default {
             type: 'form',
             data: data
         })
+    },
+
+    modifyPass(data) {
+        return request({
+            url: '/auth-manager-microservice-lwx/' + 'v1/account/modifyPass',
+            method: 'post',
+            type: 'form',
+            data: data
+        })
+    },
+
+    logout() {
+        return request({
+            url: '/auth-manager-microservice-lwx/' + 'v1/account/logout',
+            method: 'post'
+        })
     }
 }
 

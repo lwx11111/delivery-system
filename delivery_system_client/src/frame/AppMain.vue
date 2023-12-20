@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts" setup>
-import {ref, computed, reactive} from 'vue'
+import { computed } from 'vue'
 import {onMounted} from "vue";
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
@@ -17,15 +17,9 @@ import { useRouter } from 'vue-router'
 const store = useStore();
 const router = useRouter();
 
-// const data = reactive({
-//     cachedViews: []
-// })
-
 // Mounted
 onMounted(() => {
 
-   //  console.log(store)
-   // data.cachedViews = store.state.tagsView.cachedViews
 })
 
 const cachedViews = computed(() => {
@@ -35,22 +29,6 @@ const cachedViews = computed(() => {
 const key = computed(() => {
     return router
 })
-// export default {
-//
-//   name: 'AppMain',
-//     computed: {
-//
-//     // cachedViews() {
-//     //     console.log(store)
-//     //   console.log(store.state.tagsView.cachedViews)
-//     //   return store.state.tagsView.cachedViews
-//     // },
-//     key() {
-//       console.log(router)
-//       return router
-//     }
-//   }
-// }
 </script>
 
 <style lang="scss" scoped>
@@ -79,7 +57,6 @@ const key = computed(() => {
 </style>
 
 <style lang="scss">
-// fix css style bug in open el-dialog
 .el-popup-parent--hidden {
   .fixed-header {
     padding-right: 15px;

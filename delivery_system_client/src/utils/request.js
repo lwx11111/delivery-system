@@ -47,7 +47,6 @@ axios.interceptors.request.use(
 // 路由响应拦截
 axios.interceptors.response.use(
     response => {
-        console.log(response)
         if (response.headers && (response.headers['content-type'] === 'application/x-msdownload' ||
                 response.headers['content-type'].indexOf('application/vnd.ms-excel') !== -1 ||
                 response.headers['content-type'].indexOf('application/octet-stream') !== -1)) {
