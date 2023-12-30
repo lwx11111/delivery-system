@@ -26,6 +26,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 import com.google.common.collect.Lists;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
@@ -89,8 +90,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     @Override
-    public Boolean orderDelivery(Map<String, String> params) throws Exception {
+    public Boolean orderDelivery(@RequestBody Map<String, String> params) throws Exception {
         String orderId = params.get("orderId");
+        System.out.println(orderId);
         if (StringUtils.isBlank(orderId)) {
             throw new Exception("orderId不能为空");
         }

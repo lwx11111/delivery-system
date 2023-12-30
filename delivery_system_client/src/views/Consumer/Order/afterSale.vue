@@ -62,7 +62,7 @@ const data = reactive({
     // 店铺信息
     shop: {
         id: '',
-        userId : '',
+        userId : localStorage.getItem('userId'),
         name : 'name',
         province : '',
         county : '',

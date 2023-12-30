@@ -1,6 +1,7 @@
 package org.example.config;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.algorithm.RiderOrderAllocation;
 import org.example.dao.OrderInfoMapper;
 import org.example.dao.OrderStatusMapper;
 import org.example.domain.OrderStatusDomain;
@@ -25,6 +26,9 @@ import java.util.Date;
 @WithStateMachine(name = "orderStateMachine")
 @Slf4j
 public class OrderStateListenerImpl{
+    @Autowired
+    private RiderOrderAllocation riderOrderAllocation;
+
     /**
      * 订单基本信息数据库操作
      */
@@ -48,6 +52,7 @@ public class OrderStateListenerImpl{
         try {
             // 修改状态
             order.setStatus(OrderStatus.WAIT_TAKING.getValue());
+            order.setStatusName("消费者支付");
             orderInfoMapper.updateById(order);
             // 保存订单状态流转信息
             OrderStatusDomain orderStatus = new OrderStatusDomain();
@@ -74,9 +79,13 @@ public class OrderStateListenerImpl{
         OrderInfo order = (OrderInfo) message.getHeaders().get("order");
         try {
             // 分配给附近骑手
-            order.setRiderId("1");
+            String riderId = riderOrderAllocation.pollingAllocation(order);
+            order.setRiderId(riderId);
+            // 修改骑手订单数量
+
             // 修改状态
             order.setStatus(OrderStatus.WAIT_DELIVER.getValue());
+            order.setStatusName("商家接单");
             orderInfoMapper.updateById(order);
             // 保存订单状态流转信息
             OrderStatusDomain orderStatus = new OrderStatusDomain();
@@ -97,9 +106,10 @@ public class OrderStateListenerImpl{
         OrderInfo order = (OrderInfo) message.getHeaders().get("order");
         try {
             // 修改状态
-
             order.setStatus(OrderStatus.WAIT_RECEIVE.getValue());
+            order.setStatusName("骑手配送");
             orderInfoMapper.updateById(order);
+
             // 保存订单状态流转信息
             OrderStatusDomain orderStatus = new OrderStatusDomain();
             orderStatus.setStatus(OrderStatus.WAIT_RECEIVE.getValue());
@@ -117,11 +127,14 @@ public class OrderStateListenerImpl{
 
     @OnTransition(source = "WAIT_RECEIVE", target = "FINISH")
     public boolean receiveTransition(Message<OrderStatusChangeEvent> message){
+        System.out.println("收货了11================");
         OrderInfo order = (OrderInfo) message.getHeaders().get("order");
         try {
             // 修改状态
             order.setStatus(OrderStatus.FINISH.getValue());
+            order.setStatusName("消费者收货");
             orderInfoMapper.updateById(order);
+            System.out.println("收货了================");
             // 保存订单状态流转信息
             OrderStatusDomain orderStatus = new OrderStatusDomain();
             orderStatus.setStatus(OrderStatus.FINISH.getValue());
@@ -143,6 +156,7 @@ public class OrderStateListenerImpl{
         try {
             // 修改状态
             order.setStatus(OrderStatus.SHOP_CANCEL.getValue());
+            order.setStatusName("商家拒绝接单");
             orderInfoMapper.updateById(order);
             // 保存订单状态流转信息
             OrderStatusDomain orderStatus = new OrderStatusDomain();
@@ -165,6 +179,7 @@ public class OrderStateListenerImpl{
         try {
             // 修改状态
             order.setStatus(OrderStatus.CONSUMER_CANCEL.getValue());
+            order.setStatusName("消费者取消订单");
             orderInfoMapper.updateById(order);
             // 保存订单状态流转信息
             OrderStatusDomain orderStatus = new OrderStatusDomain();
@@ -187,6 +202,7 @@ public class OrderStateListenerImpl{
         try {
             // 修改状态
             order.setStatus(OrderStatus.REFUND.getValue());
+            order.setStatusName("消费者退款");
             orderInfoMapper.updateById(order);
             // 保存订单状态流转信息
             OrderStatusDomain orderStatus = new OrderStatusDomain();
@@ -209,6 +225,7 @@ public class OrderStateListenerImpl{
         try {
             // 修改状态
             order.setStatus(OrderStatus.COMMENT.getValue());
+            order.setStatusName("消费者评论");
             orderInfoMapper.updateById(order);
             // 保存订单状态流转信息
             OrderStatusDomain orderStatus = new OrderStatusDomain();

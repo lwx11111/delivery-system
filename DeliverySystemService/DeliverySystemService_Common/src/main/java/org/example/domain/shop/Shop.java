@@ -13,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.models.auth.In;
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -80,7 +81,7 @@ public class Shop extends Model<Shop> {
     @Schema(name = "店铺评分")
     @Excel(name = "店铺评分")
     @TableField("score")
-    private Double score;
+    private Double score = 4.0;
 
     /**
     * 销量
@@ -88,7 +89,7 @@ public class Shop extends Model<Shop> {
     @Schema(name = "销量")
     @Excel(name = "销量")
     @TableField("sales_volume")
-    private Integer salesVolume;
+    private Integer salesVolume = 0;
 
     /**
     * 起送价格
@@ -136,7 +137,7 @@ public class Shop extends Model<Shop> {
     @Schema(name = "状态")
     @Excel(name = "状态")
     @TableField("status")
-    private Integer status;
+    private Integer status = 1;
 
     /**
     * 店铺描述

@@ -1,8 +1,8 @@
 <template>
     <div>
         <el-row>
-            <el-button v-if="data.isReceiveOrder" @click="receiveOrder">开始接收订单</el-button>
-            <el-button v-else @click="refuseOrder">结束接收订单</el-button>
+            <el-button v-if="data.isReceiveOrder" @click="receiveOrder()">开始接收订单</el-button>
+            <el-button v-else @click="refuseOrder()">结束接收订单</el-button>
         </el-row>
         <el-divider></el-divider>
         <div v-for="(item,key) in data.orderList">
@@ -27,6 +27,7 @@ import { reactive, ref, onMounted, toRefs } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import Api from '@/api/Order/api_orderinfo.js'
+import ApiUser from '@/api/User/auth.js';
 import {ElMessage, ElMessageBox} from "element-plus";
 
 const store = useStore();
@@ -50,7 +51,8 @@ const data = reactive({
     ],
     // 骑手信息
     rider:{
-        id:'1'
+        id: localStorage.getItem("userId"),
+        status: 0
     }
 })
 
@@ -66,12 +68,13 @@ const listOrderByRiderId = () => {
         data.orderList = res.data;
     })
 }
-const orderDeliver = (key) => {
+const orderDelivery = (key) => {
     const param = {
-        orderId: data.orderList[key].id
+        orderId: data.orderList[key].id,
+        test:"lwx"
     }
     console.log(param)
-    Api.orderDeliver(param).then(res => {
+    Api.orderDelivery(param).then(res => {
         if (res.code === 200 && res.data === true){
             ElMessage({
                 type: 'success',
@@ -106,10 +109,39 @@ const orderReceive = (key) => {
     })
 }
 const receiveOrder = () => {
-
+    data.rider.status = 0;
+    ApiUser.update4rider(data.rider.id,data.rider).then(res => {
+        if (res.code === 200){
+            ElMessage({
+                type: 'success',
+                message: '接单成功',
+            })
+            data.isReceiveOrder = true;
+        } else {
+            ElMessage({
+                type: 'warning',
+                message: '接单失败，请重试',
+            })
+        }
+    })
 }
 
 const refuseOrder = () => {
+    data.rider.status = 1;
+    ApiUser.update4rider(data.rider.id,data.rider).then(res => {
+        if (res.code === 200){
+            ElMessage({
+                type: 'success',
+                message: '停止接单成功',
+            })
+            data.isReceiveOrder = true;
+        } else {
+            ElMessage({
+                type: 'warning',
+                message: '停止接单失败，请重试',
+            })
+        }
+    })
 
 }
 </script>

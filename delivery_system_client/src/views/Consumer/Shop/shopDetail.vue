@@ -6,7 +6,7 @@
                 <h1>{{data.shop.name}}</h1>
             </el-col>
             <el-col :span="4">
-                <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                <el-image :src="data.shop.picture"></el-image>
             </el-col>
         </el-row>
         <el-row>
@@ -148,7 +148,7 @@ const data = reactive({
     // 店铺信息
     shop: {
         id: '',
-        userId : '',
+        userId : localStorage.getItem('userId'),
         name : '',
         province : '',
         county : '',
@@ -179,6 +179,7 @@ const data = reactive({
     orderInfo: {
         // 菜品信息
         orderItems:[],
+        userId: localStorage.getItem('userId'),
         shopId: '',
         deliveryRiderId: '',
         packingCharges: '',
@@ -216,7 +217,7 @@ onMounted(() => {
 const cancelCollection = () => {
     const param = {
         shopId: data.shop.id,
-        userId: '1'
+        userId: localStorage.getItem('userId'),
     }
     ApiCollection.cancelCollection(param).then(res => {
         if (res.code === 200 ){
@@ -231,7 +232,7 @@ const cancelCollection = () => {
 const isHaveCollection = () => {
     const param = {
         shopId: data.shop.id,
-        userId: '1'
+        userId: localStorage.getItem('userId'),
     }
     ApiCollection.isHaveCollection(param).then(res => {
         if (res.code === 200){
@@ -245,7 +246,7 @@ const isHaveCollection = () => {
 const addCollection = () => {
     const param = {
         shopId: data.shop.id,
-        userId: '1'
+        userId: localStorage.getItem('userId'),
     }
     ApiCollection.add4collection(param).then(res => {
         if (res.code === 200){
@@ -267,6 +268,7 @@ const getShop = () => {
 // 菜品列表
 const getShopItemList = () => {
     ApiShopItem.selpage4shopitem(data.params).then(res => {
+        console.log(res)
         if (res.code === 200){
             data.shopItemList = res.data.records;
         }
@@ -329,7 +331,7 @@ const saveCart = () => {
     // 封装参数
     let params = {
         shopId: data.shop.id,
-        userId: '1',
+        userId: localStorage.getItem('userId'),
         shopItems: shopItems
     }
     console.log(params)
@@ -351,7 +353,7 @@ const saveCart = () => {
 // 提交订单
 const submitOrder = () => {
     // 封装参数
-    data.orderInfo.packingCharges = data.shop.packingCharges
+    // data.orderInfo.packingCharges = data.shop.packingCharges
     data.orderInfo.deliveryCharge = data.shop.deliveryCharge
     data.orderInfo.shopId = data.shop.id
     data.orderInfo.totalCharge = data.totalAmount
@@ -359,8 +361,19 @@ const submitOrder = () => {
     data.orderInfo.status = '1';
     // 物品信息
     data.order.forEach((value, key) => {
+        console.log(key)
+        console.log(value)
+        console.log(data.shopItemList[key])
+        let shopItem = null;
+        // key是id
+        for (let i = 0; i < data.shopItemList.length; i++){
+            if (data.shopItemList[i].id === key){
+                shopItem = data.shopItemList[i];
+                break;
+            }
+        }
         data.orderInfo.orderItems.push({
-            shopItem: data.shopItemList[key],
+            shopItem: shopItem,
             amount: value
         })
     })

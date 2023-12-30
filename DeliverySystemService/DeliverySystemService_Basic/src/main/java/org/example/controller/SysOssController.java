@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Tag(name = "服务")
+@CrossOrigin
 @RequestMapping("/sysoss")
 public class SysOssController {
     @Autowired

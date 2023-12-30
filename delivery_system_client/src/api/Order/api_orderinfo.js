@@ -21,9 +21,10 @@ export default {
     })
   },
 
-  orderDeliver(data) {
+  orderDelivery(data) {
+    console.log(data)
     return request({
-        url: serverName + '/order/orderDeliver',
+        url: serverName + '/order/orderDelivery',
         method: 'post',
         data: data
     })

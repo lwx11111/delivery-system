@@ -3,7 +3,7 @@ import Frame from "@/frame/index.vue";
 // Shop
 const ShopIndex = () => import('@/views/Merchant/Shop/index.vue')
 // Order
-const OrderIndex = () => import('@/views/Merchant/Order/index.vue')
+const MerchantOrderIndex = () => import('@/views/Merchant/Order/index.vue')
 
 const merchantRouter = {
         path: '/Merchant',
@@ -19,8 +19,8 @@ const merchantRouter = {
             // 订单
             {
                 path: '/Merchant/Order/index',
-                component: OrderIndex,
-                name: 'OrderIndex',
+                component: MerchantOrderIndex,
+                name: 'MerchantOrderIndex',
             },
         ]
     }

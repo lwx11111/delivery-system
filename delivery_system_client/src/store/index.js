@@ -1,8 +1,5 @@
 import {createStore } from 'vuex'
-import tagsView from "@/store/modules/tagsView";
-import side from "@/store/modules/side";
-import app from "@/store/modules/app";
-import permission from "@/store/modules/permission";
+
 export default createStore({
     // state是用来定义数据，这里可以设置数据的默认数据，但是为了数据的安全性，通常不直接修改state数据，而是通过mutations修改
     state: {
@@ -66,13 +63,9 @@ export default createStore({
         // }
     },
     modules: {
-        tagsView,
-        side,
-        app,
-        permission
+        // tagsView,
+        // side,
+        // app,
+        // permission
     },
-
-    // modules,
-    // sider
-
 })

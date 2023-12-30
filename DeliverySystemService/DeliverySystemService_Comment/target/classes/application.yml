@@ -1,5 +1,5 @@
 server:
-  port: 9000
+  port: 9111
   servlet:
     encoding:
       force: true

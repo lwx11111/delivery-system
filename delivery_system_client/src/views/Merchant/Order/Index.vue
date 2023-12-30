@@ -217,8 +217,8 @@
                       :current-page="data.pageConfig.currentPage"
                       :page-size="data.pageConfig.pageSize"
                       :total="data.pageConfig.total"
-                      @size-change="handleSizeChange"
-                      @current-change="handleCurrentChange"
+                      @size-change="handleSizeChange()"
+                      @current-change="handleCurrentChange()"
                       layout="sizes,total, ->, prev, pager, next">
               </el-pagination>
         </el-card>
@@ -228,6 +228,7 @@
 </template>
 <script lang="ts" setup>
     import Api from '@/api/Order/api_orderinfo.js'
+    import ApiShop from '@/api/Shop/api_shop.js'
     import ItemDialog from './Item.vue'
     import { reactive, ref, onMounted} from 'vue'
     import { useStore } from "vuex";
@@ -248,7 +249,7 @@
             id:'',
             shopId: '',
             deliveryRiderId: '',
-            userId: '',
+            userId: localStorage.getItem("userId"),
             shopItem: '',
             packingCharges: '',
             deliveryCharge: '',
@@ -277,7 +278,8 @@
 
     // Mounted
     onMounted(() => {
-        getData();
+        listShopId();
+        // getData();
     })
 
     // Methods
@@ -338,30 +340,31 @@
         })
     }
 
+    const listShopId = () => {
+        let param = {
+            userId: localStorage.getItem("userId"),
+        }
+        ApiShop.selpage4shop(param).then(res => {
+            console.log(res.data.records[0].id);
+            if (res.code === 200){
+                data.formList.shopId = res.data.records[0].id;
+                getData();
+            }
+        })
+
+    }
     const getData = () => {
         // 查询方法
         // 查询参数
         const params = {
-            shopId : "1",
-            deliveryRiderId : data.formList.deliveryRiderId,
-            userId : data.formList.userId,
-            shopItem : data.formList.shopItem,
-            packingCharges : data.formList.packingCharges,
-            deliveryCharge : data.formList.deliveryCharge,
-            totalCharge : data.formList.totalCharge,
-            expectedTime : data.formList.expectedTime,
-            location : data.formList.location,
-            deliveryService : data.formList.deliveryService,
-            orderTime : data.formList.orderTime,
-            status : data.formList.status,
-            paymentMethod : data.formList.paymentMethod,
-            remark : data.formList.remark,
-            tableware : data.formList.tableware,
+            shopId: data.formList.shopId,
             pageIndex : data.pageConfig.currentPage,
             pageSize : data.pageConfig.pageSize
         }
+        console.log(params)
         // 后台请求
-        Api.selpage4orderinfo(params).then(res=> {
+        Api.selpage4orderinfo(params).then(res => {
+            console.log(res)
             if (res.code === 200){
                 data.tableData = res.data.records
                 data.pageConfig.total = res.data.total

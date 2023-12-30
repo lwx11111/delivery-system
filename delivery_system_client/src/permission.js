@@ -1,11 +1,17 @@
 import router from './router'
 
 import { getToken, setToken } from '@/utils/auth/auth' // get token from cookie
-import getPageTitle from '@/utils/auth/get-page-title.js'
 import { pagePermApi } from '@/api/function'
 
 const whiteList = ['/login','/register'] // no redirect whitelist
 
+const title = 'LWX'
+function getPageTitle(pageTitle) {
+    if (pageTitle) {
+        return title + pageTitle;
+    }
+    return title;
+}
 router.beforeEach(async (to, from, next) => {
     console.log("Permission")
     // 设置页面标题
@@ -15,6 +21,7 @@ router.beforeEach(async (to, from, next) => {
     if (query.hasOwnProperty('token')) {
         setToken(query.token);
     }
+
     // 检查用户是否已经登录
     const hasToken = getToken()
     if (hasToken) {

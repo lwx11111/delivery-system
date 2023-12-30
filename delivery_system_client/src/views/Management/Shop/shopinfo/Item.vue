@@ -14,17 +14,16 @@
                     ref="itemForm"
                     label-width="100px">
                 <el-row>
-<!--                    todo -->
-<!--                    <el-col :span="6">-->
-<!--                        <el-form-item-->
-<!--                                label="userId"-->
-<!--                                prop="userId">-->
-<!--                            <el-input-->
-<!--                                    v-model="data.item.userId"-->
-<!--                                    :disabled="data.disabled">-->
-<!--                            </el-input>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
+                    <el-col :span="6">
+                        <el-form-item
+                                label="userId"
+                                prop="userId">
+                            <el-input
+                                    v-model="data.item.userId"
+                                    :disabled="data.disabled">
+                            </el-input>
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="6">
                         <el-form-item
                                 label="店铺名"
@@ -145,13 +144,14 @@
                     </el-col>
                 </el-row>
                 <!--todo 图片显示-->
-                <el-row v-if="!data.disabled">
+                <el-row>
                     <el-col :span="6">
                         <el-form-item
                                 label="店铺图片"
                                 prop="picture"
                                 label-width="150px">
-                            <MinioUpload :file-list="data.fileList"
+                            <MinioUpload :file-list="data.fileList1"
+                                         :show="data.show"
                                          ref="uploadRef"
                                          @uploadCallback="uploadCallbackPicture"
                                          :limit="1"></MinioUpload>
@@ -162,10 +162,12 @@
                                 label="安全档案图片"
                                 prop="picture"
                                 label-width="150px">
-                            <MinioUpload :file-list="data.fileList"
+                            <MinioUpload :file-list="data.fileList2"
+                                         :show="data.show"
                                          ref="uploadRef"
                                          @uploadCallback="uploadCallbackSafetyFile"
-                                         :limit="1"></MinioUpload>
+                                         :limit="1">
+                            </MinioUpload>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -220,6 +222,10 @@
 
     // Data
     const data = reactive({
+        // 图片
+        fileList1: [],
+        fileList2: [],
+        show: true,
         // todo
         provinces: [
             {
@@ -368,7 +374,12 @@
                 data.disabled = false
                 break
         }
-
+        if (data.type === 'detail'){
+            data.show = true;
+        }
+        if (data.type === 'update' || data.type === 'add'){
+            data.show = false;
+        }
         // 获取数据
         if (data.type === 'detail' || data.type === 'update') {
             // ID校验
@@ -386,6 +397,7 @@
                 console.log(res)
                 if (res.code === 200){
                     data.item = res.data;
+
                     // 界面显示
                     data.showDialog = true;
                 } else {
@@ -396,6 +408,18 @@
                     return;
                 }
             })
+            // 图片
+            let item1 = {
+                url: data.item.picture
+            }
+            data.fileList1 = [];
+            data.fileList1.push(item1)
+            let item2 = {
+                url: data.item.safetyFile
+            }
+            data.fileList2 = [];
+            data.fileList2.push(item2)
+            console.log(data.fileList1)
         } else {
             // 界面显示
             data.showDialog = true;

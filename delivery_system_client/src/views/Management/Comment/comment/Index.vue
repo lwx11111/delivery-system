@@ -55,12 +55,6 @@
             <!-- 操作按钮区 -->
             <div style="margin:10px 0;">
                 <el-button
-                        type="success"
-                        icon="DocumentAdd"
-                        @click="addData()">
-                  新增
-                </el-button>
-                <el-button
                         type="info"
                         icon="Download"
                         @click="downloadExcelTemplate()">
@@ -78,18 +72,6 @@
                         @click="deleteDataMany()">
                   删除
                 </el-button>
-                <el-dropdown
-                        style="margin-left:8px;"
-                        split-button
-                        type="primary">
-                    更多功能
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item>功能1</el-dropdown-item>
-                            <el-dropdown-item>功能2</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
                 <div style="float:right;">
                     <el-button
                           type="primary"
@@ -184,14 +166,6 @@
                         align="center"
                         width="400">
                     <template #default="scope">
-                        <el-link
-                                style="margin-right: 20px"
-                                @click="toUpdate(scope)"
-                                type="primary"
-                                size="small"
-                                :underline="false">
-                          更新
-                        </el-link>
                         <el-link
                                 style="margin-right: 20px"
                                 @click="toDetail(scope)"
@@ -336,10 +310,6 @@
     }
     // 添加记录
     const itemDialog = ref();
-    const addData = () => {
-        data.type = "add";
-        itemDialog.value.init(null,data.type);
-    }
     // 下载模板
     const downloadExcelTemplate = () => {
         const params = {}
@@ -468,11 +438,6 @@
     const selectionChanged = (val: number) => {
         // 选中行变化事件
         data.selectedRows = val
-    }
-
-    const toUpdate = (scope) => {
-        data.type = "update"
-        itemDialog.value.init(scope.row.id, data.type);
     }
     const toDetail = (scope) => {
         data.type = "detail"

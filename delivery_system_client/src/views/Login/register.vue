@@ -153,7 +153,7 @@ const validatePassword = () => {
 }
 
 const validatePhone = () => {
-    if (data.form.phone.length === 13){
+    if (data.form.phone.length === 11){
         return true;
     }
     ElMessage.error('电话失败');

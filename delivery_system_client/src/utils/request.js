@@ -2,9 +2,9 @@
  * ajax请求配置
  */
 import axios from 'axios'
-import { ElMessage } from 'element-plus'
+import {ElMessage} from 'element-plus'
 import qs from "qs";
-import {getLocalStorageItem, getToken, removeToken} from '@/utils/auth/auth'
+import {getToken, removeToken} from '@/utils/auth/auth'
 
 // axios默认配置
 axios.defaults.timeout = 10000 // 超时时间
@@ -52,7 +52,6 @@ axios.interceptors.response.use(
                 response.headers['content-type'].indexOf('application/octet-stream') !== -1)) {
             return response;
         } else {
-            const res = response.data;
             // if (res.code !== '20000') {
             //     Message({
             //         message: res.message || '操作失败，请联系管理员',
@@ -63,7 +62,7 @@ axios.interceptors.response.use(
             // } else {
             //     return res
             // }
-            return res
+            return response.data
         }
     },
     error => {

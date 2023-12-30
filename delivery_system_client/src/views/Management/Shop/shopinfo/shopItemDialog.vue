@@ -26,8 +26,6 @@
                         <el-divider></el-divider>
                         <div v-for="(it,i) in item.items">
                             <el-row>
-                                <!-- todo -->
-                                <!-- {{it.picture}}-->
                                 <el-col :span="6">
                                     <el-form-item label="物品名">
                                         <el-input v-model="it.name"></el-input>
@@ -39,15 +37,31 @@
                                     </el-form-item>
                                 </el-col>
                                 <el-col :span="6">
-                                    <el-form-item label="物品描述">
-                                        <el-input v-model="it.description" type="textarea"></el-input>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="6">
                                     <el-button type="danger"
                                                @click="deleteItem(index,i)">
                                         删除物品
                                     </el-button>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="6">
+                                    <el-form-item label="物品描述">
+                                        <el-input v-model="it.description" type="textarea"></el-input>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col :span="6">
+                                    <el-form-item label="">
+                                        <MinioUpload :file-list="data.fileList"
+                                                     :i="index"
+                                                     :j="i"
+                                                     :show="data.show"
+                                                     ref="uploadRef"
+                                                     @uploadCallback="uploadCallback"
+                                                     :limit="1">
+                                        </MinioUpload>
+                                    </el-form-item>
                                 </el-col>
                             </el-row>
                             <el-divider></el-divider>
@@ -89,6 +103,7 @@
     import { useRouter } from 'vue-router'
     import { ElMessage } from "element-plus";
     import StringUtil from '@/utils/stringUtil.js'
+    import MinioUpload from "../../../components/MinioUpload.vue";
 
     const store = useStore();
     const router = useRouter()
@@ -260,6 +275,11 @@
             return;
         }
         data.shopItems[index].items.splice(i,1);
+    }
+
+    const uploadCallback = (response, url, i,j) => {
+        console.log(i + " " + j)
+        data.shopItems[i].items[j].picture = url
     }
 
     //暴露state和play方法

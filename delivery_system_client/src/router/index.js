@@ -6,6 +6,7 @@ import {
 
 import Login from '@/views/Login/index.vue';
 import Register from '@/views/Login/register.vue'
+const MerchantRegister = () => import('@/views/Merchant/merchantRegister.vue')
 // 管理端
 import managementRouter from "@/router/Management/index";
 // 消费者端
@@ -29,6 +30,12 @@ const routes = [
         path: '/register',
         component: Register,
         name: 'Register'
+    },
+    // 注册
+    {
+        path: '/Merchant/register',
+        component: MerchantRegister,
+        name: 'MerchantRegister',
     },
     managementRouter,
     consumerRouter,

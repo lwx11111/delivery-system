@@ -100,14 +100,17 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     public void saveByParam(Shop obj,Map<String, String> params) throws Exception {
         log.warn("saveByParam方法参数obj：");
         System.out.println(obj);
+        // 默认值
         this.save(obj);
         System.out.println(obj.getId());
         if (StringUtils.isNotBlank(obj.getId())) {
-            for (String categoryId : obj.getCategoryIds()) {
-                ShopCategory shopCategory = new ShopCategory();
-                shopCategory.setShopId(obj.getId());
-                shopCategory.setCategoryId(categoryId);
-                shopCategoryMapper.insert(shopCategory);
+            if (obj.getCategoryIds() != null) {
+                for (String categoryId : obj.getCategoryIds()) {
+                    ShopCategory shopCategory = new ShopCategory();
+                    shopCategory.setShopId(obj.getId());
+                    shopCategory.setCategoryId(categoryId);
+                    shopCategoryMapper.insert(shopCategory);
+                }
             }
         }
     }

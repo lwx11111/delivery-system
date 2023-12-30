@@ -8,6 +8,7 @@ import store from './store/index'
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // permission control
 import './permission'
+import './utils/stringUtil'
 // 全局变量
 import dataJson from "../public/config.json";
 

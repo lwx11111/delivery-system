@@ -42,9 +42,13 @@ import {getCurrentInstance, onMounted, reactive} from 'vue'
 import commonUtil from '../../utils/common-util.js';
 import {getEncryptPassword} from '../../utils/passwordEncrypt.js';
 import Api from '@/api/auth.js';
+import ApiShop from '@/api/Shop/api_shop.js'
+import ApiUser from '@/api/User/auth.js';
 import { setToken } from '@/utils/auth/auth.js'
 import { useStore } from "vuex";
 import { useRouter} from "vue-router";
+import {ElMessage} from "element-plus";
+
 const store = useStore();
 const router = useRouter()
 const data = reactive({
@@ -101,18 +105,57 @@ const onSubmit = () => {
     Api.loginWithCode(params).then(res => {
         console.log(res);
         if (res.code === "20000"){
+            let account = res.data.info.account
             // store存储
             store.commit('setAccount',res.data.info.account);
             store.commit('setUser',res.data.info.user);
             store.commit('setSuperAdmin',res.data.info.superAdmin);
             store.commit('setToken',res.data.token);
-
+            // 本地存储
+            localStorage.setItem('userId', account.accountId)
+            localStorage.setItem('userName', account.loginName)
             setToken(res.data.token.accessToken);
-            // sessionStorage.setItem("Auth-Token",res.data.token.accessToken)
             // 根据类型跳转
-            router.push({
-                path: '/homePage',
-            })
+            if (account.customAccountId === 'consumer'){
+                router.push({
+                    path: '/Consumer/index',
+                })
+            } else if(account.customAccountId === 'merchant') {
+                // 是否商铺已注册
+                let param = {
+                    userId: account.accountId,
+                }
+                ApiShop.selpage4shop(param).then(res => {
+                    console.log(res.data.records);
+                    if (res.code === 200){
+                        if (res.data.records.length === 0){
+                            router.push({
+                                path: '/Merchant/register',
+                            })
+                        } else {
+                            router.push({
+                                path: '/homepage',
+                            })
+                        }
+                    }
+                })
+            } else if (account.customAccountId === 'rider') {
+                ApiUser.riderRegister(account.accountId).then(res => {
+                    console.log(res);
+                    if (res.code === '20000'){
+                        // 页面跳转
+                        router.push({
+                            path: '/Rider/Order/index',
+                        })
+                    } else {
+                        ElMessage.error('登录失败');
+                    }
+                })
+                router.push({
+                    path: '/homepage',
+                })
+            }
+
         }
     });
 }

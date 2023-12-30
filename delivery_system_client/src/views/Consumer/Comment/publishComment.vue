@@ -27,9 +27,9 @@
                 <h1>商家评价</h1>
             </el-row>
             <el-row>
-<!--                <el-col>-->
-<!--                    <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>-->
-<!--                </el-col>-->
+                <el-col>
+                    <el-image :src="data.shop.picture"></el-image>
+                </el-col>
                 <el-col>
                     {{data.shop.name}}
                 </el-col>
@@ -102,7 +102,7 @@ const submit = () => {
         return;
     }
     const param = {
-        userId: data.user.id,
+        userId: localStorage.getItem('userId'),
         orderId: data.orderId,
         riderId: data.rider.id,
         shopId: data.shop.id,

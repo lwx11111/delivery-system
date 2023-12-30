@@ -1,30 +1,38 @@
 <template>
-<!--    v-model:file-list="props.fileList"-->
-    <el-upload
-        ref="upload"
-        :auto-upload="true"
-        list-type="picture"
-        :limit="props.limit"
-        :action="data.minioUrl"
-        :data="data.fileData"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :on-success="handleSuccess"
-        :on-error="handleError"
-        :before-upload="handleBeforeUpload"
-        :on-exceed="handleExceed"
-        :on-change="handleChange">
-        <el-button type="primary">点击上传</el-button>
-        <template #tip>
-            <div class="el-upload__tip text-red">
-                文件大小不能超过2MB!
-            </div>
-        </template>
-    </el-upload>
+<!--    :limit="props.limit"-->
+<!--    :on-exceed="handleExceed"-->
+    <div>
+        <div v-if="props.show" v-for="(item,key) in props.fileList">
+            <el-image style="width: 100px; height: 100px"
+                      :src="item.url">
+            </el-image>
+        </div>
+        <el-upload v-else
+                   ref="upload"
+                   :file-list="data.fileList"
+                   :auto-upload="true"
+                   list-type="picture"
+
+                   :action="data.minioUrl"
+                   :data="data.fileData"
+                   :on-preview="handlePreview"
+                   :on-remove="handleRemove"
+                   :on-success="handleSuccess"
+                   :on-error="handleError"
+                   :before-upload="handleBeforeUpload"
+
+                   :on-change="handleChange">
+            <el-button type="primary">点击上传</el-button>
+            <template #tip>
+                <div class="el-upload__tip text-red">
+                    文件大小不能超过2MB!
+                </div>
+            </template>
+        </el-upload>
+    </div>
 </template>
 
 <script lang="ts" setup>
-import Api from '@/api/api_category.js'
 import { reactive, ref, onMounted, toRefs } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
@@ -42,19 +50,11 @@ const data = reactive({
         groupId: '',
         groupName:''
     },
-    minioUrl: "http://localhost:9999/file/sysoss/uploadOSS",
-    minioServerUrl: "http://127.0.0.1:9000/"
+    minioUrl: "http://localhost:6001/sysoss/uploadOSS",
+    minioServerUrl: "http://127.0.0.1:9000/",
+    fileList: [],
 })
-// const fileList = ref<UploadUserFile[]>([
-//     {
-//         name: 'element-plus-logo.svg',
-//         url: 'https://element-plus.org/images/element-plus-logo.svg',
-//     },
-//     {
-//         name: 'element-plus-logo2.svg',
-//         url: 'https://element-plus.org/images/element-plus-logo.svg',
-//     },
-// ])
+
 // Props
 const props = defineProps({
     limit: {
@@ -64,14 +64,33 @@ const props = defineProps({
     // 上传的文件列表
     fileList: {
         type: Array,
-        default: []
+        default: [],
+        required: false
     },
+    show: {
+        type: Boolean,
+        default: false,
+        required: false
+    },
+    // 指定上传的文件列表下标
+    i: {
+        type: Number,
+        default: -1,
+        required: false
+    },
+    j: {
+        type: Number,
+        default: -1,
+        required: false
+    }
 
 })
 
 // Mounted
 onMounted(() => {
-
+    data.fileList = props.fileList;
+    console.log(props.show)
+    console.log(data.fileList)
 })
 
 // Methods
@@ -81,8 +100,6 @@ onMounted(() => {
  */
 const upload = ref<UploadInstance>()
 const handleExceed: UploadProps['onExceed'] = (files) => {
-    console.log(upload.value)
-    console.log(files)
     ElMessageBox.confirm('重复上传会覆盖之前的材料，是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -90,16 +107,19 @@ const handleExceed: UploadProps['onExceed'] = (files) => {
     }).then(() => {
         // 先从oss删除之前的文件
         console.log(data.fileData)
-        if (data.fileData != null){
-            deleteFile();
-        }
+        // if (data.fileData != null){
+        //     deleteFile();
+        // }
+        // 删除fileList中的文件
+        data.fileList = [];
         upload.value!.clearFiles()
         const file = files[0] as UploadRawFile
         file.uid = genFileId()
         upload.value!.handleStart(file)
+        console.log(file)
         upload.value!.submit()
-
-
+        console.log(upload.value!)
+        console.log(file)
     })
 }
 
@@ -120,16 +140,16 @@ const deleteFile = () => {
  */
 const handleBeforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
     //文件类型和大小限制
-    if (rawFile.type !== 'image/jpeg') {
-        ElMessage.error('图片必须是JPG类型')
-        return false
-    } else if (rawFile.size / 1024 / 1024 > 2) {
-        ElMessage.error('图片大小不能超过2MB!')
-        return false
-    }
+    // if (rawFile.type !== 'image/jpeg') {
+    //     ElMessage.error('图片必须是JPG类型')
+    //     return false
+    // } else if (rawFile.size / 1024 / 1024 > 2) {
+    //     ElMessage.error('图片大小不能超过2MB!')
+    //     return false
+    // }
 
     // 文件数量限制
-    if (props.fileList.length >= props.limit) {
+    if (data.fileList.length >= props.limit) {
         ElMessage.error(`最多只能上传${props.limit}个文件`)
         return false
     }
@@ -149,7 +169,19 @@ const handleSuccess: UploadProps['onSuccess'] = (response, file, fileList) => {
         // 封装文件信息
         data.fileData = response.data;
         const url = data.minioServerUrl + response.data.bucket + "/" + response.data.storageFileName;
-        emits("uploadCallback", response, url);
+        // 上传路径
+        console.log(url)
+        let item = {
+            url: url
+        }
+        data.fileList.push(item)
+        if (props.i !== -1 && props.j !== -1){
+            emits("uploadCallback", response, url,props.i,props.j);
+        } else {
+            emits("uploadCallback", response, url);
+        }
+
+
     }
     // this.uploadStatus = false
     // if (response.data.result=='true') {
@@ -224,6 +256,10 @@ const handlePreview: UploadProps['onPreview'] = (file) => {
  */
 const handleChange: UploadProps['onChange'] = (file) => {
     console.log(file)
+    console.log(data.fileList)
+    // if (data.fileList.length > 0) {
+    //     data.fileList = [data.fileList[data.fileList.length - 1]]//这一步，是 展示最后一次选择文件
+    // }
 }
 
 defineExpose({

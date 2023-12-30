@@ -1,10 +1,8 @@
 <template>
     <router-view v-slot="{ Component }" :key="key">
-        <transition name="fade-transform" mode="out-in">
-            <keep-alive :include="cachedViews">
-                <component :is="Component" />
-            </keep-alive>
-        </transition>
+        <keep-alive>
+            <component :is="Component" />
+        </keep-alive>
     </router-view>
 </template>
 
@@ -23,7 +21,7 @@ onMounted(() => {
 })
 
 const cachedViews = computed(() => {
-    return store.state.tagsView.cachedViews
+    // return store.state.tagsView.cachedViews
 })
 
 const key = computed(() => {

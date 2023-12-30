@@ -300,7 +300,7 @@
             id:'',
             shopId: '',
             deliveryRiderId: '',
-            userId: '',
+            userId: localStorage.getItem('userId'),
             shopItem: '',
             packingCharges: '',
             deliveryCharge: '',

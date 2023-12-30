@@ -3,7 +3,7 @@
         <el-card style="margin-bottom: 10px">
             <el-row>
                 <el-col :span="11" style="margin-right: 5px">
-                    <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                    <el-image :src="item.picture"></el-image>
                 </el-col>
                 <el-col :span="12">
                     <el-row>

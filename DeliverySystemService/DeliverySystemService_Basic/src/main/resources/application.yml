@@ -8,7 +8,7 @@ server:
 
 spring:
   application:
-    name: file
+    name: basic
   cloud:
     nacos:
       discovery:

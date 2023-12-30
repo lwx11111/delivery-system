@@ -84,6 +84,8 @@ public class OrderStateMachineConfig extends StateMachineConfigurerAdapter<Order
                 .and()
                 .withExternal().source(OrderStatus.WAIT_RECEIVE).target(OrderStatus.FINISH)
                 .event(OrderStatusChangeEvent.RECEIVED)
+                .and()
+                .withExternal()
                 // 消费者取消
                 .source(OrderStatus.WAIT_PAYMENT)
                 .target(OrderStatus.CONSUMER_CANCEL)

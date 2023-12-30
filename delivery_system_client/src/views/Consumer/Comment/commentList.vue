@@ -53,7 +53,7 @@ const data = reactive({
             releaseTime: "2023-12-19 12:04:58",
             riderId: "1",
             shopId: null,
-            userId: "1",
+            userId: localStorage.getItem('userId'),
             userName: "11"
         }
     ],

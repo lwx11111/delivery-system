@@ -11,13 +11,23 @@
                     </div>
                     <template #dropdown>
                         <el-dropdown-menu>
+<!--                            <el-dropdown-item>-->
+<!--                                <span style="display:block;"-->
+<!--                                      @click="handlePersonal()">-->
+<!--                                    修改个人信息-->
+<!--                                </span>-->
+<!--                            </el-dropdown-item>-->
                             <el-dropdown-item>
-                            <span style="display:block;"
-                                  @click="handleModifyPass()">修改密码</span>
+                                <span style="display:block;"
+                                      @click="handleModifyPass()">
+                                    修改密码
+                                </span>
                             </el-dropdown-item>
                             <el-dropdown-item divided>
-                            <span style="display:block;"
-                                  @click="logout()">退出系统</span>
+                                <span style="display:block;"
+                                      @click="logout()">
+                                    退出系统
+                                </span>
                             </el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
@@ -60,6 +70,8 @@ import { onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import Api from '@/api/auth'
 import {ElMessage} from "element-plus";
+import { removeToken } from '@/utils/auth/auth.js'
+import {getEncryptPassword} from "@/utils/passwordEncrypt";
 
 const store = useStore();
 const router = useRouter()
@@ -71,7 +83,7 @@ const data = reactive({
         oldPass: '',
         newPass: '',
         confirmPass: '',
-        name: ''
+        accountId: localStorage.getItem("userId"),
     },
     rules: {
         oldPass: [
@@ -94,7 +106,9 @@ const data = reactive({
 
 // Mounted
 onMounted(() => {
-
+    console.log(localStorage.getItem("userId"))
+    data.name = localStorage.getItem("userName")
+    data.form.name = data.name
 })
 
 // Methods
@@ -126,8 +140,16 @@ const form = ref();
 const handleSavePass = () => {
     form.value.validate(valid => {
         if (valid) {
+            data.form.newPass = getEncryptPassword(data.form.newPass, 'aes');
+            data.form.oldPass = getEncryptPassword(data.form.oldPass, 'aes');
             Api.modifyPass(data.form).then(res => {
-                ElMessage.success('修改成功');
+                console.log(res)
+                if (res.code === '20000'){
+                    ElMessage.success('修改成功');
+                    logout();
+                } else {
+                    ElMessage.error(res.message)
+                }
             })
         } else {
             return false;
@@ -141,10 +163,17 @@ const handleSavePass = () => {
 const logout = () => {
     Api.logout().then(res => {
         console.log(res);
+        removeToken();
         router.push({
             path: '/login',
         })
     })
+}
+
+/**
+ *
+ */
+const handlePersonal = () =>{
 
 }
 </script>

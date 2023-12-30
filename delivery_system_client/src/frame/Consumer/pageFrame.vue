@@ -23,12 +23,9 @@
                 <el-container>
                     <el-main style="background: #FFFAFA">
                         <router-view v-slot="{ Component }" :key="key" >
-                            <transition name="fade-transform" mode="out-in">
-<!--                                :include="cachedViews"-->
-                                <keep-alive>
-                                    <component :is="Component" />
-                                </keep-alive>
-                            </transition>
+                            <keep-alive>
+                                <component :is="Component" />
+                            </keep-alive>
                         </router-view>
                     </el-main>
                 </el-container>
@@ -67,10 +64,15 @@ const open = (key:string, keyPath: string[]) => {
 
 const close = (key:string, keyPath: string[]) => {
     console.log(key, keyPath);
+
 }
 
 const handleSelect = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
+    let path = keyPath[0];
+    router.push({
+        path: path,
+    })
 }
 
 const key = computed(() => {

@@ -22,7 +22,7 @@ export default {
 
     modifyPass(data) {
         return request({
-            url: '/auth-manager-microservice-lwx/' + 'v1/account/modifyPass',
+            url: '/auth-manager-microservice-lwx/' + 'v1/account/modify-password',
             method: 'post',
             type: 'form',
             data: data
@@ -34,6 +34,24 @@ export default {
             url: '/auth-manager-microservice-lwx/' + 'v1/account/logout',
             method: 'post'
         })
-    }
+    },
+
+    riderRegister(riderId){
+        return request({
+            url: 'order/rider/riderRegister/'+ riderId,
+            method: 'get',
+        })
+    },
+
+    // 修改
+    update4rider(id, obj) {
+        return request({
+            url:  'order/rider/' + id,
+            method: 'put',
+            data: obj
+        })
+    },
+
+
 }
 

@@ -63,6 +63,7 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
+
                 <el-row>
                     <el-col>
                         <el-form-item
@@ -70,9 +71,11 @@
                                 prop="picture"
                                 label-width="150px">
                             <MinioUpload :file-list="data.fileList"
+                                         :show="data.show"
                                          ref="uploadRef"
                                          @uploadCallback="uploadCallback"
-                                         :limit="1"></MinioUpload>
+                                         :limit="1">
+                            </MinioUpload>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -148,6 +151,7 @@
               { required: true, message: '分类名不能为空', trigger: 'blur' }
             ],
         },
+        show: true,
     })
 
     // Props
@@ -209,9 +213,15 @@
                 data.disabled = false
                 break
         }
-
+        if (data.type === 'detail'){
+            data.show = true;
+        }
+        if (data.type === 'update' || data.type === 'add'){
+            data.show = false;
+        }
         // 获取数据
         if (data.type === 'detail' || data.type === 'update') {
+
             // ID校验
             if (id != null && id != '') {
                 data.id = id
@@ -246,7 +256,6 @@
                     if (!StringUtil.isEmpty(res.data.picture)){
                         data.fileList = [
                             {
-                                name: '123.jpg',
                                 url: res.data.picture,
                             },
                         ]

@@ -123,6 +123,11 @@ public class OrderInfo extends Model<OrderInfo> {
     @TableField("status")
     private Integer status;
 
+    @Schema(description = "状态名")
+    @Excel(name = "状态名")
+    @TableField("status_name")
+    private String statusName;
+
     @Schema(description = "支付方式")
     @Excel(name = "支付方式")
     @TableField("payment_method")

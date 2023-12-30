@@ -3,7 +3,7 @@ import request from '@/utils/request'
 export default {
   deleteFileByStorageFileName(data) {
     return request({
-      url: '/file/sysoss/deleteFileByStorageFileName',
+      url: '/basic/file/sysoss/deleteFileByStorageFileName',
       method: 'post',
       data: data
     })

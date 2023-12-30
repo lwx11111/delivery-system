@@ -114,10 +114,10 @@ const data = reactive({
             salesVolume: 1,
             score: 1,
             status: 1,
-            userId: "1",
+            userId: localStorage.getItem('userId'),
         },
         shopId: "1",
-        userId: "1",
+        userId: localStorage.getItem('userId'),
     }
 })
 
@@ -156,7 +156,7 @@ const orderPay = () => {
         }
     })
 }
-orderCanel
+
 </script>
 
 <style scoped>

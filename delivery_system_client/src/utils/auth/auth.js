@@ -1,11 +1,12 @@
 const TokenKey = 'Auth-Token'
-
+export function getUserId() {
+    let userId = localStorage.getItem('userId');
+}
 export function getToken() {
     return sessionStorage.getItem(TokenKey);
 }
 
 export function setToken(token) {
-    console.log(token)
     sessionStorage.setItem(TokenKey, token);
 }
 

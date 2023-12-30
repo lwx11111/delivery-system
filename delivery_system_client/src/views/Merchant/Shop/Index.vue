@@ -18,7 +18,7 @@
             <el-table-column
                     prop="id"
                     label="id"
-                    width="180"
+                    width="200"
                     align="center">
             </el-table-column>
             <el-table-column
@@ -30,18 +30,6 @@
             <el-table-column
                     prop="province"
                     label="省"
-                    width="180"
-                    align="center">
-            </el-table-column>
-            <el-table-column
-                    prop="county"
-                    label="县"
-                    width="180"
-                    align="center">
-            </el-table-column>
-            <el-table-column
-                    prop="location"
-                    label="具体地址"
                     width="180"
                     align="center">
             </el-table-column>
@@ -66,12 +54,6 @@
             <el-table-column
                     prop="deliveryCharge"
                     label="配送费"
-                    width="180"
-                    align="center">
-            </el-table-column>
-            <el-table-column
-                    prop="safetyFile"
-                    label="安全档案图片"
                     width="180"
                     align="center">
             </el-table-column>
@@ -102,12 +84,6 @@
             <el-table-column
                     prop="itemCategory"
                     label="物品分类"
-                    width="180"
-                    align="center">
-            </el-table-column>
-            <el-table-column
-                    prop="picture"
-                    label="店铺图片路径"
                     width="180"
                     align="center">
             </el-table-column>
@@ -175,7 +151,8 @@
         tableData: [],
         // dialog
         type: '',
-        shopId: "1"
+        shopId: "1",
+        userId: localStorage.getItem("userId")
     })
 
     // Mounted
@@ -185,23 +162,28 @@
 
     // Methods
     const getData = () => {
-        Api.sel4shop(data.shopId).then(res=> {
+        if (data.userId === null){
+            ElMessage({
+                type: 'warning',
+                message: '请先登录',
+            })
+            router.push("/login")
+        }
+        let param = {
+            userId: data.userId
+        }
+        Api.selpage4shop(param).then(res=> {
             console.log(res)
             if (res.code === 200){
-                data.tableData.push(res.data)
+                data.tableData = res.data.records;
             }
         })
     }
     // 添加记录
     const itemDialog = ref();
-    const addData = () => {
-        data.type = "add";
-        itemDialog.value.init(null,data.type);
-    }
 
     // 选中行变化事件
     const selectionChanged = (val: number) => {
-
 
     }
 

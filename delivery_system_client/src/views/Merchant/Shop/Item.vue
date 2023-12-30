@@ -14,17 +14,6 @@
                     ref="itemForm"
                     label-width="100px">
                 <el-row>
-<!--                    todo -->
-<!--                    <el-col :span="6">-->
-<!--                        <el-form-item-->
-<!--                                label="userId"-->
-<!--                                prop="userId">-->
-<!--                            <el-input-->
-<!--                                    v-model="data.item.userId"-->
-<!--                                    :disabled="data.disabled">-->
-<!--                            </el-input>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
                     <el-col :span="6">
                         <el-form-item
                                 label="店铺名"
@@ -46,12 +35,15 @@
                     </el-col>
                 </el-row>
 
+                <!--商家不能更新-->
                 <el-row>
                     <el-col :span="6">
                         <el-form-item
                                 label="省"
                                 prop="province">
-                            <el-select v-model="data.item.province" placeholder="请选择">
+                            <el-select v-model="data.item.province"
+                                       placeholder="请选择"
+                                       :disabled="true">
                                 <el-option :disabled="data.disabled"
                                            v-for="(item, index) in data.provinces"
                                            :label="item.name"
@@ -63,7 +55,9 @@
                         <el-form-item
                                 label="县"
                                 prop="county">
-                            <el-select v-model="data.item.county" placeholder="请选择">
+                            <el-select v-model="data.item.county"
+                                       placeholder="请选择"
+                                       :disabled="true">
                                 <el-option :disabled="data.disabled"
                                             v-for="(item, index) in data.counties"
                                            :label="item.name"
@@ -76,7 +70,7 @@
                                 label="具体地址"
                                 prop="location">
                             <el-input v-model="data.item.location"
-                                    :disabled="data.disabled">
+                                    :disabled="true">
                             </el-input>
                         </el-form-item>
                     </el-col>
@@ -133,39 +127,32 @@
                             </el-time-picker>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="状态">
-                            <el-select v-model="data.item.status"
-                                       :disabled="data.disabled"
-                                       placeholder="请选择">
-                                <el-option value="1" label="正常"></el-option>
-                                <el-option value="0" label="关闭"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
                 </el-row>
-                <!--todo 图片显示-->
-                <el-row v-if="!data.disabled">
-                    <el-col :span="6">
+                <el-row>
+                    <el-col :span="24">
                         <el-form-item
                                 label="店铺图片"
                                 prop="picture"
                                 label-width="150px">
-<!--                            <MinioUpload :file-list="data.fileList"-->
-<!--                                         ref="uploadRef"-->
-<!--                                         @uploadCallback="uploadCallbackPicture"-->
-<!--                                         :limit="1"></MinioUpload>-->
+                            <MinioUpload :file-list="data.pictureArray"
+                                         ref="uploadRef"
+                                         @uploadCallback="uploadCallbackPicture"
+                                         :limit="1">
+                            </MinioUpload>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
                         <el-form-item
                                 label="安全档案图片"
-                                prop="picture"
+                                prop="safetyFile"
                                 label-width="150px">
-<!--                            <MinioUpload :file-list="data.fileList"-->
-<!--                                         ref="uploadRef"-->
-<!--                                         @uploadCallback="uploadCallbackSafetyFile"-->
-<!--                                         :limit="1"></MinioUpload>-->
+                            <MinioUpload :file-list="data.safetyFileArray"
+                                         ref="uploadRef"
+                                         @uploadCallback="uploadCallbackSafetyFile"
+                                         :limit="1">
+                            </MinioUpload>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -209,17 +196,20 @@
 <script lang="ts" setup>
     import Api from '@/api/Shop/api_shop.js'
     import ApiCategory from '@/api/Shop/api_category.js'
-    import { reactive, ref, onMounted, toRefs } from 'vue'
+    import { reactive, ref, onMounted } from 'vue'
     import { useStore } from "vuex";
     import { useRouter } from 'vue-router'
-    import {ElMessage, ElMessageBox} from "element-plus";
-    // import MinioUpload from "@/components/MinioUpload.vue";
+    import { ElMessage } from "element-plus";
+    import MinioUpload from "../../components/MinioUpload.vue";
 
     const store = useStore();
     const router = useRouter()
 
     // Data
     const data = reactive({
+        // 图片数组
+        pictureArray: [],
+        safetyFileArray: [],
         // todo
         provinces: [
             {
@@ -342,9 +332,11 @@
 
     // Methods
     const uploadCallbackPicture = (response, url) => {
+        console.log(url)
         data.item.picture = url
     }
     const uploadCallbackSafetyFile = (response, url) => {
+        console.log(url)
         data.item.safetyFile = url
     }
 
@@ -386,6 +378,20 @@
                 console.log(res)
                 if (res.code === 200){
                     data.item = res.data;
+
+                    // 图片处理
+                    if (data.pictureArray.length === 0){
+                        let item = {
+                            url: res.data.picture,
+                        }
+                        data.pictureArray.push(item)
+                    }
+                    if (data.safetyFileArray.length === 0){
+                        let item = {
+                            url: res.data.safetyFile,
+                        }
+                        data.safetyFileArray.push(item)
+                    }
                     // 界面显示
                     data.showDialog = true;
                 } else {

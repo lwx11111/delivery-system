@@ -75,6 +75,7 @@ public class OrderInfoController {
     @PostMapping("/orderDelivery")
     @ResponseBody
     public SimpleResponse orderDelivery(@RequestBody Map<String,String> params){
+        System.out.println("kwxxxxxxx");
         SimpleResponse response = new SimpleResponse();
         try {
             response.setData(service.orderDelivery(params));

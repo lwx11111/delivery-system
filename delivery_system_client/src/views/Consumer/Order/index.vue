@@ -35,7 +35,7 @@
                     @click="toOrderDetail(key)">
                 <el-col :span="4"
                         style="margin-right: 5px">
-                    <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                    <el-image :src="item.shop.picture"></el-image>
                 </el-col>
                 <el-col :span="8">
                     <h1>{{item.shop.name}}</h1>
@@ -161,10 +161,10 @@ const data = reactive({
                 salesVolume:1,
                 score:1,
                 status:1,
-                userId:"1",
+                userId:localStorage.getItem('userId'),
             },
             shopId:"1",
-            userId:"1",
+            userId:localStorage.getItem('userId'),
         },
     ],
     // 菜单栏名称
@@ -172,7 +172,7 @@ const data = reactive({
     // 查询参数
     params: {
         name:'',
-        userId: '1',
+        userId: localStorage.getItem('userId'),
         status: '',
         pageIndex: 1,
         pageSize: 10
