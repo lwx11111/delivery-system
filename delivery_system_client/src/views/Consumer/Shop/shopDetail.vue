@@ -31,47 +31,52 @@
         <!--选择物品界面-->
         <el-tab-pane label="点菜" name="order">
             <el-row>
-                <!-- 分类列表-->
-                <el-col :span="4"
-                        style="border-right: 1px solid red; " >
-                    <el-scrollbar height="400px" style="padding: 10px">
-                        <el-space direction="vertical">
-                            <el-card style="width: 90%; border: 1px solid red"
-                                     v-for="item in data.shopItemCategoryList">
-                                {{item.name}}
-                            </el-card>
-                        </el-space>
-                    </el-scrollbar>
-                </el-col>
+<!--                &lt;!&ndash; 分类列表&ndash;&gt;-->
+<!--                <el-col :span="4"-->
+<!--                        style="border-right: 1px solid red; " >-->
+<!--                    <el-scrollbar height="400px" style="padding: 10px">-->
+<!--                        <el-space direction="vertical">-->
+<!--                            <el-card style="width: 90%; border: 1px solid red"-->
+<!--                                     v-for="item in data.shopItemCategoryList">-->
+<!--                                {{item.name}}-->
+<!--                            </el-card>-->
+<!--                        </el-space>-->
+<!--                    </el-scrollbar>-->
+<!--                </el-col>-->
 
                 <!--菜品列表-->
-                <el-col :span="20">
+                <el-col :span="24" style="text-align: center">
                     <!--todo 高度-->
                     <el-scrollbar height="500px" style="padding: 10px">
                         <el-space direction="vertical">
                             <el-card v-for="(item, key) in data.shopItemList">
                                 <el-row>
+                                    <!--图片-->
                                     <el-col :span="11"
                                             @click="toShopItemDetail(key)"
                                             style="margin-right: 5px">
                                         <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
                                     </el-col>
+                                    <!--名字 价格-->
                                     <el-col :span="12">
-                                        <el-row @click="toShopItemDetail(key)">
+                                        <el-row @click="toShopItemDetail(key)"
+                                                style="margin-bottom: 5px">
                                                 <span style="font-size: 20px;font-weight: bold;">
                                                     {{item.name}}
                                                 </span>
                                         </el-row>
-                                        <el-row>{{item.price}}￥</el-row>
+                                        <el-row style="color: red; margin-bottom: 5px">
+                                            {{item.price}}￥
+                                        </el-row>
                                         <!--减少添加按钮-->
                                         <el-row>
-                                            <el-icon size="20px"
+                                            <el-icon size="30px"
                                                      v-if="data.order.has(item.id)"
                                                      @click="subCart(key)">
                                                 <Remove />
                                             </el-icon>
                                             {{data.order.get(item.id)}}
-                                            <el-icon size="20px"
+                                            <el-icon size="30px"
                                                      @click="addCart(key)">
                                                 <CirclePlus />
                                             </el-icon>
@@ -85,21 +90,26 @@
             </el-row>
 
             <!--购物车-->
-            <el-card>
-                <div>
-                    总金额：<span v-text="data.totalAmount"></span>
-                    <el-button @click="saveCart()"
-                               style="background: gold">
-                        加入购物车
-                    </el-button>
-                    <el-button @click="submitOrder()"
-                               style="background: gold">
-                        提交订单
-                    </el-button>
-                </div>
+            <el-card style="border: 1px solid gold ">
+                <el-row>
+                    <el-col :span="18">
+                        总金额：<span v-text="data.totalAmount"></span>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-button @click="saveCart()"
+                                   style="background: cornflowerblue">
+                            加入购物车
+                        </el-button>
+                    </el-col>
+                    <el-col :span="3">
+                        <el-button @click="submitOrder()"
+                                   style="background: gold">
+                            提交订单
+                        </el-button>
+                    </el-col>
+                </el-row>
             </el-card>
         </el-tab-pane>
-        <el-tab-pane label="Config" name="second">Config</el-tab-pane>
         <el-tab-pane label="评价" name="shopComment">
             <CommentList :shop-id="data.shop.id"></CommentList>
         </el-tab-pane>

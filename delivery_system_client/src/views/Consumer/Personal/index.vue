@@ -1,13 +1,13 @@
 <template>
-    <el-row>设置 客服</el-row>
     <!-- 头像名字-->
     <el-card @click="toUserDetail" style="margin-bottom: 10px">
         <el-row>
-            <el-col :span="4">
+            <el-col style="margin-right: 10px"
+                    :span="4">
                 <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
             </el-col>
-            <el-col :span="20">
-                {{data.user.name}}
+            <el-col :span="15">
+                <h1>{{data.user.name}}</h1>
             </el-col>
         </el-row>
     </el-card>
@@ -44,28 +44,29 @@
                 <h1 @click="toOrderIndex()">查看全部</h1>
             </el-col>
         </el-row>
+        <el-divider></el-divider>
         <el-row>
-            <el-col :span="4"
+            <el-col :span="6"
                     @click="toOrderIndex(1)">
                 <el-icon><Search></Search></el-icon>
                 <div>待付款</div>
             </el-col>
-            <el-col :span="4"
+            <el-col :span="6"
                     @click="toOrderIndex(2)">
                 <el-icon><Search></Search></el-icon>
                 <div>待收货</div>
             </el-col>
-            <el-col :span="4"
-                    @click="toOrderIndex(3)">
-                <el-icon><Search></Search></el-icon>
-                <div>待使用</div>
-            </el-col>
-            <el-col :span="4"
+<!--            <el-col :span="5"-->
+<!--                    @click="toOrderIndex(3)">-->
+<!--                <el-icon><Search></Search></el-icon>-->
+<!--                <div>待使用</div>-->
+<!--            </el-col>-->
+            <el-col :span="6"
                     @click="toOrderIndex(4)">
                 <el-icon><Search></Search></el-icon>
                 <div>待评价</div>
             </el-col>
-            <el-col :span="4"
+            <el-col :span="6"
                     @click="toOrderIndex(5)">
                 <el-icon><Search></Search></el-icon>
                 <div>退款/售后</div>

@@ -5,7 +5,7 @@
             <el-col v-if="props.categoryId === '0' "
                     @click="toCategoryList(key, true)"
                     :span="4"
-                    style="margin: 10px;"
+                    style="margin: 10px;text-align: center"
                     v-for="(item,key) in data.parentCategoryList">
                 <el-image style="height: 60px;border-radius: 50%"
                           :src="item.picture"></el-image>
@@ -17,10 +17,11 @@
             <el-col v-if="props.categoryId === '0' "
                     @click="toCategoryList(key, false)"
                     :span="4"
-                    style="margin: 10px"
+                    style="margin: 10px; text-align: center"
                     v-for="(item,key) in data.categoryList">
                 <el-image style="height: 40px;border-radius: 50%"
-                          :src="item.picture"></el-image>
+                          :src="item.picture">
+                </el-image>
                 <div>{{item.name}}</div>
             </el-col>
         </el-row>

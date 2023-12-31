@@ -23,6 +23,10 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 
 // 全局变量配置
 app.config.globalProperties = {
-    APP_NAME: dataJson.APP_NAME
+    APP_NAME: dataJson.APP_NAME,
+    GATEWAY_URL: dataJson.GATEWAY_URL,
+    AUTH_NAME: dataJson.AUTH_NAME,
+    CAPTCHA_URL: dataJson.CAPTCHA_URL,
+    APP_ID: dataJson.APP_ID,
 };
 

@@ -289,6 +289,7 @@
         }
         console.log(param)
         Api.orderTaking(param).then(res => {
+            console.log(res)
             if (res.code === 200 && res.data === true){
                 ElMessage({
                     type: 'success',

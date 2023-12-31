@@ -36,21 +36,7 @@ export default {
         })
     },
 
-    riderRegister(riderId){
-        return request({
-            url: 'order/rider/riderRegister/'+ riderId,
-            method: 'get',
-        })
-    },
 
-    // 修改
-    update4rider(id, obj) {
-        return request({
-            url:  'order/rider/' + id,
-            method: 'put',
-            data: obj
-        })
-    },
 
 
 }

@@ -19,6 +19,7 @@ public class CartQo {
     private String id;
     private String shopItemId;
     private String shopId;
+    private String picture;
     private Integer amount;
     private String shopItemName;
     private Double price;

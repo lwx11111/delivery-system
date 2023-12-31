@@ -6,9 +6,9 @@
             style="margin-bottom: 10px">
         <!--用户信息-->
         <el-row >
-            <el-col :span="10">
-                <el-image></el-image>
-            </el-col>
+<!--            <el-col :span="10">-->
+<!--                <el-image :src="require('src/assets/profile.png')"></el-image>-->
+<!--            </el-col>-->
             <el-col :span="5">
                 {{item.userName}}
             </el-col>

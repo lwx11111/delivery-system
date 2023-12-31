@@ -11,28 +11,28 @@
                             {{item.name}}
                         </span>
                     </el-row>
-                    <el-row>
-                        <el-col :span="10">
+                    <el-row style="margin-top: 5px">
+                        <el-col :span="10" >
                             <span style="font-size: 15px;">{{item.score}}分</span>
                         </el-col>
                         <el-col :span="10">
                             <span style="font-size: 15px;">月售{{item.salesVolume}}</span>
                         </el-col>
                     </el-row>
-                    <el-row>
+                    <el-row style="margin-top: 5px">
                         <el-col :span="10">
-                            <span>起送 ￥{{item.minPrice}}</span>
+                            <span style="color: red">起送 ￥{{item.minPrice}}</span>
                         </el-col>
                         <el-col :span="10">
-                            <span>配送 ￥{{item.deliveryCharge}}</span>
+                            <span style="color: red">配送 ￥{{item.deliveryCharge}}</span>
                         </el-col>
                     </el-row>
-                    <el-row>
+                    <el-row style="margin-top: 5px">
                         <el-col :span="10">
-                            <span>40分钟</span>
+                            <span>预计时间:40分钟</span>
                         </el-col>
                         <el-col :span="10">
-                            <span>2.2km</span>
+                            <span>距离：2.2km</span>
                         </el-col>
                     </el-row>
                 </el-col>
@@ -51,7 +51,10 @@ const router = useRouter()
 
 // Props
 const props = defineProps({
-    shopList: [],
+    shopList:{
+        type: Array,
+        required: true
+    }
 })
 
 // Data

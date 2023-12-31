@@ -1,7 +1,7 @@
 <template>
     <!--点单状态-->
     <el-row>
-        <h1>点单完成</h1>
+        <h1 style="text-align: center">点单完成</h1>
     </el-row>
     <!-- 操作-->
     <el-card style="margin-bottom: 10px">
@@ -61,63 +61,72 @@
         <el-row v-for="item in data.order.orderItems"
                 @click="toShopDetail"
                 style="margin-bottom: 5px">
-            <el-col :span="6">
+            <el-col style="margin-right: 5px"
+                    :span="6">
                 <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="6">
                 {{item.shopItem.name}}
             </el-col>
-            <el-col :span="4">
+            <el-col :span="5">
                 数量：{{item.amount}}
             </el-col>
-            <el-col :span="4">
+            <el-col style="color:red;" :span="5">
                 价格：{{item.shopItem.price}}￥
             </el-col>
         </el-row>
         <el-divider></el-divider>
         <!--订单基本信息-金额 -->
         <el-row>
-            打包费: {{data.order.packingCharges}}￥
-        </el-row>
-        <el-row>
-            配送费: {{data.order.deliveryCharge}}￥
-        </el-row>
-        <el-row>
-            总金额：{{data.order.totalCharge}}￥
+            <el-col :span="6"></el-col>
+            <el-col :span="6"></el-col>
+            <el-col :span="5"></el-col>
+            <el-col :span="5">
+                <el-row style="color:red;">
+                    打包费: {{data.order.packingCharges}}￥
+                </el-row>
+                <el-row style="color:red;">
+                    配送费: {{data.order.deliveryCharge}}￥
+                </el-row>
+                <el-row style="color:red;">
+                    总金额：{{data.order.totalCharge}}￥
+                </el-row>
+            </el-col>
         </el-row>
     </el-card>
+
     <!--订单详细信息-->
     <el-card>
-        <el-row>
+        <el-row style="margin-bottom: 5px">
             期望时间: {{data.order.expectedTime}}
         </el-row>
-        <el-row>
+        <el-row style="margin-bottom: 5px">
             配送地址: {{data.order.location}}
         </el-row>
-        <el-row>
+        <el-row style="margin-bottom: 5px">
             用户信息: {{data.user.name}} {{data.user.phone}}
         </el-row>
-        <el-row>
+        <el-row style="margin-bottom: 5px">
             配送服务: {{data.order.deliveryService}}
         </el-row>
-        <el-row @click="toRiderDetail">
+        <el-row @click="toRiderDetail"
+                style="margin-bottom: 5px">
             配送骑手: {{data.order.deliveryRiderId}}
-            <el-icon><ArrowRight></ArrowRight></el-icon>
+<!--            <el-icon><ArrowRight></ArrowRight></el-icon>-->
         </el-row>
-        <el-row>
+        <el-row style="margin-bottom: 5px">
             点单号: {{data.order.id}}
-            <el-button>复制</el-button>
         </el-row>
-        <el-row>
+        <el-row style="margin-bottom: 5px">
             下单时间: {{data.order.orderTime}}
         </el-row>
-        <el-row>
+        <el-row style="margin-bottom: 5px">
             支付方式: {{data.order.paymentMethod}}
         </el-row>
-        <el-row>
+        <el-row style="margin-bottom: 5px">
             点单备注: {{data.order.remark}}
         </el-row>
-        <el-row>
+        <el-row style="margin-bottom: 5px">
             餐具数量: {{data.order.tableware}}
         </el-row>
     </el-card>

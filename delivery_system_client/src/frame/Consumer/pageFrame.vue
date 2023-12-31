@@ -1,8 +1,7 @@
 <template>
     <div class="common-layout">
         <el-container>
-            <el-header style="border: 1px solid red">
-                <!--     default-active="/Consumer/index"           -->
+            <el-header>
                 <el-menu router
                          @close="close"
                          default-active="/Consumer/index"
@@ -10,10 +9,10 @@
                          @open="open"
                          mode="horizontal">
                     <el-menu-item index="/Consumer/index">外卖</el-menu-item>
-                    <el-sub-menu index="2">
-                        <template #title>Workspace</template>
-                        <el-menu-item index="/">会员</el-menu-item>
-                    </el-sub-menu>
+<!--                    <el-sub-menu index="2">-->
+<!--                        <template #title>Workspace</template>-->
+<!--                        <el-menu-item index="/">会员</el-menu-item>-->
+<!--                    </el-sub-menu>-->
                     <el-menu-item index="/Consumer/Order/index">订单</el-menu-item>
                     <el-menu-item index="/Consumer/Personal/index">我的</el-menu-item>
                 </el-menu>
@@ -32,7 +31,11 @@
                 <el-aside width="200px"></el-aside>
             </el-container>
         </el-container>
-        <el-footer style="border: 1px solid red">Footer</el-footer>
+        <el-footer style="text-align: center; border-top: 1px beige solid">
+            <h3>
+                备案信息：111111111111111
+            </h3>
+        </el-footer>
     </div>
 </template>
 
@@ -64,7 +67,6 @@ const open = (key:string, keyPath: string[]) => {
 
 const close = (key:string, keyPath: string[]) => {
     console.log(key, keyPath);
-
 }
 
 const handleSelect = (key: string, keyPath: string[]) => {

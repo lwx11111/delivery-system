@@ -5,36 +5,34 @@
                top="5vh"
                title="物品信息">
         <!--物品图片-->
-        <el-row class="div-class" style="border: 1px red solid">
-            <el-image class="el-image" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+        <el-row class="div-class">
+            <el-image class="el-image"
+                      style="height: 300px; width: 300px"
+                      src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg">
+            </el-image>
         </el-row>
 
         <!--物品描述-->
         <el-card>
             <el-row>
-                <el-col>
+                <el-col :span="8">
                     <h1>{{data.shopItemInfo.name}}</h1>
                 </el-col>
-            </el-row>
-
-            <el-row>
-                <el-col :span="10">
-                    <div>{{data.shopItemInfo.price}}￥</div>
+                <el-col style="color: red" :span="8">
+                    <h1>{{data.shopItemInfo.price}}￥</h1>
                 </el-col>
                 <!--价格和加购-->
-                <el-col :span="10">
-                    <el-row>
-                        <el-icon size="20px"
-                                 v-if="data.order.has(data.shopItemInfo.id)"
-                                 @click="subCart(data.shopItemInfo.id)">
-                            <Remove />
-                        </el-icon>
-                        {{data.order.get(data.shopItemInfo.id)}}
-                        <el-icon size="20px"
-                                 @click="addCart(data.shopItemInfo.id)">
-                            <CirclePlus />
-                        </el-icon>
-                    </el-row>
+                <el-col :span="8">
+                    <el-icon size="30px"
+                             v-if="data.order.has(data.shopItemInfo.id)"
+                             @click="subCart(data.shopItemInfo.id)">
+                        <Remove />
+                    </el-icon>
+                    {{data.order.get(data.shopItemInfo.id)}}
+                    <el-icon size="30px"
+                             @click="addCart(data.shopItemInfo.id)">
+                        <CirclePlus />
+                    </el-icon>
                 </el-col>
             </el-row>
         </el-card>
@@ -52,7 +50,7 @@
             <el-tab-pane label="评价" name="shopComment">Role</el-tab-pane>
         </el-tabs>
         <!--购物车-->
-        <el-card>
+        <el-card style="border: 1px solid gold ">
             <div>
                 总金额：<span v-text="data.totalAmount"></span>
             </div>

@@ -2,17 +2,22 @@
     <div class="back" style="border: 1px solid white">
         <el-card class="login-form-content">
             <el-form :model="form"
+                     ref="formRef"
+                     :rules="data.rules"
                      label-width="100px">
                 <el-form-item label="用户名"
+                              prop="username"
                               class="input-item flex align-center">
                     <el-input v-model="form.username" />
                 </el-form-item>
                 <el-form-item label="密码"
+                              prop="password"
                               class="input-item flex align-center">
                     <el-input v-model="form.password"
                               show-password/>
                 </el-form-item>
                 <el-form-item label="验证码"
+                              prop="verifyCode"
                               class="input-item flex align-center">
                     <el-input v-model="form.verifyCode"
                               style="width: 80%">
@@ -21,7 +26,7 @@
                          alt="验证码"
                          id="captchaImg"
                          :src="data.captchaUrl"
-                         @click="setCaptchUrl"/>
+                         @click="setCaptchaUrl"/>
                 </el-form-item>
                 <el-form-item class="input-item flex align-center">
                     <el-button type="primary"
@@ -38,7 +43,7 @@
 </template>
 
 <script lang="ts" setup>
-import {getCurrentInstance, onMounted, reactive} from 'vue'
+import {getCurrentInstance, onMounted, reactive, ref} from 'vue'
 import commonUtil from '../../utils/common-util.js';
 import {getEncryptPassword} from '../../utils/passwordEncrypt.js';
 import Api from '@/api/auth.js';
@@ -53,7 +58,18 @@ const store = useStore();
 const router = useRouter()
 const data = reactive({
     captchaUrl: '',
-    uuid: ''
+    uuid: '',
+    rules: {
+        username: [
+            {required: true, message: '用户名不能为空', trigger: 'blur'}
+        ],
+        password: [
+            {required: true, message: '密码不能为空', trigger: 'blur'}
+        ],
+        verifyCode: [
+            {required: true, message: '验证码不能为空', trigger: 'blur'}
+        ],
+    }
 })
 const form = reactive({
     username: '',
@@ -63,44 +79,55 @@ const form = reactive({
 
 // Mounted
 onMounted(() => {
-    setCaptchUrl();
+    setCaptchaUrl();
 })
-
-const currentInstance = getCurrentInstance();
 
 /**
  * 获取验证码
  */
+const currentInstance = getCurrentInstance();
 const getCaptchaUrl = () => {
     const uuid = commonUtil.createGuid()
     data.uuid = uuid;
-    // 使用getCurrentInstanceAPI获取全局对象方法一
-    // 从globalProperties中可以获取到所有的全局变量
+    // 使用getCurrentInstanceAPI获取全局对象方法 从globalProperties中可以获取到所有的全局变量
     const globalProperties = currentInstance?.appContext.config.globalProperties
-    // return 'http://localhost:9999/manager/v1/public/anon/verification-code/create?uuid=' + uuid;
-    return 'http://localhost:8921/auth-external-microservice-lwx/v1/public/anon/verification-code/create?uuid=' + uuid;
+    return globalProperties.GATEWAY_URL + "/" + globalProperties.AUTH_NAME + "/" + globalProperties.CAPTCHA_URL + uuid;
 }
 
 /**
  * 重新获取验证码
  */
-const setCaptchUrl = () => {
+const setCaptchaUrl = () => {
     data.captchaUrl = getCaptchaUrl()
     form.verifyCode = ''
 }
 
+
 /**
- * 登录
+ * 登录校验
  */
+const formRef = ref();
 const onSubmit = () => {
-    var params = {
+    formRef.value.validate(valid => {
+        if (valid) {
+            loginWithCode();
+        }
+    })
+}
+
+/**
+ * 请求后端登录
+ */
+const loginWithCode = () => {
+    const globalProperties = currentInstance?.appContext.config.globalProperties
+    const params = {
         verify: form.verifyCode,
         uuid: data.uuid,
         username: getEncryptPassword(form.username, 'aes'),
         password: getEncryptPassword(form.password, 'aes'),
-        appId: '1',
+        appId: globalProperties.APP_ID,
         appName: 'dw'
-    }
+    };
 
     Api.loginWithCode(params).then(res => {
         console.log(res);
@@ -115,50 +142,70 @@ const onSubmit = () => {
             localStorage.setItem('userId', account.accountId)
             localStorage.setItem('userName', account.loginName)
             setToken(res.data.token.accessToken);
-            // 根据类型跳转
-            if (account.customAccountId === 'consumer'){
-                router.push({
-                    path: '/Consumer/index',
-                })
-            } else if(account.customAccountId === 'merchant') {
-                // 是否商铺已注册
-                let param = {
-                    userId: account.accountId,
-                }
-                ApiShop.selpage4shop(param).then(res => {
-                    console.log(res.data.records);
-                    if (res.code === 200){
-                        if (res.data.records.length === 0){
-                            router.push({
-                                path: '/Merchant/register',
-                            })
-                        } else {
-                            router.push({
-                                path: '/homepage',
-                            })
-                        }
-                    }
-                })
-            } else if (account.customAccountId === 'rider') {
-                ApiUser.riderRegister(account.accountId).then(res => {
-                    console.log(res);
-                    if (res.code === '20000'){
-                        // 页面跳转
-                        router.push({
-                            path: '/Rider/Order/index',
-                        })
-                    } else {
-                        ElMessage.error('登录失败');
-                    }
-                })
-                router.push({
-                    path: '/homepage',
-                })
-            }
+            // 跳转
+            routerPushByType(account.customAccountId, account.accountId);
 
+        } else {
+            ElMessage.error(res.message)
         }
     });
 }
+
+/**
+ * 根据用户类型跳转
+ * @param customAccountId
+ * @param accountId
+ */
+const routerPushByType = (customAccountId, accountId) => {
+    // 根据类型跳转
+    if (customAccountId === 'consumer'){
+        // 消费者
+        router.push({
+            path: '/Consumer/index',
+        })
+    } else if(customAccountId === 'merchant') {
+        // 是否商铺已注册
+        let param = {
+            userId: accountId,
+        }
+        ApiShop.selpage4shop(param).then(res => {
+            console.log(res.data.records);
+            if (res.code === 200){
+                if (res.data.records.length === 0){
+                    router.push({
+                        path: '/Merchant/register',
+                    })
+                } else {
+                    router.push({
+                        path: '/homepage',
+                    })
+                }
+            }
+        })
+    } else if (customAccountId === 'rider') {
+        // 骑手
+        ApiUser.riderRegister(accountId).then(res => {
+            console.log(res);
+            if (res.code === 200){
+                // 页面跳转
+                router.push({
+                    path: '/Rider/Order/index',
+                })
+            } else {
+                ElMessage.error('登录失败');
+            }
+        })
+    } else {
+        // 页面跳转
+        router.push({
+            path: '/homepage',
+        })
+    }
+}
+
+/**
+ * 跳转注册页面
+ */
 const toRegister = () => {
     router.push({
         path: '/register',

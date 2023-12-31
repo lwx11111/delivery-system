@@ -4,9 +4,9 @@
 
     <select id="getRiderByNum" resultType="String">
         select account_id
-        from rider_order
-        order by order_num desc
-        where status = 0
+        from rider_order r
+        where r.status = 0
+        order by num desc
         limit 1
     </select>
 </mapper>

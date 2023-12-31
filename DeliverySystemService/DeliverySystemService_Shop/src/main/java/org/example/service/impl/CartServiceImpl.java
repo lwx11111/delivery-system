@@ -63,6 +63,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, Cart> implements IC
             cartVO.setShopId(entry.getKey());
             cartVO.setShopName(entry.getValue().get(0).getShopName());
             cartVO.setCarts(entry.getValue());
+            cartVO.setPicture(entry.getValue().get(0).getPicture());
             cartList.add(cartVO);
         }
         return cartList;

@@ -4,8 +4,9 @@
           <h1>
               首页
           </h1>
+          作者：刘文轩
+          联系方式：13806436774
       </el-card>
-      <el-card style="margin: 10px; border: 1px solid gold"></el-card>
   </div>
 </template>
 

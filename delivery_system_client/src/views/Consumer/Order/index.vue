@@ -2,7 +2,7 @@
     <!--外卖首页信息和地址-->
     <el-row>
         <el-col :span="24"
-                style="background: #DAA520; height: 50px">
+                style="text-align: center;background: #DAA520; height: 50px">
             <h1>订单</h1>
         </el-col>
     </el-row>
@@ -53,29 +53,48 @@
                             style="margin-right: 5px">
                         <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
                     </el-col>
-                    <el-col :span="4">
+                    <el-col :span="6">
                         {{it.shopItem.name}}
                     </el-col>
-                    <el-col :span="4">
+                    <el-col :span="5">
                         数量：{{it.amount}}
                     </el-col>
-                    <el-col :span="4">
+                    <el-col style="color:red;" :span="5">
                         价格：{{it.shopItem.price}}￥
                     </el-col>
                 </el-row>
             </div>
-            <el-row >
-                总价：<span style="color: red">{{item.totalCharge}}￥</span>
+            <el-row>
+                <el-col :span="6">
+
+                </el-col>
+                <el-col :span="6">
+
+                </el-col>
+                <el-col :span="5">
+
+                </el-col>
+                <el-col :span="5">
+                    总价：<span style="color: red">{{item.totalCharge}}￥</span>
+                </el-col>
             </el-row>
+            <el-divider></el-divider>
             <!--操作-->
             <el-row>
-                <el-button v-if="item.status === 1 || item.status === 2 || item.status === 3 || item.status === 4"
-                           @click="orderCancel(key)">取消订单</el-button>
-                <el-button v-if="item.status === 5"
-                           @click="orderRefund(key)">退款</el-button>
-                <el-button v-if="item.status === 5">再来一单</el-button>
-                <el-button v-if="item.status === 5 && item.status !== 51"
-                           @click="toComment(key)">评价</el-button>
+                <el-col :span="14">
+                </el-col>
+                <el-col :span="10">
+                    <el-button v-if="item.status === 1 || item.status === 2 || item.status === 3 || item.status === 4"
+                               @click="orderCancel(key)">取消订单
+                    </el-button>
+                    <el-button v-if="item.status === 5"
+                               @click="orderRefund(key)">退款
+                    </el-button>
+                    <el-button v-if="item.status === 5">再来一单</el-button>
+                    <el-button v-if="item.status === 5 && item.status !== 51"
+                               @click="toComment(key)">评价
+                    </el-button>
+                </el-col>
             </el-row>
         </el-card>
     </div>

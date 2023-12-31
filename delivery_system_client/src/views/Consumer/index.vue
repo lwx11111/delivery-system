@@ -1,7 +1,7 @@
 <template>
     <div>
         <!--外卖首页信息和地址-->
-        <el-row>
+        <el-row style="text-align: center">
             <el-col
                 :span="24"
                 style="background: #DAA520; height: 50px">
@@ -46,7 +46,29 @@ const router = useRouter()
 // Data
 const data = reactive({
     // 店铺信息
-    shopList: [],
+    shopList: [
+        {
+            categoryIds: null,
+            closeTime: "15:31:12",
+            county: "1",
+            deliveryCharge: 2,
+            description: "这是一家店",
+            id:"1",
+            itemCategory: "1",
+            location: "1",
+            minPrice: 2,
+            name: "店铺1",
+            openTime: "08:00:01",
+            params: null,
+            picture: "http://127.0.0.1:9000/sys/shop1.png",
+            province: "1",
+            safetyFile: "http://127.0.0.1:9000/sys/shop1.png",
+            salesVolume: 1,
+            score: 1,
+            status: 1,
+            userId: "1",
+        }
+    ],
     // 查询参数
     params: {
         screening: '',
@@ -68,6 +90,7 @@ onMounted(() => {
  */
 const getShopList = () => {
     ApiShop.selpage4shop(data.params).then(res => {
+        console.log(res)
         if (res.code === 200){
             data.shopList = res.data.records;
         }

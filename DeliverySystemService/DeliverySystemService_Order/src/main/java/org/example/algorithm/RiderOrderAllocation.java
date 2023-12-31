@@ -19,9 +19,12 @@ public class RiderOrderAllocation {
      * 1.获取所有在线骑手
      * 2.分配
      */
-    public String pollingAllocation(OrderInfo order) {
+    public String pollingAllocation(OrderInfo order) throws Exception {
         // 暂时从数据库读
         String riderId = riderOrderMapper.getRiderByNum();
+        if (riderId == null) {
+            throw new Exception("没有骑手在线");
+        }
         return riderId;
     }
 }

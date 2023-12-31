@@ -3,7 +3,7 @@
         <!--外卖首页信息和地址-->
         <el-row>
             <el-col :span="24"
-                style="background: #DAA520; height: 50px">
+                style="text-align: center;background: #DAA520; height: 50px">
                 <h1>分类店铺</h1>
             </el-col>
         </el-row>

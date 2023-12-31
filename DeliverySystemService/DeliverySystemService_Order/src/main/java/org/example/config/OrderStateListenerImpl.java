@@ -96,6 +96,7 @@ public class OrderStateListenerImpl{
             orderStatusMapper.insert(orderStatus);
             return true;
         } catch (Exception e) {
+            System.out.println("lwxxxxxxxxxxxxxxxxxx");
             e.printStackTrace();
             return false;
         }

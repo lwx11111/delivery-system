@@ -26,5 +26,6 @@ public class CartVO {
      */
     private String shopId;
     private String shopName;
+    private String picture;
     private List<CartQo> carts;
 }
