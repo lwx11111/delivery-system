@@ -31,9 +31,9 @@
                 <el-aside width="200px"></el-aside>
             </el-container>
         </el-container>
-        <el-footer style="text-align: center; border-top: 1px beige solid">
+        <el-footer class="footer">
             <h3>
-                备案信息：111111111111111
+                备案信息：鲁ICP备2022023259号-1
             </h3>
         </el-footer>
     </div>
@@ -84,5 +84,14 @@ const key = computed(() => {
 </script>
 
 <style scoped>
-
+.footer {
+    /*position: fixed;*/
+    left: 0px;
+    bottom: 0px;
+    width: 100%;
+    height: 50px;
+    z-index: 9999;
+    text-align: center;
+    border-top: 1px beige solid
+}
 </style>

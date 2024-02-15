@@ -1,6 +1,7 @@
 <template>
     <div class="back" style="border: 1px solid white">
         <el-card class="login-form-content">
+            <h1 style="text-align: center">登录</h1>
             <el-form :model="form"
                      ref="formRef"
                      :rules="data.rules"
@@ -89,6 +90,7 @@ const currentInstance = getCurrentInstance();
 const getCaptchaUrl = () => {
     const uuid = commonUtil.createGuid()
     data.uuid = uuid;
+    //  "AUTH_NAME": "auth-external-microservice-lwx",
     // 使用getCurrentInstanceAPI获取全局对象方法 从globalProperties中可以获取到所有的全局变量
     const globalProperties = currentInstance?.appContext.config.globalProperties
     return globalProperties.GATEWAY_URL + "/" + globalProperties.AUTH_NAME + "/" + globalProperties.CAPTCHA_URL + uuid;
@@ -228,7 +230,7 @@ const toRegister = () => {
     margin-top: 10%;
     margin-left: 25%;
     width: 50%;
-    height: 40%;
+    height: 60%;
     background-color: #f5f6f7;
     .input-item {
         margin: 20px auto;

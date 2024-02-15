@@ -1,8 +1,28 @@
 import request from '@/utils/request'
-const serverName = '/file'
+const serverName = '/basic'
 
 
 export default {
+  getProvinces(){
+    return request({
+      url: serverName + '/area/getProvinces',
+      method: 'get',
+    })
+  },
+
+  getCity(parentId){
+    return request({
+      url: serverName + '/area/getCity/' + parentId,
+      method: 'get',
+    })
+  },
+
+  getCounty(parentId){
+    return request({
+      url: serverName + '/area/getCounty/' + parentId,
+      method: 'get',
+    })
+  },
 
   // 分页查询
   selpage4sysdict(data) {

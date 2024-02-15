@@ -11,10 +11,11 @@ const OrderDetail = () => import("@/views/Consumer/Order/orderDetail.vue")
 const AfterSale = () => import("@/views/Consumer/Order/afterSale.vue")
 const OrderPay = () => import("@/views/Consumer/Order/orderPay.vue")
 // Personal
-const PersonalIndex = () => import("@/views/Consumer/Personal/index.vue")
+const ConsumerPersonalIndex = () => import("@/views/Consumer/Personal/index.vue")
 const UserDetail = () => import("@/views/Consumer/Personal/userDetail.vue")
 const ShoppingCart = () => import("@/views/Consumer/Personal/cart.vue")
 const Collection = () => import("@/views/Consumer/Personal/collection.vue")
+const Setting = () => import("@/views/Consumer/Personal/setting.vue")
 const consumerRouter = {
         path: '/Consumer',
         component: PageFrame,
@@ -76,8 +77,8 @@ const consumerRouter = {
             //个人中心
             {
                 path: '/Consumer/Personal/index',
-                component: PersonalIndex,
-                name: 'PersonalIndex',
+                component: ConsumerPersonalIndex,
+                name: 'ConsumerPersonalIndex',
             },
             {
                 path: '/Consumer/Personal/shoppingCart',
@@ -93,6 +94,11 @@ const consumerRouter = {
                 path: '/Consumer/Personal/userDetail',
                 component: UserDetail,
                 name: 'UserDetail',
+            },
+            {
+                path: '/Consumer/Personal/setting',
+                component: Setting,
+                name: 'Setting',
             },
         ]
     }

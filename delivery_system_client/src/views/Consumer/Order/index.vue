@@ -9,7 +9,7 @@
     <!-- 搜索框-->
     <el-row style="margin-top: 10px; margin-bottom: 10px;">
         <el-col :span="24">
-            <el-input placeholder="Please input"
+            <el-input placeholder="请输入"
                       class="input-with-select">
                 <template #prepend>
                     <el-button :icon="Search" />
@@ -127,37 +127,37 @@ const data = reactive({
     orderList: [
         {
             // 基本信息
-            deliveryCharge: 1,
-            deliveryRiderId: "1",
-            deliveryService: "1",
-            expectedTime: "2023-11-30 05:59:56",
-            id: "1730165452519075841",
-            location: "1",
-            orderTime:"2023-11-30 05:59:59",
-            packingCharges:1,
-            paymentMethod:"0",
-            remark:"1",
+            deliveryCharge: '',
+            deliveryRiderId: "",
+            deliveryService: "",
+            expectedTime: "",
+            id: "",
+            location: "",
+            orderTime:"",
+            packingCharges:0,
+            paymentMethod:"",
+            remark:"",
             status:0,
             statusName:'',
-            tableware:"1",
-            totalCharge:1,
+            tableware:"",
+            totalCharge:0,
             // 订单物品
             orderItems: [
                 {
                     shopItem: {
-                        categoryName: "1111",
-                        description: "1",
+                        categoryName: "",
+                        description: "",
                         id: null,
-                        name: "物品1",
-                        picture: "1",
-                        price: 1,
+                        name: "",
+                        picture: "",
+                        price: 0,
                         shopId: null,
                     },
-                    amount: 1
+                    amount: 0
                 },
                 {
                     shopItem: {},
-                    amount: 1
+                    amount: 0
                 },
             ],
             // 店铺信息

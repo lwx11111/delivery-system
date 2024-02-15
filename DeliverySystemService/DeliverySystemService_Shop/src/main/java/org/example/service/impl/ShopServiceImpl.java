@@ -59,6 +59,23 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     private ShopMapper shopMapper;
 
     @Override
+    public Shop getShopById(String id) throws Exception {
+        Shop shop = this.getById(id);
+        if (shop == null){
+            throw new Exception("shop not found");
+        }
+        // 分类信息
+        List<ShopCategory> shopCategories = shopCategoryMapper.selectList(
+                new QueryWrapper<ShopCategory>().eq("shop_id", shop.getId()));
+        String[] categoryIds = new String[shopCategories.size()];
+        for (int i = 0; i < shopCategories.size(); i++) {
+            categoryIds[i] = shopCategories.get(i).getCategoryId();
+        }
+        shop.setCategoryIds(categoryIds);
+        return shop;
+    }
+
+    @Override
     public Shop getShopByOrderId(String orderId) throws Exception {
         // 校验
         if (orderId == null){
@@ -153,6 +170,16 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         Page<Shop> page = PageUtils.pageHandler(params);
         QueryWrapper<Shop> query = getQuery(params);
         IPage<Shop> result = this.page(page, query);
+        // 分类信息
+        for (Shop item : result.getRecords()) {
+            List<ShopCategory> shopCategories = shopCategoryMapper.selectList(new QueryWrapper<ShopCategory>().eq("shop_id", item.getId()));
+            String[] categoryIds = new String[shopCategories.size()];
+            for (int i = 0; i < shopCategories.size(); i++) {
+                categoryIds[i] = shopCategories.get(i).getCategoryId();
+            }
+            item.setCategoryIds(categoryIds);
+            System.out.println(categoryIds.length);
+        }
         return result;
     }
 

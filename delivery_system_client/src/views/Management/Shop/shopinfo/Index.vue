@@ -47,35 +47,35 @@
                                 </el-col>
                             </el-row>
 
-                            <el-row>
-                                <el-col :span="6">
-                                    <el-form-item label="省">
-                                        <el-select v-model="data.formList.parentId" placeholder="请选择">
-                                            <el-option v-for="(item, index) in data.parentCategoryList"
-                                                       :label="item.name"
-                                                       :value="item.id" />
-                                        </el-select>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="6">
-                                    <el-form-item label="县">
-                                        <el-select v-model="data.formList.parentId" placeholder="请选择">
-                                            <el-option v-for="(item, index) in data.parentCategoryList"
-                                                       :label="item.name"
-                                                       :value="item.id" />
-                                        </el-select>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="6">
-                                    <el-form-item label="具体地址">
-                                        <el-input placeholder="请输入具体地址"
-                                                  v-model="data.formList.location"
-                                                  style="width: 200px"
-                                                  @keyup.enter.native="getData">
-                                        </el-input>
-                                    </el-form-item>
-                                </el-col>
-                            </el-row>
+<!--                            <el-row>-->
+<!--                                <el-col :span="6">-->
+<!--                                    <el-form-item label="省">-->
+<!--                                        <el-select v-model="data.formList.parentId" placeholder="请选择">-->
+<!--                                            <el-option v-for="(item, index) in data.parentCategoryList"-->
+<!--                                                       :label="item.name"-->
+<!--                                                       :value="item.id" />-->
+<!--                                        </el-select>-->
+<!--                                    </el-form-item>-->
+<!--                                </el-col>-->
+<!--                                <el-col :span="6">-->
+<!--                                    <el-form-item label="县">-->
+<!--                                        <el-select v-model="data.formList.parentId" placeholder="请选择">-->
+<!--                                            <el-option v-for="(item, index) in data.parentCategoryList"-->
+<!--                                                       :label="item.name"-->
+<!--                                                       :value="item.id" />-->
+<!--                                        </el-select>-->
+<!--                                    </el-form-item>-->
+<!--                                </el-col>-->
+<!--                                <el-col :span="6">-->
+<!--                                    <el-form-item label="具体地址">-->
+<!--                                        <el-input placeholder="请输入具体地址"-->
+<!--                                                  v-model="data.formList.location"-->
+<!--                                                  style="width: 200px"-->
+<!--                                                  @keyup.enter.native="getData">-->
+<!--                                        </el-input>-->
+<!--                                    </el-form-item>-->
+<!--                                </el-col>-->
+<!--                            </el-row>-->
 
 <!--                            <el-row>-->
 <!--                                <el-col :span="6">-->
@@ -104,24 +104,24 @@
 <!--                                </el-col>-->
 <!--                            </el-row>-->
 
-                            <el-row>
-                                <el-col :span="8">
-                                    <el-form-item label="开门时间">
-                                        <el-time-picker
-                                                v-model="data.formList.openTime"
-                                                placeholder="请输入开门时间">
-                                        </el-time-picker>
-                                    </el-form-item>
-                                </el-col>
-                                <el-col :span="8">
-                                    <el-form-item label="关门时间">
-                                        <el-time-picker
-                                                v-model="data.formList.closeTime"
-                                                placeholder="请输入关门时间">
-                                        </el-time-picker>
-                                    </el-form-item>
-                                </el-col>
-                            </el-row>
+<!--                            <el-row>-->
+<!--                                <el-col :span="8">-->
+<!--                                    <el-form-item label="开门时间">-->
+<!--                                        <el-time-picker-->
+<!--                                                v-model="data.formList.openTime"-->
+<!--                                                placeholder="请输入开门时间">-->
+<!--                                        </el-time-picker>-->
+<!--                                    </el-form-item>-->
+<!--                                </el-col>-->
+<!--                                <el-col :span="8">-->
+<!--                                    <el-form-item label="关门时间">-->
+<!--                                        <el-time-picker-->
+<!--                                                v-model="data.formList.closeTime"-->
+<!--                                                placeholder="请输入关门时间">-->
+<!--                                        </el-time-picker>-->
+<!--                                    </el-form-item>-->
+<!--                                </el-col>-->
+<!--                            </el-row>-->
                         </el-form>
                     </div>
                 </el-collapse-item>
@@ -200,18 +200,18 @@
                         width="180"
                         align="center">
                 </el-table-column>
-                 <el-table-column
-                        prop="province"
-                        label="省"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="county"
-                        label="县"
-                        width="180"
-                        align="center">
-                </el-table-column>
+<!--                 <el-table-column-->
+<!--                        prop="province"-->
+<!--                        label="省"-->
+<!--                        width="180"-->
+<!--                        align="center">-->
+<!--                </el-table-column>-->
+<!--                 <el-table-column-->
+<!--                        prop="county"-->
+<!--                        label="县"-->
+<!--                        width="180"-->
+<!--                        align="center">-->
+<!--                </el-table-column>-->
                  <el-table-column
                         prop="location"
                         label="具体地址"
@@ -242,48 +242,48 @@
                         width="180"
                         align="center">
                 </el-table-column>
-                 <el-table-column
-                        prop="safetyFile"
-                        label="安全档案图片"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="openTime"
-                        label="开门时间"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="closeTime"
-                        label="关门时间"
-                        width="180"
-                        align="center">
-                </el-table-column>
+<!--                 <el-table-column-->
+<!--                        prop="safetyFile"-->
+<!--                        label="安全档案图片"-->
+<!--                        width="180"-->
+<!--                        align="center">-->
+<!--                </el-table-column>-->
+<!--                 <el-table-column-->
+<!--                        prop="openTime"-->
+<!--                        label="开门时间"-->
+<!--                        width="180"-->
+<!--                        align="center">-->
+<!--                </el-table-column>-->
+<!--                 <el-table-column-->
+<!--                        prop="closeTime"-->
+<!--                        label="关门时间"-->
+<!--                        width="180"-->
+<!--                        align="center">-->
+<!--                </el-table-column>-->
                  <el-table-column
                         prop="status"
                         label="状态"
                         width="180"
                         align="center">
                 </el-table-column>
-                 <el-table-column
-                        prop="description"
-                        label="店铺描述"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="itemCategory"
-                        label="物品分类"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="picture"
-                        label="店铺图片路径"
-                        width="180"
-                        align="center">
-                </el-table-column>
+<!--                 <el-table-column-->
+<!--                        prop="description"-->
+<!--                        label="店铺描述"-->
+<!--                        width="180"-->
+<!--                        align="center">-->
+<!--                </el-table-column>-->
+<!--                 <el-table-column-->
+<!--                        prop="itemCategory"-->
+<!--                        label="物品分类"-->
+<!--                        width="180"-->
+<!--                        align="center">-->
+<!--                </el-table-column>-->
+<!--                 <el-table-column-->
+<!--                        prop="picture"-->
+<!--                        label="店铺图片路径"-->
+<!--                        width="180"-->
+<!--                        align="center">-->
+<!--                </el-table-column>-->
                 <el-table-column
                         fixed="right"
                         label="操作"

@@ -1,194 +1,193 @@
 package org.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.example.domain.shop.ShopItemVO;
-import org.example.web.SimpleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
+import org.example.web.SimpleResponse;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.domain.shop.Shop;
+import org.example.domain.SysArea;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.example.service.IShopService;
+import org.example.service.ISysAreaService;
 
 
 import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <p>
- * 店铺信息 前端控制器
+ *  前端控制器
  * </p>
  *
  * @author lwx20
- * @since 2023-10-16
+ * @since 2024-01-01
  */
 @RestController
-@Tag(name = "店铺信息服务")
-@RequestMapping("/shop")
-public class ShopController {
+@Tag(name = "服务")
+@RequestMapping("/area")
+public class SysAreaController {
     @Autowired
-    private IShopService service;
+    private ISysAreaService service;
 
-    @GetMapping("/getShopByOrderId/{orderId}")
+    @GetMapping("/getProvinces")
     @ResponseBody
-    public SimpleResponse getShopByOrderId(@PathVariable(name = "orderId") String orderId){
+    public SimpleResponse getProvinces(){
         SimpleResponse response = new SimpleResponse();
         try {
-            response.setData(service.getShopByOrderId(orderId));
+            response.setData(service.getProvinces());
         } catch (Exception e) {
-            e.printStackTrace();
             response.setCode(500);
             response.setMessage(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
 
-    @GetMapping("/listShopItemsByShopId/{id}")
+    @GetMapping("/getCity/{provinceId}")
     @ResponseBody
-    @Operation(description = "根据商铺号查商铺物品")
-    public SimpleResponse listShopItemsByShopId(@PathVariable(name = "id") String id){
+    public SimpleResponse getCity(@PathVariable Double provinceId){
         SimpleResponse response = new SimpleResponse();
         try {
-            response.setData(service.listShopItemsByShopId(id));
+            response.setData(service.getCity(provinceId));
         } catch (Exception e) {
-            e.printStackTrace();
             response.setCode(500);
             response.setMessage(e.getMessage());
-        }
-        return response;
-    }
-
-    @PostMapping("/saveShopItems")
-    @ResponseBody
-    @Operation(description = "保存或更改商铺物品")
-    public SimpleResponse saveShopItems(@RequestBody List<ShopItemVO> shopItemVOList){
-        SimpleResponse response = new SimpleResponse();
-        try {
-            service.saveShopItems(shopItemVOList);
-        } catch (Exception e) {
             e.printStackTrace();
-            response.setCode(500);
-            response.setMessage(e.getMessage());
         }
         return response;
     }
 
 
+    @GetMapping("/getCounty/{cityId}")
+    @ResponseBody
+    public SimpleResponse getCounty(@PathVariable Double cityId){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.getCounty(cityId));
+        } catch (Exception e) {
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+            e.printStackTrace();
+        }
+        return response;
+    }
 
     @PostMapping
     @ResponseBody
-    @Operation(description = "创建店铺信息")
-    public SimpleResponse save(@RequestBody Shop obj){
+    @Operation(description = "创建")
+    public SimpleResponse save(@RequestBody SysArea obj){
         SimpleResponse response = new SimpleResponse();
         try {
-            service.saveByParam(obj,obj.getParams());
+//            service.saveByParam(obj,obj.getParams());
         } catch (Exception e) {
+            response.setCode(500);
+            response.setMessage(e.getMessage());
             e.printStackTrace();
-            response.setCode(500);
-            response.setMessage(e.getMessage());
         }
         return response;
-
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{areaid}")
     @ResponseBody
-    @Operation(description = "更新店铺信息")
-    public SimpleResponse update(@PathVariable(name = "id") String id,@RequestBody Shop obj){
+    @Operation(description = "更新")
+    public SimpleResponse update(@PathVariable(name = "areaid") Integer areaid,@RequestBody SysArea obj){
         SimpleResponse response = new SimpleResponse();
         try {
-            service.updateByParam(obj,obj.getParams());
+//            service.updateByParam(obj,obj.getParams());
         } catch (Exception e) {
             response.setCode(500);
             response.setMessage(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{areaid}")
     @ResponseBody
-    @Operation(description = "按ID删除店铺信息")
-    public SimpleResponse remove(@PathVariable(name = "id") String id){
-            SimpleResponse response = new SimpleResponse();
-        try {
-        service.removeById(id);
-        } catch (Exception e) {
-            response.setCode(500);
-            response.setMessage(e.getMessage());
-        }
-        return response;
-    }
-
-    @GetMapping("/{id}")
-    @Operation(description = "按ID查询店铺信息")
-    @ResponseBody
-    public SimpleResponse select(@PathVariable(name = "id") String id) {
+    @Operation(description = "按ID删除")
+    public SimpleResponse remove(@PathVariable(name = "areaid") Integer areaid){
         SimpleResponse response = new SimpleResponse();
         try {
-            response.setData(service.getShopById(id));
+        service.removeById(areaid);
         } catch (Exception e) {
             response.setCode(500);
             response.setMessage(e.getMessage());
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    @GetMapping("/{areaid}")
+    @Operation(description = "按ID查询")
+    @ResponseBody
+    public SimpleResponse select(@PathVariable(name = "areaid") Integer areaid) {
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.getById(areaid));
+        } catch (Exception e) {
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
 
     @PostMapping("/dels")
     @ResponseBody
-    @Operation(description = "按ID删除多个店铺信息")
-    public SimpleResponse removes(@RequestBody List<String> ids){
+    @Operation(description = "按ID删除多个")
+    public SimpleResponse removes(@RequestBody List<Integer> areaids){
         SimpleResponse response = new SimpleResponse();
         try {
-            service.removeByIds(ids);
+            service.removeByIds(areaids);
         } catch (Exception e) {
             response.setCode(500);
             response.setMessage(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
 
 
     @PostMapping("/delby")
-    @Operation(description = "条件删除店铺信息")
+    @Operation(description = "条件删除")
     public void deleteBy(@RequestBody(required = false) Map<String, String> params) {
         service.deleteBy(params);
     }
 
     @PostMapping("/selby")
     @ResponseBody
-    public List<Shop> selectBy(@RequestBody(required = false) Map<String, String> params) {
+    public List<SysArea> selectBy(@RequestBody(required = false) Map<String, String> params) {
         return  service.selectBy(params);
     }
 
     @PostMapping("/selpage")
-    @Operation(description = "分页查询店铺信息")
+    @Operation(description = "分页查询")
     @ResponseBody
     public SimpleResponse selectPage(@RequestBody Map<String, String> params) {
         SimpleResponse response = new SimpleResponse();
         try {
-            IPage<Shop> page = service.selectPage(params);
+            IPage<SysArea> page = service.selectPage(params);
             response.setData(page);
         } catch (Exception e) {
-            e.printStackTrace();
             response.setCode(500);
             response.setMessage(e.getMessage());
+            e.printStackTrace();
         }
         return response;
     }
 
     @PostMapping("/selpageCustomSqlByWrapper")
     @ResponseBody
-    public IPage<Shop> selpageCustomSqlByWrapper(@RequestBody Map<String, String> params) {
+    public IPage<SysArea> selpageCustomSqlByWrapper(@RequestBody Map<String, String> params) {
         return service.selpageCustomSqlByWrapper(params);
     }
 
     @PostMapping("/selpageCustomSqlByMap")
-    @Operation(description = "分页查询-自定义sql-Map店铺信息")
+    @Operation(description = "分页查询-自定义sql-Map")
     @ResponseBody
-    public IPage<Shop> selpageCustomSqlByMap(@RequestBody Map<String, String> params) {
+    public IPage<SysArea> selpageCustomSqlByMap(@RequestBody Map<String, String> params) {
         return service.selpageCustomSqlByMap(params);
     }
 
@@ -217,42 +216,8 @@ public class ShopController {
 
     @PostMapping("/excel")
     @ResponseBody
-    public void excel(HttpServletResponse response, HttpServletRequest request,
-            @RequestBody Map<String, String> params) throws Exception {
+    public void excel(HttpServletResponse response, HttpServletRequest request, @RequestBody Map<String, String> params) throws Exception {
         service.excel(response, request, params);
     }
-
-    @PostMapping("/listShopsByCategoryId")
-    @Operation(description = "分页查询-根据分类ID查询店铺信息")
-    @ResponseBody
-    public SimpleResponse listShopsByCategoryId(@RequestBody Map<String, String> params) {
-        SimpleResponse response = new SimpleResponse();
-        try {
-            response.setData(service.listShopsByCategoryId(params));
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.setCode(500);
-            response.setMessage(e.getMessage());
-        }
-        return response;
-    }
-
-    @PostMapping("/listShopWithShopItemByUserId")
-    @Operation(description = "分页查询-根据用户ID查询店铺和对应的物品信息-购物车、收藏")
-    @ResponseBody
-    public SimpleResponse listShopWithShopItemByUserId(@RequestBody Map<String, String> params) {
-        // @RequestBody String id ====> ' "id" '
-        SimpleResponse response = new SimpleResponse();
-        try {
-            response.setData(service.listShopWithShopItemByUserId(params));
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.setCode(500);
-            response.setMessage(e.getMessage());
-        }
-        return response;
-    }
-
-
 }
 

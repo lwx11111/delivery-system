@@ -11,23 +11,22 @@
                 <div v-for="(item,index) in data.shopItems">
                     <el-card style="margin-bottom: 10px">
                         <el-row>
-                            <el-col :span="6">
+                            <el-col :span="12">
                                 <el-form-item label="分类名">
                                     <el-input v-model="item.categoryName"></el-input>
                                 </el-form-item>
                             </el-col>
+                            <el-col :span="6"></el-col>
                             <el-col :span="6">
                                 <el-button type="danger"
                                            @click="deleteShopItem(index)">
-                                    删除分类
+                                    删除该分类
                                 </el-button>
                             </el-col>
                         </el-row>
                         <el-divider></el-divider>
                         <div v-for="(it,i) in item.items">
                             <el-row>
-                                <!-- todo -->
-                                <!-- {{it.picture}}-->
                                 <el-col :span="6">
                                     <el-form-item label="物品名">
                                         <el-input v-model="it.name"></el-input>
@@ -38,11 +37,24 @@
                                         <el-input-number v-model="it.price"></el-input-number>
                                     </el-form-item>
                                 </el-col>
+                            </el-row>
+                            <el-row>
+<!--                                :file-list="data.fileList"-->
+<!--                                <el-col :span="6">-->
+<!--                                    <el-form-item label="物品图片">-->
+<!--                                        <MinioUpload :ref="index + '' + i"-->
+
+<!--                                                     @uploadCallback="uploadCallbackSafetyFile"-->
+<!--                                                     :limit="1">-->
+<!--                                        </MinioUpload>-->
+<!--                                    </el-form-item>-->
+<!--                                </el-col>-->
                                 <el-col :span="6">
                                     <el-form-item label="物品描述">
                                         <el-input v-model="it.description" type="textarea"></el-input>
                                     </el-form-item>
                                 </el-col>
+                                <el-col :span="6"></el-col>
                                 <el-col :span="6">
                                     <el-button type="danger"
                                                @click="deleteItem(index,i)">
@@ -52,12 +64,13 @@
                             </el-row>
                             <el-divider></el-divider>
                             <el-row v-if="i === item.items.length - 1 || item.items.length === 0" >
-                                <el-form-item>
+                                <el-col :span="18"></el-col>
+                                <el-col :span="6">
                                     <el-button type="primary"
                                                @click="addItem(index)">
                                         添加新物品
                                     </el-button>
-                                </el-form-item>
+                                </el-col>
                             </el-row>
                         </div>
                     </el-card>
@@ -89,12 +102,15 @@
     import { useRouter } from 'vue-router'
     import { ElMessage } from "element-plus";
     import StringUtil from '@/utils/stringUtil.js'
+    import MinioUpload from "./MinioUpload.vue";
 
     const store = useStore();
     const router = useRouter()
 
     // Data
     const data = reactive({
+        // 图片
+        fileList: [],
         backUrl: '/name/shopitem/index',
         shopId: 0,
         shopItems: [
@@ -122,6 +138,16 @@
     })
 
     // Methods
+    const uploadCallbackSafetyFile = (response, url) => {
+        // 保证每次只有一个物品图片没上传，循环找到这个元素
+        for (let i = 0; i < data.shopItems.length; i++){
+            for (let j = 0; j < data.shopItems[i].items.length; j++){
+                if ("" === data.shopItems[i].items[j].picture || null === data.shopItems[i].items[j].picture){
+                    data.shopItems[i].items[j].picture = url
+                }
+            }
+        }
+    }
     const init = (id) => {
         // 界面初始化接收参数
         data.shopId = id;
@@ -133,6 +159,7 @@
                     data.shopItems[0].items[0].shopId = id;
                 } else {
                     data.shopItems = res.data;
+                    // 初始化图片二维数组
                 }
             } else {
                 ElMessage({
@@ -210,8 +237,33 @@
         })
     }
     const addShopItem = () =>{
+        for (let i = 0; i < data.shopItems.length; i++){
+            if (StringUtil.isEmpty(data.shopItems[i].categoryName)){
+                ElMessage({
+                    message: '分类名不能为空',
+                    type: 'warning',
+                })
+                return;
+            }
+            for (let j = 0; j < data.shopItems[i].items.length; j++ ){
+                if (StringUtil.isEmpty(data.shopItems[i].items[j].name)){
+                    ElMessage({
+                        message: '物品名不能为空',
+                        type: 'warning',
+                    })
+                    return;
+                }
+                if (StringUtil.isEmpty(data.shopItems[i].items[j].price)){
+                    ElMessage({
+                        message: '物品价格不能为空',
+                        type: 'warning',
+                    })
+                    return;
+                }
+            }
+        }
         const item = {
-            categoryName: '1',
+            categoryName: '',
             items: [
                 {
                     id: '',
@@ -227,7 +279,32 @@
         data.shopItems.push(item)
     }
 
-    const addItem = (index) =>{
+    const addItem = (index) => {
+        for (let i = 0; i < data.shopItems.length; i++){
+            if (StringUtil.isEmpty(data.shopItems[i].categoryName)){
+                ElMessage({
+                    message: '分类名不能为空',
+                    type: 'warning',
+                })
+                return;
+            }
+            for (let j = 0; j < data.shopItems[i].items.length; j++ ){
+                if (StringUtil.isEmpty(data.shopItems[i].items[j].name)){
+                    ElMessage({
+                        message: '物品名不能为空',
+                        type: 'warning',
+                    })
+                    return;
+                }
+                if (StringUtil.isEmpty(data.shopItems[i].items[j].price)){
+                    ElMessage({
+                        message: '物品价格不能为空',
+                        type: 'warning',
+                    })
+                    return;
+                }
+            }
+        }
         const item = {
             id: '',
             shopId: data.shopId,

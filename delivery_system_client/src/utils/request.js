@@ -10,7 +10,7 @@ import {getToken, removeToken} from '@/utils/auth/auth'
 axios.defaults.timeout = 10000 // 超时时间
 
 // 网关地址
-axios.defaults.baseURL = 'http://localhost:8921'
+axios.defaults.baseURL = "http://43.138.149.121:8921";
 
 // 整理数据
 axios.defaults.transformRequest = function(data) {
@@ -23,7 +23,7 @@ axios.interceptors.request.use(
         if (getToken()) {
             config.headers['Authorization'] = getToken()
         }
-
+        console.log(axios.defaults.baseURL)
         if (config.type === 'form'){
             // 后端@RequestParams注解接收
             config.headers['Content-Type'] = 'application/x-www-form-urlencoded'

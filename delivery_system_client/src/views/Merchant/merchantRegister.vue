@@ -40,32 +40,47 @@
                     </el-col>
                 </el-row>
 
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item
-                                label="省"
-                                prop="province">
-                            <el-select v-model="data.item.province" placeholder="请选择">
-                                <el-option v-for="(item, index) in data.provinces"
-                                           :label="item.name"
-                                           :value="item.id" />
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item
-                                label="县"
-                                prop="county">
-                            <el-select v-model="data.item.county" placeholder="请选择">
-                                <el-option v-for="(item, index) in data.counties"
-                                           :label="item.name"
-                                           :value="item.id" />
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+<!--                <el-row>-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item-->
+<!--                                label="省"-->
+<!--                                prop="province">-->
+<!--                            <el-select v-model="data.item.province"-->
+<!--                                       @change="getCity()"-->
+<!--                                       placeholder="请选择">-->
+<!--                                <el-option v-for="(item, index) in data.provinces"-->
+<!--                                           :label="item.name"-->
+<!--                                           :value="item.areaId" />-->
+<!--                            </el-select>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item-->
+<!--                            label="市"-->
+<!--                            prop="city">-->
+<!--                            <el-select v-model="data.item.city"-->
+<!--                                       placeholder="请选择">-->
+<!--                                <el-option v-for="(item, index) in data.cities"-->
+<!--                                           @change="getCounty()"-->
+<!--                                           :label="item.name"-->
+<!--                                           :value="item.areaId" />-->
+<!--                            </el-select>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="8">-->
+<!--                        <el-form-item-->
+<!--                                label="县"-->
+<!--                                prop="county">-->
+<!--                            <el-select v-model="data.item.county" placeholder="请选择">-->
+<!--                                <el-option v-for="(item, index) in data.counties"-->
+<!--                                           :label="item.name"-->
+<!--                                           :value="item.areaId" />-->
+<!--                            </el-select>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                </el-row>-->
 
-                <el-row >
+                <el-row>
                     <el-col :span="24">
                         <el-form-item
                             label="具体地址"
@@ -99,32 +114,31 @@
                     </el-col>
                 </el-row>
 
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item
-                                label="开门时间"
-                                prop="openTime">
-                            <el-time-picker format="HH:mm:ss"
-                                            value-format="HH:mm:ss"
-                                            v-model="data.item.openTime"
-                                            placeholder="请选择开门时间">
-                            </el-time-picker>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item
-                                label="关门时间"
-                                prop="closeTime">
-                            <el-time-picker format="HH:mm:ss"
-                                            value-format="HH:mm:ss"
-                                            v-model="data.item.closeTime"
-                                            placeholder="请选择开门时间">
-                            </el-time-picker>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+<!--                <el-row>-->
+<!--                    <el-col :span="12">-->
+<!--                        <el-form-item-->
+<!--                                label="开门时间"-->
+<!--                                prop="openTime">-->
+<!--                            <el-time-picker format="HH:mm:ss"-->
+<!--                                            value-format="HH:mm:ss"-->
+<!--                                            v-model="data.item.openTime"-->
+<!--                                            placeholder="请选择开门时间">-->
+<!--                            </el-time-picker>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="12">-->
+<!--                        <el-form-item-->
+<!--                                label="关门时间"-->
+<!--                                prop="closeTime">-->
+<!--                            <el-time-picker format="HH:mm:ss"-->
+<!--                                            value-format="HH:mm:ss"-->
+<!--                                            v-model="data.item.closeTime"-->
+<!--                                            placeholder="请选择开门时间">-->
+<!--                            </el-time-picker>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                </el-row>-->
 
-                <!--todo 图片显示-->
                 <el-row>
                     <el-col :span="24">
                         <el-form-item
@@ -160,7 +174,7 @@
                         <el-form-item
                                 label="商铺类型"
                                 prop="categoryId">
-                            <el-tree-select v-model="data.item.categoryId"
+                            <el-tree-select v-model="data.item.categoryIds"
                                             :data="data.categoryTree"
                                             :render-after-expand="false"
                                             show-checkbox
@@ -188,6 +202,7 @@
 import {reactive, onMounted, ref } from 'vue';
 import ApiCategory from '@/api/Shop/api_category.js'
 import ApiShop from '@/api/Shop/api_shop.js'
+import ApiDict from '@/api/Common/api_sysdict.js'
 import { useStore } from "vuex";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
@@ -205,23 +220,11 @@ const data = reactive({
     provinces: [
         {
             name:"北京市",
-            id:'1'
+            areaId:'1'
         },
-        {
-            name: "天津市",
-            id: "2"
-        }
     ],
-    counties: [
-        {
-            name:"北京市",
-            id:'1'
-        },
-        {
-            name: "天津市",
-            id: "2"
-        }
-    ],
+    cities: [],
+    counties: [],
     // 类型选择
     categoryTree: [],
     item: {},
@@ -231,6 +234,9 @@ const data = reactive({
         ],
         province: [
             { required: true, message: '省不能为空', trigger: 'blur' }
+        ],
+        city: [
+            { required: true, message: '市不能为空', trigger: 'blur' }
         ],
         county: [
             { required: true, message: '县不能为空', trigger: 'blur' }
@@ -253,7 +259,7 @@ const data = reactive({
         closeTime: [
             { required: true, message: '关门时间不能为空', trigger: 'blur' }
         ],
-        categoryId: [
+        categoryIds: [
             { required: true, message: '商铺类型不能为空', trigger: 'blur' }
         ],
         picture: [
@@ -264,7 +270,37 @@ const data = reactive({
 
 
 // Mounted
+const getProvinces = () => {
+    // 省市县信息
+    ApiDict.getProvinces().then(res => {
+        console.log(res)
+        data.provinces = res.data
+    })
+}
+
+const getCity = () => {
+    if (data.item.province === undefined){
+        return;
+    }
+    // 省市县信息
+    ApiDict.getCity(data.item.province).then(res => {
+        console.log(res)
+        data.cities = res.data
+    })
+}
+
+const getCounty = () => {
+    if (data.item.city === undefined){
+        return;
+    }
+    // 省市县信息
+    ApiDict.getCounty(data.item.city).then(res => {
+        console.log(res)
+        data.counties = res.data
+    })
+}
 onMounted(() => {
+    getProvinces();
     // 用户信息
     data.item.userId = localStorage.getItem("userId");
     // 店铺类型

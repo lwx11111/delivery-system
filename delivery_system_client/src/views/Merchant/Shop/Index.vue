@@ -27,12 +27,12 @@
                     width="180"
                     align="center">
             </el-table-column>
-            <el-table-column
-                    prop="province"
-                    label="省"
-                    width="180"
-                    align="center">
-            </el-table-column>
+<!--            <el-table-column-->
+<!--                    prop="province"-->
+<!--                    label="省"-->
+<!--                    width="180"-->
+<!--                    align="center">-->
+<!--            </el-table-column>-->
             <el-table-column
                     prop="score"
                     label="店铺评分"
@@ -57,36 +57,36 @@
                     width="180"
                     align="center">
             </el-table-column>
-            <el-table-column
-                    prop="openTime"
-                    label="开门时间"
-                    width="180"
-                    align="center">
-            </el-table-column>
-            <el-table-column
-                    prop="closeTime"
-                    label="关门时间"
-                    width="180"
-                    align="center">
-            </el-table-column>
-            <el-table-column
-                    prop="status"
-                    label="状态"
-                    width="180"
-                    align="center">
-            </el-table-column>
+<!--            <el-table-column-->
+<!--                    prop="openTime"-->
+<!--                    label="开门时间"-->
+<!--                    width="180"-->
+<!--                    align="center">-->
+<!--            </el-table-column>-->
+<!--            <el-table-column-->
+<!--                    prop="closeTime"-->
+<!--                    label="关门时间"-->
+<!--                    width="180"-->
+<!--                    align="center">-->
+<!--            </el-table-column>-->
+<!--            <el-table-column-->
+<!--                    prop="status"-->
+<!--                    label="状态"-->
+<!--                    width="180"-->
+<!--                    align="center">-->
+<!--            </el-table-column>-->
             <el-table-column
                     prop="description"
                     label="店铺描述"
                     width="180"
                     align="center">
             </el-table-column>
-            <el-table-column
-                    prop="itemCategory"
-                    label="物品分类"
-                    width="180"
-                    align="center">
-            </el-table-column>
+<!--            <el-table-column-->
+<!--                    prop="itemCategory"-->
+<!--                    label="物品分类"-->
+<!--                    width="180"-->
+<!--                    align="center">-->
+<!--            </el-table-column>-->
             <el-table-column
                     fixed="right"
                     label="操作"

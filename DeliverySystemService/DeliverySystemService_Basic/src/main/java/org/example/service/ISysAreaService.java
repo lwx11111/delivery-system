@@ -1,14 +1,10 @@
 package org.example.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.ibatis.annotations.Param;
-import org.example.domain.shop.Shop;
+import org.example.domain.SysArea;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.example.domain.shop.ShopItemVO;
-import org.example.domain.shop.vo.ShopWithItemVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -16,29 +12,25 @@ import java.util.Map;
 
 /**
  * <p>
- * 店铺信息 服务类
+ *  服务类
  * </p>
  *
  * @author lwx20
- * @since 2023-10-04
+ * @since 2024-01-01
  */
-public interface IShopService extends IService<Shop> {
-    Shop getShopById(String id) throws Exception;
+public interface ISysAreaService extends IService<SysArea> {
+     List<SysArea> getProvinces() throws Exception;
 
-    Shop getShopByOrderId(String orderId) throws Exception;
+    List<SysArea> getCity(Double provinceId) throws Exception;
 
-    List<ShopWithItemVO> listShopWithShopItemByUserId(Map<String,String> params) throws Exception;
-
-    List<ShopItemVO> listShopItemsByShopId(String id) throws Exception;
-
-    void saveShopItems(List<ShopItemVO> shopItemVOList) throws Exception;
+    List<SysArea> getCounty(Double cityId) throws Exception;
     /**
      * 根据参数保存
      * @param obj
      * @param params
      * @return: void
      */
-    void saveByParam(Shop obj,Map<String, String> params) throws Exception;
+    void saveByParam(SysArea obj, Map<String, String> params);
 
     /**
      * 根据参数更新
@@ -46,7 +38,7 @@ public interface IShopService extends IService<Shop> {
      * @param params
      * @return: void
      */
-    void updateByParam(Shop obj,Map<String, String> params);
+    void updateByParam(SysArea obj, Map<String, String> params);
     /**
      * 根据条件删除
      *
@@ -59,40 +51,33 @@ public interface IShopService extends IService<Shop> {
      * 根据条件查询
      *
      * @param params
-     * @return: List<Shop>
+     * @return: List<DouArea>
      */
-     List<Shop> selectBy(Map<String, String> params);
+     List<SysArea> selectBy(Map<String, String> params);
 
     /**
      * 分页查询
      *
      * @param params
-     * @return: IPage<Shop>
+     * @return: IPage<DouArea>
     */
-    IPage<Shop> selectPage(Map<String, String> params);
-
-    /**
-     * 分页查询某分类店铺信息
-     * @param params
-     * @return
-     */
-    Page<Shop> listShopsByCategoryId(Map<String, String> params) throws Exception;
+    IPage<SysArea> selectPage(Map<String, String> params);
 
     /**
      * 分页查询-自定义sql-Wrapper
      *
      * @param params
-     * @return: IPage<Shop>
+     * @return: IPage<DouArea>
     */
-    IPage<Shop> selpageCustomSqlByWrapper(Map<String, String> params);
+    IPage<SysArea> selpageCustomSqlByWrapper(Map<String, String> params);
 
     /**
      * 分页查询-自定义sql-Map
      *
      * @param params
-     * @return: IPage<Shop>
+     * @return: IPage<DouArea>
     */
-    IPage<Shop> selpageCustomSqlByMap(Map<String, String> params);
+    IPage<SysArea> selpageCustomSqlByMap(Map<String, String> params);
 
     /**
      * 下载excel模板
@@ -119,5 +104,4 @@ public interface IShopService extends IService<Shop> {
      * @return: void
     */
     void excel(HttpServletResponse response, HttpServletRequest request, Map<String, String> params) throws Exception;
-
 }

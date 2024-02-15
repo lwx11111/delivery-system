@@ -1,6 +1,7 @@
 <template>
     <div class="back" style="border: 1px solid white">
         <el-card class="login-form-content">
+            <h1 style="text-align: center">注册</h1>
             <el-form :model="data.form"
                      ref="formRef"
                      :rules="data.rules"
@@ -208,10 +209,10 @@ const submitForm = () => {
 
 .login-form-content {
     text-align: center;
-    margin-top: 10%;
+    margin-top: 5%;
     margin-left: 25%;
     width: 50%;
-    height: 70%;
+    height: 80%;
     background-color: #f5f6f7;
     .input-item {
         margin: 20px auto;

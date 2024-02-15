@@ -1,12 +1,15 @@
 <template>
+    <el-row style="margin-bottom: 10px">
+        <h3 @click="toSetting()">设置</h3>
+    </el-row>
     <!-- 头像名字-->
     <el-card @click="toUserDetail" style="margin-bottom: 10px">
         <el-row>
             <el-col style="margin-right: 10px"
                     :span="4">
-                <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                <el-image :src="data.imageURL"></el-image>
             </el-col>
-            <el-col :span="15">
+            <el-col :span="10">
                 <h1>{{data.user.name}}</h1>
             </el-col>
         </el-row>
@@ -24,55 +27,60 @@
                 <el-icon><Search></Search></el-icon>
                 <div>我的收藏</div>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="6"
+                    @click="toOrderIndex()">
                 <el-icon><Search></Search></el-icon>
-                <div>浏览记录</div>
+                <div>我的订单</div>
             </el-col>
-            <el-col :span="6">
-                <el-icon><Search></Search></el-icon>
-                <div>红包</div>
-            </el-col>
+<!--            <el-col :span="6">-->
+<!--                <el-icon><Search></Search></el-icon>-->
+<!--                <div>浏览记录</div>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6">-->
+<!--                <el-icon><Search></Search></el-icon>-->
+<!--                <div>红包</div>-->
+<!--            </el-col>-->
         </el-row>
     </el-card>
     <!--订单操作-->
-    <el-card>
-        <el-row>
-            <el-col :span="20">
-                <h1>订单</h1>
-            </el-col>
-            <el-col :span="4">
-                <h1 @click="toOrderIndex()">查看全部</h1>
-            </el-col>
-        </el-row>
-        <el-divider></el-divider>
-        <el-row>
-            <el-col :span="6"
-                    @click="toOrderIndex(1)">
-                <el-icon><Search></Search></el-icon>
-                <div>待付款</div>
-            </el-col>
-            <el-col :span="6"
-                    @click="toOrderIndex(2)">
-                <el-icon><Search></Search></el-icon>
-                <div>待收货</div>
-            </el-col>
-<!--            <el-col :span="5"-->
-<!--                    @click="toOrderIndex(3)">-->
-<!--                <el-icon><Search></Search></el-icon>-->
-<!--                <div>待使用</div>-->
+<!--    <el-card>-->
+<!--        <el-row>-->
+<!--            <el-col :span="20">-->
+<!--                <h1>订单</h1>-->
 <!--            </el-col>-->
-            <el-col :span="6"
-                    @click="toOrderIndex(4)">
-                <el-icon><Search></Search></el-icon>
-                <div>待评价</div>
-            </el-col>
-            <el-col :span="6"
-                    @click="toOrderIndex(5)">
-                <el-icon><Search></Search></el-icon>
-                <div>退款/售后</div>
-            </el-col>
-        </el-row>
-    </el-card>
+<!--            <el-col :span="4">-->
+<!--                <h1 @click="toOrderIndex()">查看全部</h1>-->
+<!--            </el-col>-->
+<!--        </el-row>-->
+<!--        <el-divider></el-divider>-->
+<!--        <el-row>-->
+<!--            <el-col :span="6"-->
+<!--                    @click="toOrderIndex(1)">-->
+<!--                <el-icon><Search></Search></el-icon>-->
+<!--                <div>待付款</div>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6"-->
+<!--                    @click="toOrderIndex(2)">-->
+<!--                <el-icon><Search></Search></el-icon>-->
+<!--                <div>待收货</div>-->
+<!--            </el-col>-->
+<!--&lt;!&ndash;            <el-col :span="5"&ndash;&gt;-->
+<!--&lt;!&ndash;                    @click="toOrderIndex(3)">&ndash;&gt;-->
+<!--&lt;!&ndash;                <el-icon><Search></Search></el-icon>&ndash;&gt;-->
+<!--&lt;!&ndash;                <div>待使用</div>&ndash;&gt;-->
+<!--&lt;!&ndash;            </el-col>&ndash;&gt;-->
+<!--            <el-col :span="6"-->
+<!--                    @click="toOrderIndex(4)">-->
+<!--                <el-icon><Search></Search></el-icon>-->
+<!--                <div>待评价</div>-->
+<!--            </el-col>-->
+<!--            <el-col :span="6"-->
+<!--                    @click="toOrderIndex(5)">-->
+<!--                <el-icon><Search></Search></el-icon>-->
+<!--                <div>退款/售后</div>-->
+<!--            </el-col>-->
+<!--        </el-row>-->
+<!--    </el-card>-->
 </template>
 
 <script lang="ts" setup>
@@ -87,21 +95,26 @@ const router = useRouter()
 import { Search } from '@element-plus/icons-vue'
 // Data
 const data = reactive({
+    imageURL:'',
     //用户信息
     user: {
-        id: '1',
-        name: 'lwx'
+        id: localStorage.getItem("userId"),
+        name: localStorage.getItem("userName"),
     }
 
 })
 
 // Mounted
 onMounted(() => {
-
+    data.imageURL = new URL(`@/assets/profile.png`, import.meta.url).href
 })
 
 // Methods
-
+const toSetting = () => {
+    router.push({
+        path: '/Consumer/Personal/setting',
+    })
+}
 const toUserDetail = () => {
     router.push({
         path: '/Consumer/Personal/userDetail',

@@ -4,7 +4,7 @@ import Frame from "@/frame/index.vue";
 const ShopIndex = () => import('@/views/Merchant/Shop/index.vue')
 // Order
 const MerchantOrderIndex = () => import('@/views/Merchant/Order/index.vue')
-
+const MerchantPersonalIndex = () => import('@/views/Merchant/Personal/index.vue')
 const merchantRouter = {
         path: '/Merchant',
         component: Frame,
@@ -21,6 +21,11 @@ const merchantRouter = {
                 path: '/Merchant/Order/index',
                 component: MerchantOrderIndex,
                 name: 'MerchantOrderIndex',
+            },
+            {
+                path: '/Merchant/Personal/index',
+                component: MerchantPersonalIndex,
+                name: 'MerchantPersonalIndex',
             },
         ]
     }
