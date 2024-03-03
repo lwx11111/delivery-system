@@ -59,7 +59,7 @@ const router = useRouter()
 const data = reactive({
     //用户信息
     user: {
-        id: '1',
+        id: localStorage.getItem("userId"),
         name: 'lwx'
     },
     // 购物车信息

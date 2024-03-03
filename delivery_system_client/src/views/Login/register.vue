@@ -1,59 +1,78 @@
 <template>
-    <div class="back" style="border: 1px solid white">
-        <el-card class="login-form-content">
-            <h1 style="text-align: center">注册</h1>
-            <el-form :model="data.form"
-                     ref="formRef"
-                     :rules="data.rules"
-                     label-width="100px">
-                <el-form-item label="用户名"
-                              prop="username"
-                              class="input-item flex align-center">
-                    <el-input v-model="data.form.username"></el-input>
-                </el-form-item>
-                <el-form-item label="密码"
-                              prop="password"
-                              class="input-item flex align-center">
-                    <el-input type="password" v-model="data.form.password"
-                              show-password></el-input>
-                </el-form-item>
-                <el-form-item label="确认密码"
-                              prop="confirmPassword"
-                              class="input-item flex align-center">
-                    <el-input type="password" v-model="data.form.confirmPassword"
-                              show-password></el-input>
-                </el-form-item>
-                <el-form-item label="手机号"
-                              prop="phone"
-                              class="input-item flex align-center">
-                    <el-input type="phone" v-model="data.form.phone"></el-input>
-                </el-form-item>
-                <el-form-item label="验证码"
-                              prop="verifyCode"
-                              class="input-item flex align-center">
-                    <el-input v-model="data.form.verifyCode"
-                              style="width: 80%">
+    <div class="back">
+        <div class="loginBack">
+            <el-card class="login-form-content">
+                <h1 style="text-align: center">注册</h1>
+                <el-form :model="data.form"
+                         ref="formRef"
+                         :rules="data.rules"
+                         label-width="100px">
+                    <el-input v-model="data.form.username"
+                              class="input-item"
+                              placeholder="用户名">
+                        <template #prefix>
+                            <el-icon style="color: gold"><Avatar /></el-icon>
+                        </template>
                     </el-input>
-                    <img
-                        alt="验证码"
-                        id="captchaImg"
-                        :src="data.captchaUrl"
-                        class="verifyImg"
-                        @click="setCaptchUrl"/>
-                </el-form-item>
-                <el-form-item label="用户类型"
-                              prop="type">
-                    <el-select v-model="data.form.type" placeholder="请选择">
-                        <el-option v-for="(item, index) in data.types"
-                                   :label="item.name"
-                                   :value="item.id" />
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="submitForm()">注册</el-button>
-                </el-form-item>
-            </el-form>
-        </el-card>
+                    <el-input v-model="data.form.password"
+                              class="input-item flex align-center"
+                              show-password
+                              placeholder="密码">
+                        <template #prefix>
+                            <el-icon style="color: gold"><Lock /></el-icon>
+                        </template>
+                    </el-input>
+                    <el-input v-model="data.form.confirmPassword"
+                              class="input-item flex align-center"
+                              show-password
+                              placeholder="确认密码">
+                        <template #prefix>
+                            <el-icon style="color: gold"><Lock /></el-icon>
+                        </template>
+                    </el-input>
+                    <el-input v-model="data.form.phone"
+                              class="input-item flex align-center"
+                              placeholder="手机号">
+                        <template #prefix>
+                            <el-icon style="color: gold"><Iphone /></el-icon>
+                        </template>
+                    </el-input>
+                    <el-row>
+                        <el-col :span="14">
+                            <el-input v-model="data.form.verifyCode"
+                                      placeholder="验证码"
+                                      class="input-item">
+                            </el-input>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-image class="login-code"
+                                      alt="验证码"
+                                      id="captchaImg"
+                                      :src="data.captchaUrl"
+                                      @click="setCaptchUrl"/>
+                        </el-col>
+                    </el-row>
+
+                    <el-form-item label="用户类型"
+                                  class="input-item"
+                                  prop="type">
+                        <el-select v-model="data.form.type"
+                                   placeholder="请选择">
+                            <el-option v-for="(item, index) in data.types"
+                                       :label="item.name"
+                                       :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+
+                    <el-button style="width: 100%; height: 45px;"
+                               type="primary"
+                               @click="submitForm()">
+                        注册
+                    </el-button>
+                </el-form>
+            </el-card>
+        </div>
     </div>
 </template>
 
@@ -96,21 +115,6 @@ const data = reactive({
         type:''
     },
     rules: {
-        username: [
-            {required: true, message: '用户名不能为空', trigger: 'blur'}
-        ],
-        password: [
-            {required: true, message: '密码不能为空', trigger: 'blur'}
-        ],
-        confirmPassword: [
-            {required: true, message: '确认密码不能为空', trigger: 'blur'}
-        ],
-        phone: [
-            {required: true, message: '电话号不能为空', trigger: 'blur'}
-        ],
-        verifyCode: [
-            {required: true, message: '验证码不能为空', trigger: 'blur'}
-        ],
         type: [
             {required: true, message: '用户类型不能为空', trigger: 'blur'}
         ],
@@ -133,7 +137,7 @@ const getCaptchaUrl = () => {
     // 使用getCurrentInstanceAPI获取全局对象方法一
     // 从globalProperties中可以获取到所有的全局变量
     const globalProperties = currentInstance?.appContext.config.globalProperties
-    return 'http://localhost:8921/auth-external-microservice-lwx/v1/public/anon/verification-code/create?uuid=' + uuid;
+    return globalProperties.GATEWAY_URL + "/" + globalProperties.AUTH_NAME + "/" + globalProperties.CAPTCHA_URL + uuid;
 }
 
 /**
@@ -144,21 +148,36 @@ const setCaptchUrl = () => {
     data.form.verifyCode = ''
 }
 
-// 验证密码是否一致的方法
-const validatePassword = () => {
+const validateForm = () => {
+    if (data.form.username === ''){
+        ElMessage.error('用户名不能为空');
+        return false;
+    }
+    if (data.form.password === ''){
+        ElMessage.error('密码不能为空');
+        return false;
+    }
+    if (data.form.confirmPassword === ''){
+        ElMessage.error('确认密码不能为空');
+        return false;
+    }
+    if (data.form.phone === ''){
+        ElMessage.error('电话号不能为空');
+        return false;
+    }
+    if (data.form.verifyCode === ''){
+        ElMessage.error('验证码不能为空');
+        return false;
+    }
     if (data.form.password !== data.form.confirmPassword) {
-        ElMessage.error('注册失败');
+        ElMessage.error('两次密码不一致');
+        return false;
+    }
+    if (data.form.phone.length !== 11){
+        ElMessage.error('电话不满足11位');
         return false;
     }
     return true;
-}
-
-const validatePhone = () => {
-    if (data.form.phone.length === 11){
-        return true;
-    }
-    ElMessage.error('电话失败');
-    return false;
 }
 
 // 提交表单的方法
@@ -167,7 +186,7 @@ const submitForm = () => {
     // 表单验证
     formRef.value.validate(valid => {
         if (valid) {
-            if (validatePassword() && validatePhone()){
+            if (validateForm()){
                 const data1 = {
                     verify: data.form.verifyCode,
                     uuid: data.uuid,
@@ -189,35 +208,58 @@ const submitForm = () => {
                     }
                 })
             }
-        } else {
-            // 表单验证不通过，不执行任何操作
-            alert('表单验证不通过');
         }
     })
 }
 </script>
 
 <style scoped>
+@media screen and (max-width: 1500px){
+    /* 当屏幕小于1500px的时候 id为bg的元素 进行改变 */
+    .back{
+        background-size: contain;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.loginBack{
+    width:1000px;
+    height:500px;
+    MARGIN-RIGHT: auto;
+    MARGIN-LEFT: auto;
+}
+
 .back {
     background-image: url('/src/assets/backgroud.jpg');
     background-size: cover;
+    /* 背景图片不重复 */
     background-repeat: no-repeat;
-    background-position: center center; /* 将背景图像置于容器中央 */
-    width: 100%;
-    height: 700px;
+    /* 最小宽度为100% */
+    min-width: 100%;
+    /* 最小高度为100vh    vh: 就等于 视窗的高度  1vh = 视窗的高度的1%*/
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    border: 1px white solid;
 }
 
 .login-form-content {
     text-align: center;
     margin-top: 5%;
-    margin-left: 25%;
-    width: 50%;
-    height: 80%;
-    background-color: #f5f6f7;
+    margin-left: 17%;
+    width: 70%;
+    height: 140%;
     .input-item {
         margin: 20px auto;
         height: 45px;
         border-radius: 20px;
+    }
+
+    .login-code {
+        margin: 20px auto;
+        height: 45px;
+        float: right;
     }
 }
 </style>

@@ -196,6 +196,9 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
             if("id".equals(entry.getKey())){
                 query.eq("id",entry.getValue());
             }
+            if("shopId".equals(entry.getKey())){
+                query.eq("shop_id",entry.getValue());
+            }
             if("userName".equals(entry.getKey())){
                 query.eq("user_name",entry.getValue());
             }

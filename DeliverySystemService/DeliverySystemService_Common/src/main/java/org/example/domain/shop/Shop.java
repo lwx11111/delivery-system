@@ -160,6 +160,16 @@ public class Shop extends Model<Shop> {
     @TableField("picture")
     private String picture;
 
+    @Schema(name = "总分1-5 整数")
+    @Excel(name = "总分1-5 整数")
+    @TableField("sum_score")
+    Integer sumScore;
+
+    @Schema(name = "打分总人数")
+    @Excel(name = "打分总人数")
+    @TableField("sum_people")
+    Integer sumPeople;
+
 
     @TableField(exist = false)
     private Map<String,String> params;
@@ -167,9 +177,6 @@ public class Shop extends Model<Shop> {
     @TableField(exist = false)
     private String[] categoryIds;
 
-//    @Override
-//    protected Serializable pkVal(){
-//            return this.id;
-//        }
+
 
 }

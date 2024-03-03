@@ -1,19 +1,21 @@
 import {
   createRouter,
   createWebHistory,
-  createWebHashHistory,
 } from 'vue-router'
 
 import Login from '@/views/Login/index.vue';
 import Register from '@/views/Login/register.vue'
-const MerchantRegister = () => import('@/views/Merchant/merchantRegister.vue')
 // 管理端
 import managementRouter from "@/router/Management/index";
 // 消费者端
 import consumerRouter from "@/router/Consumer/index";
 // 商家端
 import merchantRouter from "@/router/Merchant/index";
+// 骑手端
 import riderRouter from "@/router/Rider";
+
+const MerchantRegister = () => import('@/views/Merchant/merchantRegister.vue')
+
 // 模块化路由
 const routes = [
     // 路由守卫 vue3动态路由问题导致刷新完页面会爆出No match found for location with path
@@ -24,18 +26,18 @@ const routes = [
     {
         path: '/login',
         component: Login,
-        name: 'Login'
+        name: '登录'
     },
     {
         path: '/register',
         component: Register,
-        name: 'Register'
+        name: '注册'
     },
     // 注册
     {
         path: '/Merchant/register',
         component: MerchantRegister,
-        name: 'MerchantRegister',
+        name: '商家注册',
     },
     managementRouter,
     consumerRouter,

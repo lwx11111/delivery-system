@@ -52,20 +52,24 @@
 
     // Mounted
     onMounted(() => {
+
+        /**
+         * 获取左侧菜单
+         */
         leftMenuApi().then(response => {
-            // console.log(response)
             // 不加载权限系统的
             for (let i = 0;i < response.data.length; i++){
-                if (response.data[i].label !== '权限系统监控' && response.data[i].label !== '系统管理' && response.data[i].label !== '权限管理'){
-                    data.menuData.push(response.data[i])
+                if (response.data[i].funName !== '权限系统监控' && response.data[i].funName !== '系统管理' && response.data[i].funName !== '权限管理'){
+                    // 管理端不加载消费 商家 骑手端
+                    if (localStorage.getItem("userId") === '1'){
+                        if (response.data[i].funName !== '消费端' && response.data[i].funName !== '商家端' && response.data[i].funName !== '骑手端'){
+                            data.menuData.push(response.data[i])
+                        }
+                    } else {
+                        data.menuData.push(response.data[i])
+                    }
                 }
             }
-            // this.menuData = response.data;
-            //
-            // const findFun = this.menuData.find(fun => fun.funName === '');
-            // if (findFun !== undefined) {
-            //   this.openeds.push(findFun.funId);
-            // }
         });
     })
 </script>

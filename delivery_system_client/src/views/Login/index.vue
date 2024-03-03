@@ -1,45 +1,50 @@
 <template>
-    <div class="back" style="border: 1px solid white">
-        <el-card class="login-form-content">
-            <h1 style="text-align: center">登录</h1>
-            <el-form :model="form"
-                     ref="formRef"
-                     :rules="data.rules"
-                     label-width="100px">
-                <el-form-item label="用户名"
-                              prop="username"
-                              class="input-item flex align-center">
-                    <el-input v-model="form.username" />
-                </el-form-item>
-                <el-form-item label="密码"
-                              prop="password"
-                              class="input-item flex align-center">
-                    <el-input v-model="form.password"
-                              show-password/>
-                </el-form-item>
-                <el-form-item label="验证码"
-                              prop="verifyCode"
-                              class="input-item flex align-center">
-                    <el-input v-model="form.verifyCode"
-                              style="width: 80%">
+    <div class="back">
+        <div class="loginBack">
+            <el-card class="login-form-content">
+                <h1 style="text-align: center">登录</h1>
+                <el-form :model="form"
+                         ref="formRef">
+                    <el-input v-model="form.username"
+                              class="input-item"
+                              placeholder="用户名">
+                        <template #prefix>
+                            <el-icon style="color: gold"><Avatar /></el-icon>
+                        </template>
                     </el-input>
-                    <img class="login-code"
-                         alt="验证码"
-                         id="captchaImg"
-                         :src="data.captchaUrl"
-                         @click="setCaptchaUrl"/>
-                </el-form-item>
-                <el-form-item class="input-item flex align-center">
-                    <el-button type="primary"
+                    <el-input v-model="form.password"
+                              placeholder="密码"
+                              class="input-item"
+                              show-password>
+                        <template #prefix>
+                            <el-icon style="color: gold"><Lock /></el-icon>
+                        </template>
+                    </el-input>
+
+                    <el-row>
+                        <el-col :span="14">
+                            <el-input v-model="form.verifyCode"
+                                      placeholder="验证码"
+                                      class="input-item">
+                            </el-input>
+                        </el-col>
+                        <el-col :span="10">
+                            <el-image class="login-code"
+                                 alt="验证码"
+                                 id="captchaImg"
+                                 :src="data.captchaUrl"
+                                 @click="setCaptchaUrl"/>
+                        </el-col>
+                    </el-row>
+                    <el-button style="width: 100%; height: 45px;"
+                               type="primary"
                                @click="onSubmit()">
                         登录
                     </el-button>
-                    <el-button  @click="toRegister()">
-                        注册
-                    </el-button>
-                </el-form-item>
-            </el-form>
-        </el-card>
+                    <el-text class="input-item" @click="toRegister()" type="primary">去注册</el-text>
+                </el-form>
+            </el-card>
+        </div>
     </div>
 </template>
 
@@ -60,17 +65,6 @@ const router = useRouter()
 const data = reactive({
     captchaUrl: '',
     uuid: '',
-    rules: {
-        username: [
-            {required: true, message: '用户名不能为空', trigger: 'blur'}
-        ],
-        password: [
-            {required: true, message: '密码不能为空', trigger: 'blur'}
-        ],
-        verifyCode: [
-            {required: true, message: '验证码不能为空', trigger: 'blur'}
-        ],
-    }
 })
 const form = reactive({
     username: '',
@@ -80,6 +74,13 @@ const form = reactive({
 
 // Mounted
 onMounted(() => {
+    // 已经登录
+    console.log(localStorage.getItem('userId'))
+    console.log(localStorage.getItem('customAccountId'))
+    if (localStorage.getItem('userId') !== null && localStorage.getItem('customAccountId') !== null){
+        console.log("123")
+        routerPushByType(localStorage.getItem('customAccountId'), localStorage.getItem('userId'));
+    }
     setCaptchaUrl();
 })
 
@@ -90,7 +91,6 @@ const currentInstance = getCurrentInstance();
 const getCaptchaUrl = () => {
     const uuid = commonUtil.createGuid()
     data.uuid = uuid;
-    //  "AUTH_NAME": "auth-external-microservice-lwx",
     // 使用getCurrentInstanceAPI获取全局对象方法 从globalProperties中可以获取到所有的全局变量
     const globalProperties = currentInstance?.appContext.config.globalProperties
     return globalProperties.GATEWAY_URL + "/" + globalProperties.AUTH_NAME + "/" + globalProperties.CAPTCHA_URL + uuid;
@@ -104,17 +104,23 @@ const setCaptchaUrl = () => {
     form.verifyCode = ''
 }
 
-
 /**
  * 登录校验
  */
-const formRef = ref();
 const onSubmit = () => {
-    formRef.value.validate(valid => {
-        if (valid) {
-            loginWithCode();
-        }
-    })
+    if (form.username === ''){
+        ElMessage.error('用户名不能为空');
+        return;
+    }
+    if (form.password === ''){
+        ElMessage.error('密码不能为空');
+        return;
+    }
+    if (form.verifyCode === ''){
+        ElMessage.error('验证码不能为空');
+        return;
+    }
+    loginWithCode();
 }
 
 /**
@@ -132,7 +138,6 @@ const loginWithCode = () => {
     };
 
     Api.loginWithCode(params).then(res => {
-        console.log(res);
         if (res.code === "20000"){
             let account = res.data.info.account
             // store存储
@@ -143,6 +148,7 @@ const loginWithCode = () => {
             // 本地存储
             localStorage.setItem('userId', account.accountId)
             localStorage.setItem('userName', account.loginName)
+            localStorage.setItem('customAccountId', account.customAccountId)
             setToken(res.data.token.accessToken);
             // 跳转
             routerPushByType(account.customAccountId, account.accountId);
@@ -216,22 +222,44 @@ const toRegister = () => {
 </script>
 
 <style scoped>
+@media screen and (max-width: 1500px){
+    /* 当屏幕小于1500px的时候 id为bg的元素 进行改变 */
+    .back{
+        background-size: contain;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.loginBack{
+    width:1000px;
+    height:500px;
+    MARGIN-RIGHT: auto;
+    MARGIN-LEFT: auto;
+}
+
 .back {
     background-image: url('/src/assets/backgroud.jpg');
     background-size: cover;
+    /* 背景图片不重复 */
     background-repeat: no-repeat;
-    background-position: center center; /* 将背景图像置于容器中央 */
-    width: 100%;
-    height: 700px;
+    /* 最小宽度为100% */
+    min-width: 100%;
+    /* 最小高度为100vh    vh: 就等于 视窗的高度  1vh = 视窗的高度的1%*/
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    /* 不加这个有问题 */
+    border: 1px solid white;
 }
 
 .login-form-content {
     text-align: center;
-    margin-top: 10%;
+    margin-top: 15%;
     margin-left: 25%;
-    width: 50%;
-    height: 60%;
-    background-color: #f5f6f7;
+    width: 40%;
+    height: 90%;
+    /*background-color: #f5f6f7;*/
     .input-item {
         margin: 20px auto;
         height: 45px;
@@ -239,7 +267,8 @@ const toRegister = () => {
     }
 
     .login-code {
-        height: 38px;
+        margin: 20px auto;
+        height: 45px;
         float: right;
     }
 }

@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.domain.shop.ShopItemVO;
 import org.example.domain.shop.vo.ShopWithItemVO;
+import org.example.params.UpdateSumScoreParams;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -23,6 +24,11 @@ import java.util.Map;
  * @since 2023-10-04
  */
 public interface IShopService extends IService<Shop> {
+
+    void updateSumScore(UpdateSumScoreParams updateSumScoreParams) throws Exception;
+
+    void salesVolumePlus(String shopId) throws Exception;
+
     Shop getShopById(String id) throws Exception;
 
     Shop getShopByOrderId(String orderId) throws Exception;

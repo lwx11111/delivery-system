@@ -90,7 +90,6 @@ onMounted(() => {
  */
 const getShopList = () => {
     ApiShop.selpage4shop(data.params).then(res => {
-        console.log(res)
         if (res.code === 200){
             data.shopList = res.data.records;
         }

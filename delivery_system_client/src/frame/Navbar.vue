@@ -1,39 +1,54 @@
 <template>
     <div class="navbar">
-        <div>
-            <div class="right-menu">
-                <el-dropdown class="avatar-container right-menu-item hover-effect"
-                             trigger="click">
-                    <div class="avatar-wrapper">
-                        <img src="@/assets/profile.png" class="user-avatar">
-                        <span class="user-name">{{ data.name }}</span>
-                        <i class="el-icon-caret-bottom"/>
-                    </div>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-<!--                            <el-dropdown-item>-->
-<!--                                <span style="display:block;"-->
-<!--                                      @click="handlePersonal()">-->
-<!--                                    修改个人信息-->
-<!--                                </span>-->
-<!--                            </el-dropdown-item>-->
-                            <el-dropdown-item>
+        <el-row>
+            <el-col :span="14" >
+                <div class="l-content">
+                    <el-breadcrumb separator="/">
+                        <el-breadcrumb-item
+                                v-for="(item,index) in data.breadList"
+                                :key="index"
+                                :to="{ path: item.path }">
+                            {{item.name}}
+                        </el-breadcrumb-item>
+                    </el-breadcrumb>
+                </div>
+            </el-col>
+            <el-col :span="10">
+                <div class="right-menu">
+                    <el-dropdown class="avatar-container right-menu-item hover-effect"
+                                 trigger="click">
+                        <div class="avatar-wrapper">
+                            <img src="@/assets/profile.png" class="user-avatar">
+                            <span class="user-name">{{ data.name }}</span>
+                            <i class="el-icon-caret-bottom"/>
+                        </div>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <!--                            <el-dropdown-item>-->
+                                <!--                                <span style="display:block;"-->
+                                <!--                                      @click="handlePersonal()">-->
+                                <!--                                    修改个人信息-->
+                                <!--                                </span>-->
+                                <!--                            </el-dropdown-item>-->
+                                <el-dropdown-item>
                                 <span style="display:block;"
                                       @click="handleModifyPass()">
                                     修改密码
                                 </span>
-                            </el-dropdown-item>
-                            <el-dropdown-item divided>
+                                </el-dropdown-item>
+                                <el-dropdown-item divided>
                                 <span style="display:block;"
                                       @click="logout()">
                                     退出系统
                                 </span>
-                            </el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
-            </div>
-        </div>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+                </div>
+            </el-col>
+        </el-row>
+
         <el-dialog title="修改密码"
                    :modal="true"
                    :append-to-body="false"
@@ -67,16 +82,20 @@
 <script lang="js" setup>
 import { useStore } from 'vuex'
 import { onMounted, reactive, ref } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 import Api from '@/api/auth'
 import {ElMessage} from "element-plus";
 import { removeToken } from '@/utils/auth/auth.js'
 import {getEncryptPassword} from "@/utils/passwordEncrypt";
+import { onBeforeRouteUpdate } from "vue-router";
 
 const store = useStore();
 const router = useRouter()
+const route = useRoute();
 
 const data = reactive({
+    // 路由集合
+    breadList: [],
     sidebarOpened: false,
     dialogVisible: false,
     form: {
@@ -106,12 +125,36 @@ const data = reactive({
 
 // Mounted
 onMounted(() => {
-    console.log(localStorage.getItem("userId"))
     data.name = localStorage.getItem("userName")
     data.form.name = data.name
+
+    getBreadcrumb();
 })
 
+/**
+ * 路由变化
+ */
+onBeforeRouteUpdate((val, oldVal) => {
+    console.log(val.matched)
+    getBreadcrumb(val.matched);
+});
+
 // Methods
+const isHome = (route) => {
+    return route.name === "首页";
+}
+
+const getBreadcrumb = (matched) => {
+    if (matched === undefined) {
+        matched = route.matched;
+    }
+    //如果不是首页
+    if (!isHome(matched[0])) {
+        matched = [{ path: "/home", meta: { title: "首页" } }].concat(matched);
+    }
+    data.breadList = matched;
+}
+
 const validatePass = (rule, value, callback) => {
     if (value === '') {
         callback(new Error('请输入确认密码'));
@@ -179,6 +222,10 @@ const handlePersonal = () =>{
 </script>
 
 <style lang="scss" scoped>
+.l-content{
+  margin-top: 20px;
+}
+
 .navbar {
   width: 100%;
   height: 50px;

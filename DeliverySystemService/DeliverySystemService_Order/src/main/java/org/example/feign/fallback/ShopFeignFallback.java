@@ -16,4 +16,11 @@ public class ShopFeignFallback implements ShopFeignApi {
         return response;
     }
 
+    @Override
+    public SimpleResponse salesVolumePlus(String shopId) {
+        SimpleResponse response = new SimpleResponse();
+        response.setCode(505);
+        response.setMessage("服务降级");
+        return response;
+    }
 }

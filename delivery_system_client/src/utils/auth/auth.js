@@ -3,15 +3,15 @@ export function getUserId() {
     let userId = localStorage.getItem('userId');
 }
 export function getToken() {
-    return sessionStorage.getItem(TokenKey);
+    return localStorage.getItem(TokenKey);
 }
 
 export function setToken(token) {
-    sessionStorage.setItem(TokenKey, token);
+    localStorage.setItem(TokenKey, token);
 }
 
 export function removeToken() {
-    sessionStorage.removeItem(TokenKey);
+    localStorage.removeItem(TokenKey);
 }
 
 export function setLoginInfo(info) {

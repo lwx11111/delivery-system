@@ -1,6 +1,6 @@
 // 权限管理API  【菜单、角色、权限】
 import request from '@/utils/request'
-const managerUriPrefix = '/manager'
+const managerUriPrefix = '/manager/'
 
 /**
  * 权限系统API

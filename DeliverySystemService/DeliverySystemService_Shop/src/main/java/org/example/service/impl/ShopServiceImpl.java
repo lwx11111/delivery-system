@@ -1,5 +1,7 @@
 package org.example.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.example.dao.ShopCategoryMapper;
@@ -10,6 +12,7 @@ import org.example.domain.shop.ShopCategory;
 import org.example.domain.shop.ShopItem;
 import org.example.domain.shop.ShopItemVO;
 import org.example.domain.shop.vo.ShopWithItemVO;
+import org.example.params.UpdateSumScoreParams;
 import org.example.service.IShopService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -57,6 +60,24 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     // 商铺基础信息表
     @Autowired
     private ShopMapper shopMapper;
+
+    @Override
+    public void updateSumScore(UpdateSumScoreParams updateSumScoreParams) throws Exception {
+        LambdaUpdateWrapper<Shop> wrapper = new LambdaUpdateWrapper<Shop>()
+                .eq(Shop::getId, updateSumScoreParams.getShopId())
+                .setSql("sum_score = sum_score + " + updateSumScoreParams.getScore())
+                .setSql("sum_people = sum_people + 1");
+        this.update(wrapper);
+    }
+
+    @Override
+    public void salesVolumePlus(String shopId) throws Exception {
+        LambdaUpdateWrapper<Shop> wrapper = new LambdaUpdateWrapper<Shop>()
+                .eq(Shop::getId, shopId)
+                .setSql("sales_volume = sales_volume + 1");
+        this.update(wrapper);
+
+    }
 
     @Override
     public Shop getShopById(String id) throws Exception {

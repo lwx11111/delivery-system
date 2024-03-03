@@ -1,200 +1,128 @@
 <template>
-    <div class="back" style="border: 1px solid white">
-
-        <el-card class="login-form-content">
-            <h1>商铺注册</h1>
-            <el-form :model="data.item"
-                     :rules="data.rules"
-                     ref="itemForm"
-                     label-width="100px">
-                <el-row v-if="false">
-                    <el-col :span="6">
-                        <el-form-item
+    <div class="back">
+        <div class="loginBack">
+            <el-card class="login-form-content">
+                <h1 style="text-align: center">商铺注册</h1>
+                <el-form :model="data.item"
+                         :rules="data.rules"
+                         ref="itemForm"
+                         label-width="100px">
+                    <el-row v-if="false">
+                        <el-col :span="6">
+                            <el-form-item
                                 label="userId"
                                 prop="userId">
-                            <el-input v-model="data.item.userId">
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                                <el-input v-model="data.item.userId">
+                                </el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
 
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item
-                            label="店铺名"
-                            prop="name">
-                            <el-input v-model="data.item.name">
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                    <el-input v-model="data.item.name"
+                              class="input-item"
+                              placeholder="店铺名">
+                        <template #prefix>
+                            <el-icon style="color: gold"><Avatar /></el-icon>
+                        </template>
+                    </el-input>
 
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item
-                            label="店铺描述"
-                            prop="description">
-                            <el-input v-model="data.item.description"
-                                      type="textarea" />
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                    <el-input v-model="data.item.description"
+                              class="input-item"
+                              style="margin-bottom: 30px;"
+                              placeholder="店铺描述"
+                              type="textarea">
 
-<!--                <el-row>-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item-->
-<!--                                label="省"-->
-<!--                                prop="province">-->
-<!--                            <el-select v-model="data.item.province"-->
-<!--                                       @change="getCity()"-->
-<!--                                       placeholder="请选择">-->
-<!--                                <el-option v-for="(item, index) in data.provinces"-->
-<!--                                           :label="item.name"-->
-<!--                                           :value="item.areaId" />-->
-<!--                            </el-select>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item-->
-<!--                            label="市"-->
-<!--                            prop="city">-->
-<!--                            <el-select v-model="data.item.city"-->
-<!--                                       placeholder="请选择">-->
-<!--                                <el-option v-for="(item, index) in data.cities"-->
-<!--                                           @change="getCounty()"-->
-<!--                                           :label="item.name"-->
-<!--                                           :value="item.areaId" />-->
-<!--                            </el-select>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                    <el-col :span="8">-->
-<!--                        <el-form-item-->
-<!--                                label="县"-->
-<!--                                prop="county">-->
-<!--                            <el-select v-model="data.item.county" placeholder="请选择">-->
-<!--                                <el-option v-for="(item, index) in data.counties"-->
-<!--                                           :label="item.name"-->
-<!--                                           :value="item.areaId" />-->
-<!--                            </el-select>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                </el-row>-->
+                    </el-input>
 
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item
-                            label="具体地址"
-                            prop="location">
-                            <el-input v-model="data.item.location">
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                    <el-input v-model="data.item.location"
+                              class="input-item"
+                              placeholder="具体地址">
+                    </el-input>
 
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item
                                 label="起送价格"
+                                class="input-item"
                                 prop="minPrice">
-                            <el-input-number v-model="data.item.minPrice"
-                                             :precision="2"
-                                             :step="1">
-                            </el-input-number>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item
+                                <el-input-number v-model="data.item.minPrice"
+                                                 placeholder="起送价格"
+                                                 :precision="2"
+                                                 :step="1">
+                                </el-input-number>
+                            </el-form-item>
+
+                        </el-col>
+                        <el-col :span="12">
+                            <el-form-item
                                 label="配送费"
+                                class="input-item"
                                 prop="deliveryCharge">
-                            <el-input-number v-model="data.item.deliveryCharge"
-                                             :precision="2"
-                                             :step="1">
-                            </el-input-number>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                                <el-input-number v-model="data.item.deliveryCharge"
+                                                 placeholder="配送费"
+                                                 :precision="2"
+                                                 :step="1">
+                                </el-input-number>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
 
-<!--                <el-row>-->
-<!--                    <el-col :span="12">-->
-<!--                        <el-form-item-->
-<!--                                label="开门时间"-->
-<!--                                prop="openTime">-->
-<!--                            <el-time-picker format="HH:mm:ss"-->
-<!--                                            value-format="HH:mm:ss"-->
-<!--                                            v-model="data.item.openTime"-->
-<!--                                            placeholder="请选择开门时间">-->
-<!--                            </el-time-picker>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                    <el-col :span="12">-->
-<!--                        <el-form-item-->
-<!--                                label="关门时间"-->
-<!--                                prop="closeTime">-->
-<!--                            <el-time-picker format="HH:mm:ss"-->
-<!--                                            value-format="HH:mm:ss"-->
-<!--                                            v-model="data.item.closeTime"-->
-<!--                                            placeholder="请选择开门时间">-->
-<!--                            </el-time-picker>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                </el-row>-->
-
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item
+                    <el-row>
+                        <el-col :span="24">
+                            <el-form-item
                                 label="店铺图片"
-                                prop="picture"
-                                label-width="150px">
-                            <MinioUpload ref="uploadRef"
-                                         :file-list="data.fileList1"
-                                         @uploadCallback="uploadCallbackPicture"
-                                         :limit="1">
-                            </MinioUpload>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                                prop="picture">
+                                <MinioUpload ref="uploadRef"
+                                             :file-list="data.fileList1"
+                                             @uploadCallback="uploadCallbackPicture"
+                                             :limit="1">
+                                </MinioUpload>
+                            </el-form-item>
+                        </el-col>
 
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item
-                                label="安全档案图片"
-                                prop="safetyFile"
-                                label-width="150px">
-                            <MinioUpload ref="uploadRef"
-                                         :file-list="data.fileList2"
-                                         @uploadCallback="uploadCallbackSafetyFile"
-                                         :limit="1">
-                            </MinioUpload>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                    </el-row>
 
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item
+                    <el-row>
+                        <el-col :span="24">
+                            <el-form-item
+                                label="档案图片"
+                                prop="safetyFile">
+                                <MinioUpload ref="uploadRef"
+                                             :file-list="data.fileList2"
+                                             @uploadCallback="uploadCallbackSafetyFile"
+                                             :limit="1">
+                                </MinioUpload>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item
                                 label="商铺类型"
                                 prop="categoryId">
-                            <el-tree-select v-model="data.item.categoryIds"
-                                            :data="data.categoryTree"
-                                            :render-after-expand="false"
-                                            show-checkbox
-                                            multiple>
-                            </el-tree-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                                <el-tree-select v-model="data.item.categoryIds"
+                                                :data="data.categoryTree"
+                                                :render-after-expand="false"
+                                                show-checkbox
+                                                multiple>
+                                </el-tree-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
 
-                <el-form-item>
-                    <el-button type="primary"
-                               @click="submitForm()">
-                        保存
-                    </el-button>
-                    <el-button @click="resetForm()">
-                        重置
-                    </el-button>
-                </el-form-item>
-            </el-form>
-        </el-card>
+                    <el-form-item>
+                        <el-button type="primary"
+                                   @click="submitForm()">
+                            保存
+                        </el-button>
+                        <el-button @click="resetForm()">
+                            重置
+                        </el-button>
+                    </el-form-item>
+                </el-form>
+            </el-card>
+        </div>
     </div>
 </template>
 
@@ -229,21 +157,16 @@ const data = reactive({
     categoryTree: [],
     item: {},
     rules: {
-        name: [
-            { required: true, message: '店铺名不能为空', trigger: 'blur' }
-        ],
-        province: [
-            { required: true, message: '省不能为空', trigger: 'blur' }
-        ],
-        city: [
-            { required: true, message: '市不能为空', trigger: 'blur' }
-        ],
-        county: [
-            { required: true, message: '县不能为空', trigger: 'blur' }
-        ],
-        location: [
-            { required: true, message: '具体地址不能为空', trigger: 'blur' }
-        ],
+        // province: [
+        //     { required: true, message: '省不能为空', trigger: 'blur' }
+        // ],
+        // city: [
+        //     { required: true, message: '市不能为空', trigger: 'blur' }
+        // ],
+        // county: [
+        //     { required: true, message: '县不能为空', trigger: 'blur' }
+        // ],
+
         minPrice: [
             { required: true, message: '起送价格不能为空', trigger: 'blur' }
         ],
@@ -253,12 +176,12 @@ const data = reactive({
         safetyFile: [
             { required: true, message: '安全档案图片不能为空', trigger: 'blur' }
         ],
-        openTime: [
-            { required: true, message: '开门时间不能为空', trigger: 'blur' }
-        ],
-        closeTime: [
-            { required: true, message: '关门时间不能为空', trigger: 'blur' }
-        ],
+        // openTime: [
+        //     { required: true, message: '开门时间不能为空', trigger: 'blur' }
+        // ],
+        // closeTime: [
+        //     { required: true, message: '关门时间不能为空', trigger: 'blur' }
+        // ],
         categoryIds: [
             { required: true, message: '商铺类型不能为空', trigger: 'blur' }
         ],
@@ -324,8 +247,15 @@ const submitForm = () => {
     // 表单验证
     itemForm.value.validate(valid => {
         if (valid) {
+            if(data.item.name === ''){
+                ElMessage.error('店铺名不能为空');
+                return;
+            }
+            if (data.item.location === ''){
+                ElMessage.error('具体地址不能为空');
+                return;
+            }
             // 表单验证通过
-            console.log(data.item)
             ApiShop.add4shop(data.item).then(res => {
                 if (res.code === 200){
                     ElMessage({
@@ -341,9 +271,6 @@ const submitForm = () => {
                     return;
                 }
             })
-        } else {
-            // 表单验证不通过，不执行任何操作
-            alert('表单验证不通过');
         }
     })
 }
@@ -374,25 +301,46 @@ const uploadCallbackSafetyFile = (response, url) => {
 </script>
 
 <style scoped>
+@media screen and (max-width: 1500px){
+    /* 当屏幕小于1500px的时候 id为bg的元素 进行改变 */
+    .back{
+        background-size: contain;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.loginBack{
+    width:1000px;
+    height:500px;
+    MARGIN-RIGHT: auto;
+    MARGIN-LEFT: auto;
+}
+
 .back {
     background-image: url('/src/assets/backgroud.jpg');
     background-size: cover;
+    /* 背景图片不重复 */
     background-repeat: no-repeat;
-    background-position: center center; /* 将背景图像置于容器中央 */
-    width: 100%;
-    height: 100%;
+    /* 最小宽度为100% */
+    min-width: 100%;
+    /* 最小高度为100vh    vh: 就等于 视窗的高度  1vh = 视窗的高度的1%*/
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    border: 1px white solid;
 }
 
 .login-form-content {
     text-align: center;
     margin-top: 5%;
-    margin-left: 25%;
-    width: 50%;
-    height: 70%;
-    background-color: #f5f6f7;
+    margin-left: 17%;
+    width: 80%;
+    height: 170%;
     .input-item {
-        margin: 20px auto;
-        height: 45px;
+        align-items: center;
+        margin-bottom: 20px;
+        height: 35px;
         border-radius: 20px;
     }
 }

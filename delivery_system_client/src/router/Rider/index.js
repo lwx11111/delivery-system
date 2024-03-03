@@ -16,7 +16,7 @@ const riderRouter = {
             {
                 path: '/Rider/Order/index',
                 component: OrderIndex,
-                name: 'OrderIndex',
+                name: '订单',
             },
             // Personal
             {

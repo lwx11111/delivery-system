@@ -69,17 +69,42 @@
                                             {{item.price}}￥
                                         </el-row>
                                         <!--减少添加按钮-->
-                                        <el-row>
-                                            <el-icon size="30px"
-                                                     v-if="data.order.has(item.id)"
-                                                     @click="subCart(key)">
-                                                <Remove />
-                                            </el-icon>
-                                            {{data.order.get(item.id)}}
-                                            <el-icon size="30px"
-                                                     @click="addCart(key)">
-                                                <CirclePlus />
-                                            </el-icon>
+                                        <el-row v-if="data.order.has(item.id)">
+                                            <el-col :span="3"
+                                                    style="width: 60px;"
+                                                    v-if="data.order.has(item.id)">
+                                                <el-icon size="30px"
+                                                         @click="subCart(key)">
+                                                    <Remove />
+                                                </el-icon>
+                                            </el-col>
+                                            <el-col :span="3"
+                                                    style="width: 60px;">
+                                                {{data.order.get(item.id)}}
+                                            </el-col>
+                                            <el-col :span="3">
+                                                <el-icon size="30px"
+                                                         style="width: 60px;"
+                                                         @click="addCart(key)">
+                                                    <CirclePlus />
+                                                </el-icon>
+                                            </el-col>
+                                        </el-row>
+                                        <!--解决按钮显示 card宽度变大问题-->
+                                        <el-row v-else>
+                                            <el-col :span="3">
+                                                <el-icon size="30px"
+                                                         style="width: 60px;"
+                                                         @click="addCart(key)">
+                                                    <CirclePlus />
+                                                </el-icon>
+                                            </el-col>
+                                            <el-col :span="3"
+                                                    style="width: 60px;">
+                                            </el-col>
+                                            <el-col :span="3"
+                                                    style="width: 60px;">
+                                            </el-col>
                                         </el-row>
                                     </el-col>
                                 </el-row>
@@ -110,18 +135,20 @@
                 </el-row>
             </el-card>
         </el-tab-pane>
+
         <el-tab-pane label="评价" name="shopComment">
-            <CommentList :shop-id="data.shop.id"></CommentList>
+            <CommentList></CommentList>
         </el-tab-pane>
+
         <el-tab-pane label="店铺" name="shopInfo">
             <div>
                 <el-row>
                     {{data.shop.name}}
                 </el-row>
-                <el-row>
-                    {{data.shop.name}}
-                </el-row>
             </div>
+            <!--安全档案图片-->
+            <h3>安全档案图片</h3>
+            <el-image :src="data.shop.safetyFile" style="width: 100px; height: 100px"></el-image>
         </el-tab-pane>
     </el-tabs>
 
@@ -131,6 +158,10 @@
                     :total-amount="data.totalAmount"
                     ref="shopItemDetailRef">
     </ShopItemDetail>
+
+    <!--订单确认组件-->
+    <OrderConfirm ref="orderConfirmDialog"></OrderConfirm>
+
 </template>
 
 <script lang="ts" setup>
@@ -141,12 +172,13 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import ApiShop from '@/api/Shop/api_shop.js'
 import ApiShopItem from '@/api/Shop/api_shop_item.js'
 import ApiShopItemCategory from '@/api/Shop/api_shopItemCategory.js'
-import ApiOrder from '@/api/Order/api_orderinfo.js'
+
 import ApiCollection from '@/api/Shop/api_collection.js'
 import ApiCart from '@/api/Shop/api_cart.js'
 import { Search, CirclePlus, Remove } from '@element-plus/icons-vue'
 import ShopItemDetail from "./shopItemDetail.vue";
 import CommentList from "../Comment/commentList.vue";
+import OrderConfirm from "../Order/components/orderConfirm.vue";
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
@@ -187,6 +219,7 @@ const data = reactive({
     order: new Map(),
     // 发送的订单信息
     orderInfo: {
+        id:'',
         // 菜品信息
         orderItems:[],
         userId: localStorage.getItem('userId'),
@@ -223,6 +256,15 @@ onMounted(() => {
 })
 
 // Methods
+
+/**
+ * 打开订单确认Dialog
+ * 传参
+ */
+const orderConfirmDialog = ref();
+const showOrderConfirm = () => {
+    orderConfirmDialog.value.init(data.shop, data.orderInfo);
+}
 
 const cancelCollection = () => {
     const param = {
@@ -351,7 +393,7 @@ const saveCart = () => {
                 confirmButtonText: '去支付',
                 callback: action => {
                     router.push({
-                        path: '/Consumer/Personal/cart'
+                        path: '/Consumer/Personal/shoppingCart'
                     })
                 }
             });
@@ -362,18 +404,25 @@ const saveCart = () => {
 }
 // 提交订单
 const submitOrder = () => {
+    // 是否选择物品
+    if (data.order.size === 0){
+        ElMessage.error('请选择物品')
+        return
+    }
+
     // 封装参数
     // data.orderInfo.packingCharges = data.shop.packingCharges
     data.orderInfo.deliveryCharge = data.shop.deliveryCharge
     data.orderInfo.shopId = data.shop.id
-    data.orderInfo.totalCharge = data.totalAmount
+    data.orderInfo.totalCharge = data.totalAmount + data.orderInfo.deliveryCharge;
     // 订单初始状态1
     data.orderInfo.status = '1';
+
+    // 需要先清空订单物品信息，防止物品重复
+    data.orderInfo.orderItems = [];
+
     // 物品信息
     data.order.forEach((value, key) => {
-        console.log(key)
-        console.log(value)
-        console.log(data.shopItemList[key])
         let shopItem = null;
         // key是id
         for (let i = 0; i < data.shopItemList.length; i++){
@@ -387,25 +436,10 @@ const submitOrder = () => {
             amount: value
         })
     })
-    console.log(data.orderInfo)
-    ApiOrder.add4orderinfo(data.orderInfo).then(res => {
-        if (res.code === 200){
-            console.log(res.data)
-            ElMessageBox.alert('创建订单成功', '提示', {
-                confirmButtonText: '确定',
-                callback: action => {
-                    router.push({
-                        path: '/Consumer/Order/orderPay',
-                        query: {
-                            orderId: res.data
-                        }
-                    })
-                }
-            });
-        } else {
-            ElMessage.error(res.msg)
-        }
-    })
+
+    // 打开订单信息界面
+    showOrderConfirm();
+
 }
 
 // 打开菜品详情Dialog
@@ -449,7 +483,7 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
 // Watch
 // 解决路由参数变化时，页面不刷新的问题
 watch(route, (to, from) => {
-    router.go(0)
+    // router.go(0)
 })
 </script>
 

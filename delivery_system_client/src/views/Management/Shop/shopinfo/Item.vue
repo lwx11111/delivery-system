@@ -412,6 +412,7 @@
             let item1 = {
                 url: data.item.picture
             }
+            console.log(data.item.picture)
             data.fileList1 = [];
             data.fileList1.push(item1)
             let item2 = {

@@ -29,13 +29,14 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, watch } from 'vue'
+import { reactive, onMounted, onActivated, watch } from 'vue'
 import { useStore } from "vuex";
 import { useRouter, useRoute } from 'vue-router'
 import ScreeningList from './components/screeningList.vue'
 import ShopCardList from "./components/shopCardList.vue";
 import { Search } from '@element-plus/icons-vue'
 import ApiShop from '@/api/Shop/api_shop.js'
+import { onBeforeRouteUpdate } from "vue-router";
 
 const store = useStore();
 const router = useRouter()
@@ -60,6 +61,14 @@ const data = reactive({
 
 // Mounted
 onMounted(() => {
+    // onActivated 会执行
+    // getShopList();
+})
+
+// 每次打开界面时，刷新界面，否则只有组件初始化时才会刷新，路由也监听不到
+onActivated(() => {
+    data.params.isParentId = route.query.isParentId
+    data.params.categoryId = route.query.categoryId
     getShopList();
 })
 
@@ -85,7 +94,7 @@ const getScreeningIndex = (index) => {
 // Watch
 // 解决路由参数变化时，页面不刷新的问题
 watch(route, (to, from) => {
-    router.go(0)
+    // router.go(0)
 })
 
 </script>

@@ -23,6 +23,8 @@
     <!--菜单栏-->
     <el-tabs v-model="data.tabName" class="demo-tabs" @tab-click="handleClick">
         <el-tab-pane label="全部订单" name="allOrder"></el-tab-pane>
+        <el-tab-pane label="待支付" name="toPay"></el-tab-pane>
+        <el-tab-pane label="待收货" name="toReceive"></el-tab-pane>
         <el-tab-pane label="待评价" name="toComment"></el-tab-pane>
         <el-tab-pane label="退款" name="refund"></el-tab-pane>
     </el-tabs>
@@ -84,6 +86,9 @@
                 <el-col :span="14">
                 </el-col>
                 <el-col :span="10">
+                    <el-button v-if="item.status === 1 "
+                               @click="toOrderPay(key)">去支付
+                    </el-button>
                     <el-button v-if="item.status === 1 || item.status === 2 || item.status === 3 || item.status === 4"
                                @click="orderCancel(key)">取消订单
                     </el-button>
@@ -268,8 +273,13 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
     console.log(tab);
     switch (tab.props.name){
         case 'allOrder' :
-            console.log("lwx");
             getOrderList(0);
+            break;
+        case 'toPay':
+            getOrderList(1);
+            break;
+        case 'toReceive':
+            getOrderList(4);
             break;
         case 'toComment':
             getOrderList(5);
@@ -355,6 +365,15 @@ const orderRefund = (key) => {
     })
 }
 
+const toOrderPay = (key) => {
+    let orderId = data.orderList[key].id;
+    router.push({
+        path: '/Consumer/Order/orderPay',
+        query: {
+            orderId: orderId
+        }
+    })
+}
 </script>
 
 <style scoped>

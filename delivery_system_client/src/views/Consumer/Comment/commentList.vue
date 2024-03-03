@@ -27,16 +27,17 @@
 <script lang="ts" setup>
 import { reactive, onMounted,defineProps } from 'vue'
 import { useStore } from "vuex";
-import { useRouter } from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
 import Api from '@/api/Comment/api_comment.js'
 const store = useStore();
 const router = useRouter()
-
+const route = useRoute();
 // Props
 const props = defineProps({
+    // 店铺id 子组件先mounted 所以这里获取不到 要路由获取
     shopId: {
         type: String,
-        required: true
+        required: false,
     }
 })
 
@@ -58,17 +59,19 @@ const data = reactive({
         }
     ],
     params: {
-        shopId: props.shopId
+        shopId: ''
     }
 })
 
 // Mounted
 onMounted(() => {
+    data.params.shopId = route.query.shopId
     listCommentsByShopId()
 })
 
 // Methods
 const listCommentsByShopId = () => {
+    console.log(data.params)
     Api.selpage4comment(data.params).then(res => {
         console.log(res)
         if (res.code === 200) {

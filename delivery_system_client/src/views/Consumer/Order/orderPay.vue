@@ -1,49 +1,21 @@
 <template>
-    <el-dialog v-model="data.showDialog"
-               destroy-on-close
-               width="95%"
-               top="5vh"
-               title="物品信息">
-        <el-card style="border: 1px solid gold;"
-                 class="box-card"
-                 shadow="never">
-            <div v-for="(item,index) in data.order.orderItems">
-                <el-row>
-                    <!-- todo -->
-                    <!-- {{it.picture}}-->
-                    <el-col :span="6">
-                        <el-form-item label="物品名">
-                            <el-input v-model="item.shopItem.name"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="物品价格">
-                            <el-input-number v-model="item.shopItem.price"></el-input-number>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="物品描述">
-                            <el-input v-model="item.shopItem.description" type="textarea"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="物品数量">
-                            <el-input v-model="item.amount"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </div>
-
-            <el-row>
-                <el-button @click="orderPay()">
-                    立即支付
-                </el-button>
-                <el-button @click="orderCanel()">
-                    取消订单
-                </el-button>
-            </el-row>
+    <div style="height: 50%">
+        <el-row>
+            选择支付方式
+        </el-row>
+        <el-card>
+            <el-radio-group v-model="data.paymentMethod">
+                <el-radio value="wx" size="large" border label="微信支付"></el-radio>
+                <el-radio value="zfb" size="large" border label="支付宝支付"></el-radio>
+            </el-radio-group>
         </el-card>
-    </el-dialog>
+
+        <el-button @click="orderPay()"
+                   style="background: gold; margin-top: 500px;width: 90%;">
+            支付
+        </el-button>
+    </div>
+
 </template>
 
 <script lang="ts" setup>
@@ -58,96 +30,38 @@ const route = useRoute();
 
 // Data
 const data = reactive({
-    showDialog: true,
-    // 订单信息
-    order: {
-        // 基本信息
-        deliveryCharge: 1,
-        deliveryRiderId: "1",
-        deliveryService: "1",
-        expectedTime: "2023-11-30 05:59:56",
-        id: "1730165452519075841",
-        location: "1",
-        orderTime: "2023-11-30 05:59:59",
-        packingCharges: 1,
-        paymentMethod: "0",
-        remark: "1",
-        status: 0,
-        tableware: "1",
-        totalCharge: 1,
-        // 订单物品
-        orderItems: [
-            {
-                shopItem: {
-                    categoryName: "1111",
-                    description: "1",
-                    id: null,
-                    name: "物品1",
-                    picture: "1",
-                    price: 1,
-                    shopId: null,
-                },
-                amount: 1
-            },
-            {
-                shopItem: {},
-                amount: 1
-            },
-        ],
-        // 店铺信息
-        shop: {
-            categoryIds: '',
-            closeTime: "15:31:12",
-            county: "1",
-            deliveryCharge: 2,
-            description: "1",
-            id: "1",
-            itemCategory: "1",
-            location: "1",
-            minPrice: 2,
-            name: "店铺1",
-            openTime: "08:00:01",
-            params: null,
-            picture: "http://127.0.0.1:9000/test/ad69ca1afd7630be2e290b9e3ea57541_.jpg",
-            province: "1",
-            safetyFile: "http://127.0.0.1:9000/test/226f5de9d23239c69cc02902e5974d7f_.jpg",
-            salesVolume: 1,
-            score: 1,
-            status: 1,
-            userId: localStorage.getItem('userId'),
-        },
-        shopId: "1",
-        userId: localStorage.getItem('userId'),
-    }
+    orderId:'',
+    paymentMethod: '',
 })
 
 // Mounted
 onMounted(() => {
-    data.order.id = route.query.orderId;
-    getOrderData(route.query.orderId);
+    data.orderId = route.query.orderId;
 })
 
 // Methods
-const getOrderData = (id) => {
-    Api.sel4orderinfo(id).then(res => {
-        console.log(res)
-        if (res.code === 200){
-            data.order = res.data;
-        }
-    })
-}
-
+/**
+ * 支付订单
+ */
 const orderPay = () => {
-    const param = {
-        orderId: data.order.id,
-        paymentMethod: 'wx'
+    if (data.paymentMethod === ''){
+        ElMessage.error('请选择支付方式')
+        return
     }
+
+    const param = {
+        orderId: data.orderId,
+        paymentMethod: data.paymentMethod
+    }
+    console.log(param)
     Api.orderPay(param).then(res => {
         console.log(res)
         if (res.code === 200){
             if (res.data === true){
                 ElMessage.success('支付成功')
-                data.showDialog = false;
+                router.push({
+                    path: '/Consumer/Order/index',
+                })
             } else {
                 ElMessage.error('支付失败，请重试')
             }

@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import jakarta.annotation.Resource;
 import org.example.dao.OrderShopItemMapper;
 import org.example.domain.order.OrderInfo;
@@ -9,6 +10,7 @@ import org.example.domain.order.OrderItem;
 import org.example.domain.order.OrderShopItem;
 import org.example.domain.order.vo.OrderRiderVO;
 import org.example.domain.shop.Shop;
+import org.example.dto.OrderPayDto;
 import org.example.feign.ShopFeignApi;
 import org.example.service.IOrderInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -69,13 +71,22 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
 
     @Override
     public Boolean orderPay(Map<String,String> params) throws Exception {
-        String orderId = params.get("orderId");
-        if (StringUtils.isBlank(orderId)) {
-            throw new Exception("orderId不能为空");
-        }
-        OrderInfo orderInfo = this.getById(orderId);
+        OrderPayDto orderPayDto = new OrderPayDto();
+
+        OrderInfo orderInfo = this.getById(params.get("orderId"));
+        // 暂时记录到order里 成功后更新
+        orderInfo.setPaymentMethod(params.get("paymentMethod"));
         // 修改订单状态信息
-        return orderStateService.pay(orderInfo);
+        boolean result = this.orderStateService.pay(orderInfo);
+        if (result){
+            // 修改支付方式
+            System.out.println(params.get("paymentMethod"));
+            LambdaUpdateWrapper<OrderInfo> updateWrapper = new LambdaUpdateWrapper<OrderInfo>()
+                    .eq(OrderInfo::getId, orderInfo.getId())
+                    .set(OrderInfo::getPaymentMethod, params.get("paymentMethod"));
+            this.update(updateWrapper);
+        }
+        return result;
     }
 
     @Override

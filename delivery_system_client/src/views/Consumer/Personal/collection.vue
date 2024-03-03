@@ -21,8 +21,8 @@ import {ElMessage} from "element-plus";
 const data = reactive({
     //用户信息
     user: {
-        id: '1',
-        name: 'lwx'
+        id: localStorage.getItem("userId"),
+
     },
     // 店铺信息
     shops: []

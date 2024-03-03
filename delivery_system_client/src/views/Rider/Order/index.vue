@@ -77,6 +77,7 @@ const data = reactive({
 
 // Mounted
 onMounted(() => {
+    console.log(localStorage.getItem("userId"))
     listOrderByRiderId();
 })
 

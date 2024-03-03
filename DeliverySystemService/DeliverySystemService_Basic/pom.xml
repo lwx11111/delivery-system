@@ -12,6 +12,12 @@
     <artifactId>DeliverySystemService_Basic</artifactId>
 
     <dependencies>
+        <!-- xxljob-->
+        <dependency>
+            <groupId>com.xuxueli</groupId>
+            <artifactId>xxl-job-core</artifactId>
+            <version>2.4.0</version>
+        </dependency>
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>DeliverySystemService_Common</artifactId>

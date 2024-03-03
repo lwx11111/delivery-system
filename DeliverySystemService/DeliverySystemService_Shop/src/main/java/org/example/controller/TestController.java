@@ -27,7 +27,7 @@ public class TestController {
     private TestDao testDao;
 
     @PostMapping("/test")
-    public void fun(@RequestBody String str){
+    public void fun(){
         System.out.println(BigDecimal.valueOf((int) 1 + Math.random() * 11));
         System.out.println((BigDecimal.valueOf(1 + Math.random() * 3)));
         System.out.println(BigDecimal.valueOf(20 + Math.random() * 20));

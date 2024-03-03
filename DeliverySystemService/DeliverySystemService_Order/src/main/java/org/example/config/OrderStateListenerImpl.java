@@ -1,5 +1,6 @@
 package org.example.config;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.example.algorithm.RiderOrderAllocation;
 import org.example.dao.OrderInfoMapper;
@@ -8,6 +9,8 @@ import org.example.domain.OrderStatusDomain;
 import org.example.domain.order.OrderInfo;
 import org.example.enums.OrderStatus;
 import org.example.enums.OrderStatusChangeEvent;
+import org.example.feign.ShopFeignApi;
+import org.example.service.impl.OrderInfoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.statemachine.annotation.OnTransition;
@@ -40,6 +43,9 @@ public class OrderStateListenerImpl{
      */
     @Autowired
     private OrderStatusMapper orderStatusMapper;
+
+    @Autowired
+    private ShopFeignApi shopFeignApi;
 
     /**
      * 支付
@@ -131,6 +137,8 @@ public class OrderStateListenerImpl{
         System.out.println("收货了11================");
         OrderInfo order = (OrderInfo) message.getHeaders().get("order");
         try {
+            // 销量加一
+            shopFeignApi.salesVolumePlus(order.getShopId());
             // 修改状态
             order.setStatus(OrderStatus.FINISH.getValue());
             order.setStatusName("消费者收货");

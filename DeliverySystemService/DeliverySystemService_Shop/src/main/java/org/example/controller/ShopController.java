@@ -2,6 +2,7 @@ package org.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.domain.shop.ShopItemVO;
+import org.example.params.UpdateSumScoreParams;
 import org.example.web.SimpleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
@@ -31,6 +32,38 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShopController {
     @Autowired
     private IShopService service;
+
+    /**
+     * 更新总分
+     * @return
+     */
+    @PostMapping("/shop/updateSumScore")
+    @ResponseBody
+    SimpleResponse updateSumScore(@RequestBody UpdateSumScoreParams updateSumScoreParams){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            service.updateSumScore(updateSumScoreParams);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    @PostMapping("/salesVolumePlus")
+    @ResponseBody
+    public SimpleResponse salesVolumePlus(@RequestBody String shopId){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            service.salesVolumePlus(shopId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
 
     @GetMapping("/getShopByOrderId/{orderId}")
     @ResponseBody

@@ -5,7 +5,7 @@ import { pagePermApi } from '@/api/function'
 
 const whiteList = ['/login','/register'] // no redirect whitelist
 
-const title = 'LWX'
+const title = '外卖系统'
 function getPageTitle(pageTitle) {
     if (pageTitle) {
         return title + pageTitle;
@@ -13,7 +13,6 @@ function getPageTitle(pageTitle) {
     return title;
 }
 router.beforeEach(async (to, from, next) => {
-    console.log("Permission")
     // 设置页面标题
     document.title = getPageTitle(to.meta.title)
 
