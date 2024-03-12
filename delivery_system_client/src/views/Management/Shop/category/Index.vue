@@ -95,12 +95,24 @@
                         align="center">
                 </el-table-column>
                 <el-table-column
+                        prop="picture"
+                        label="图片"
+                        width="100"
+                        align="center">
+                    <template #default="scope">
+                        <div style="display: flex; align-items: center">
+                            <el-image style="height: 50px; width: 50px" :src="scope.row.picture"/>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column
                         prop="name"
                         label="分类名"
                         width="180"
                         align="center">
                 </el-table-column>
-                <el-table-column
+                <!--记录-->
+                <el-table-column :formatter="typeFormat"
                         prop="parentId"
                         label="大类ID"
                         width="180"
@@ -171,6 +183,8 @@
 
     // Data
     const data = reactive({
+        // 父类数据
+        parentCategoryList:[],
         context: { componentParent: this },// context: 父对象
         screenHeight: window.innerHeight,// screenHeight:控制高度自适应-页面高度
         otherHeight: 310,// otherHeight:控制高度自适应-表格外的高度
@@ -208,23 +222,22 @@
     onMounted(() => {
         getData();
         getParentCategoryList();
-        // window.onresize = () => {
-        //     return (() => {
-        //         data.screenHeight = window.innerHeight
-        //     })()
-        // }
-
-        // 菜单界面生成时日志记录
-        // const islog = Vue.prototype.$config.ISLOG;
-        // if (true==islog){
-        //     this.OperatorLogParam.operateFeatures = '菜单点击'
-        //     this.OperatorLogParam.operateType = LogType.Query
-        //     this.OperatorLogParam.operateState = '成功'
-        //     OperatorLog.setOperationLog(this.OperatorLogParam)
-        // }
     })
 
     // Methods
+
+    /**
+     * 修改枚举值到具体含义
+     * @param row
+     * @param column
+     */
+    const typeFormat = (row, column) => {
+        for (const i of data.parentCategoryList) {
+            if (i.id === row.parentId) {
+                return i.name
+            }
+        }
+    }
 
     /**
      * 父级分类店铺列表

@@ -9,18 +9,19 @@
                  shadow="never">
             <div v-for="(item,index) in data.orderItems">
                 <el-row>
-                    <!-- todo -->
-                    <!-- {{it.picture}}-->
+                    <el-col :span="6">
+                        <el-image style="height: 100px" :src="item.shopItem.picture"></el-image>
+                    </el-col>
                     <el-col :span="6">
                         <el-form-item label="物品名">
                             <el-input v-model="item.shopItem.name"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="物品价格">
-                            <el-input-number v-model="item.shopItem.price"></el-input-number>
-                        </el-form-item>
-                    </el-col>
+<!--                    <el-col :span="6">-->
+<!--                        <el-form-item label="物品价格">-->
+<!--                            <el-input-number v-model="item.shopItem.price"></el-input-number>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
                     <el-col :span="6">
                         <el-form-item label="物品描述">
                             <el-input v-model="item.shopItem.description" type="textarea"></el-input>

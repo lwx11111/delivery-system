@@ -5,9 +5,9 @@ const CategoryIndex = () => import('@/views/Management/Shop/category/Index.vue')
 const CollectionIndex = () => import('@/views/Management/User/collection/Index.vue')
 const OrderInfoIndex = () => import('@/views/Management/Order/orderinfo/Index.vue')
 const ShopInfoIndex = () => import('@/views/Management/Shop/shopinfo/Index.vue')
-const ShopItem = () => import('@/views/Management/Shop/shopitem.vue')
+// const ShopItem = () => import('@/views/Management/Shop/shopitem.vue')
 const CommentIndex = () => import('@/views/Management/Comment/comment/Index.vue')
-
+const AddressIndex = () => import('@/views/Management/Address/Index.vue')
 const managementRouter =
 {
     path: '/',
@@ -74,10 +74,21 @@ const managementRouter =
             name: '收藏管理'
         },
         {
-            path: '/Management/Shop/shopitem/index',
-            component: ShopItem,
-            name: '物品管理',
+            path: '/Address',
+            name: '地址管理',
+            children: [
+                {
+                    path: '/Management/Address/index',
+                    component: AddressIndex,
+                    name: '地址管理',
+                },
+            ],
         },
+        // {
+        //     path: '/Management/Shop/shopitem/index',
+        //     component: ShopItem,
+        //     name: '物品管理',
+        // },
     ]
 }
 

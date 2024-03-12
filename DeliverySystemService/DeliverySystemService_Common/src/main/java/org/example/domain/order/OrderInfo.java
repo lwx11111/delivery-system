@@ -47,6 +47,9 @@ public class OrderInfo extends Model<OrderInfo> {
     @TableField("user_id")
     private String userId;
 
+    @TableField(exist = false)
+    private String userName;
+
     /**
      * 配送骑手
      */
@@ -54,6 +57,9 @@ public class OrderInfo extends Model<OrderInfo> {
     @Excel(name = "配送骑手")
     @TableField("rider_id")
     private String riderId;
+
+    @TableField(exist = false)
+    private String riderName;
 
     /**
     * 打包费

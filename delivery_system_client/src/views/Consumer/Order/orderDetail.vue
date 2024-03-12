@@ -137,7 +137,7 @@ import { reactive, onMounted } from 'vue'
 import { useStore } from "vuex";
 import { useRouter, useRoute } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
-
+import UserStorage from '@/cache/userStorage.js'
 import Api from '@/api/Order/api_orderinfo.js'
 
 
@@ -203,10 +203,10 @@ const data = reactive({
             salesVolume:1,
             score:1,
             status:1,
-            userId: localStorage.getItem('userId'),
+            userId: UserStorage.getUserId(),
         },
         shopId:"1",
-        userId:localStorage.getItem('userId'),
+        userId:UserStorage.getUserId(),
     },
     // 骑手信息
     rider: {},

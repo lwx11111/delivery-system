@@ -68,33 +68,37 @@
                     </el-row>
 
                     <el-row>
-                        <el-col :span="24">
+                        <el-col :span="12">
                             <el-form-item
                                 label="店铺图片"
                                 prop="picture">
-                                <MinioUpload ref="uploadRef"
-                                             :file-list="data.fileList1"
-                                             @uploadCallback="uploadCallbackPicture"
-                                             :limit="1">
-                                </MinioUpload>
+                                <MinioUploadNew key1="picture" @getUrl="getUrl">
+                                </MinioUploadNew>
+<!--                                <MinioUpload ref="uploadRef"-->
+<!--                                             :file-list="data.fileList1"-->
+<!--                                             @uploadCallback="uploadCallbackPicture"-->
+<!--                                             :limit="1">-->
+<!--                                </MinioUpload>-->
                             </el-form-item>
                         </el-col>
-
-                    </el-row>
-
-                    <el-row>
-                        <el-col :span="24">
+                        <el-col :span="12">
                             <el-form-item
                                 label="档案图片"
                                 prop="safetyFile">
-                                <MinioUpload ref="uploadRef"
-                                             :file-list="data.fileList2"
-                                             @uploadCallback="uploadCallbackSafetyFile"
-                                             :limit="1">
-                                </MinioUpload>
+                                <MinioUploadNew key1="safetyFile" @getUrl="getUrl">
+                                </MinioUploadNew>
+                                <!--                                <MinioUpload ref="uploadRef"-->
+                                <!--                                             :file-list="data.fileList2"-->
+                                <!--                                             @uploadCallback="uploadCallbackSafetyFile"-->
+                                <!--                                             :limit="1">-->
+                                <!--                                </MinioUpload>-->
                             </el-form-item>
                         </el-col>
                     </el-row>
+
+<!--                    <el-row>-->
+<!--                       -->
+<!--                    </el-row>-->
 
                     <el-row>
                         <el-col :span="12">
@@ -134,8 +138,9 @@ import ApiDict from '@/api/Common/api_sysdict.js'
 import { useStore } from "vuex";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
-import MinioUpload from "../components/MinioUpload.vue";
-
+import MinioUpload from "../components/MinioUploadOld.vue";
+import UserStorage from '@/cache/userStorage.js';
+import MinioUploadNew from "../components/MinioUpload.vue";
 const store = useStore();
 const router = useRouter()
 
@@ -225,7 +230,7 @@ const getCounty = () => {
 onMounted(() => {
     getProvinces();
     // 用户信息
-    data.item.userId = localStorage.getItem("userId");
+    data.item.userId = UserStorage.getUserId(),
     // 店铺类型
     ApiCategory.listTreeCategory().then(res => {
         console.log(res)
@@ -240,6 +245,21 @@ onMounted(() => {
         }
     })
 })
+
+/**
+ * 获取url
+ * @param url
+ * @param key1
+ * @param key2
+ */
+const getUrl = (url, key1, key2) => {
+    console.log(url)
+    if (key1 === 'picture'){
+        data.item.picture = url
+    } else if (key1 === 'safetyFile'){
+        data.item.safetyFile = url
+    }
+}
 
 // 提交表单的方法
 const itemForm = ref();
@@ -336,7 +356,7 @@ const uploadCallbackSafetyFile = (response, url) => {
     margin-top: 5%;
     margin-left: 17%;
     width: 80%;
-    height: 170%;
+    height: 130%;
     .input-item {
         align-items: center;
         margin-bottom: 20px;

@@ -1,8 +1,8 @@
 <template>
     <div class="navbar">
         <el-row>
-            <el-col :span="14" >
-                <div class="l-content">
+            <el-col :span="14">
+                <div class="left-menu">
                     <el-breadcrumb separator="/">
                         <el-breadcrumb-item
                                 v-for="(item,index) in data.breadList"
@@ -19,8 +19,7 @@
                                  trigger="click">
                         <div class="avatar-wrapper">
                             <img src="@/assets/profile.png" class="user-avatar">
-                            <span class="user-name">{{ data.name }}</span>
-                            <i class="el-icon-caret-bottom"/>
+                            <span class="user-name">{{ data.form.name }}</span>
                         </div>
                         <template #dropdown>
                             <el-dropdown-menu>
@@ -79,13 +78,14 @@
         </el-dialog>
     </div>
 </template>
-<script lang="js" setup>
+<script lang="ts" setup>
 import { useStore } from 'vuex'
 import { onMounted, reactive, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import Api from '@/api/auth'
 import {ElMessage} from "element-plus";
-import { removeToken } from '@/utils/auth/auth.js'
+import UserStorage from '@/cache/userStorage.js';
+import AuthStorage from '@/cache/authStorage.js';
 import {getEncryptPassword} from "@/utils/passwordEncrypt";
 import { onBeforeRouteUpdate } from "vue-router";
 
@@ -99,10 +99,11 @@ const data = reactive({
     sidebarOpened: false,
     dialogVisible: false,
     form: {
+        name: '',
         oldPass: '',
         newPass: '',
         confirmPass: '',
-        accountId: localStorage.getItem("userId"),
+        accountId: UserStorage.getUserId(),
     },
     rules: {
         oldPass: [
@@ -125,8 +126,7 @@ const data = reactive({
 
 // Mounted
 onMounted(() => {
-    data.name = localStorage.getItem("userName")
-    data.form.name = data.name
+    data.form.name = UserStorage.getUserName();
 
     getBreadcrumb();
 })
@@ -135,7 +135,6 @@ onMounted(() => {
  * 路由变化
  */
 onBeforeRouteUpdate((val, oldVal) => {
-    console.log(val.matched)
     getBreadcrumb(val.matched);
 });
 
@@ -206,55 +205,25 @@ const handleSavePass = () => {
 const logout = () => {
     Api.logout().then(res => {
         console.log(res);
-        removeToken();
+        AuthStorage.removeToken();
         router.push({
             path: '/login',
         })
     })
 }
 
-/**
- *
- */
-const handlePersonal = () =>{
-
-}
 </script>
 
 <style lang="scss" scoped>
-.l-content{
-  margin-top: 20px;
+.left-menu{
+    padding: 20px;
 }
 
 .navbar {
-  width: 100%;
-  height: 50px;
-  overflow: hidden;
-  position: relative;
-  background: #fafafa;
+    width: 100%;
+  height: 100%;
+  background: 	#ffffff;
   box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
-
-  .hamburger-container {
-    line-height: 46px;
-    height: 100%;
-    float: left;
-    cursor: pointer;
-    transition: background .3s;
-    -webkit-tap-highlight-color: transparent;
-
-    &:hover {
-      background: rgba(0, 0, 0, .025)
-    }
-  }
-
-  .breadcrumb-container {
-    float: left;
-  }
-
-  .errLog-container {
-    display: inline-block;
-    vertical-align: top;
-  }
 
   .right-menu {
     float: right;
@@ -301,18 +270,7 @@ const handlePersonal = () =>{
 
         .user-name {
           font-size: 16px;
-          /*line-height: 50px;*/
-          /*height: 50px;*/
-          /*display: inline-block;*/
           color: #000;
-        }
-
-        .el-icon-caret-bottom {
-          cursor: pointer;
-          position: absolute;
-          right: -20px;
-          top: 25px;
-          font-size: 12px;
         }
       }
     }

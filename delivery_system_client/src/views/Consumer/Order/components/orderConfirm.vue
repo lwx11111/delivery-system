@@ -18,7 +18,7 @@
                 <el-row style="margin-bottom: 10px">
                     <el-col :span="6"
                             style="margin-right: 5px">
-                        <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                        <el-image :src="item.shopItem.picture"></el-image>
                     </el-col>
                     <el-col :span="6">
                         {{item.shopItem.name}}
@@ -95,7 +95,7 @@ import { useRouter, useRoute } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
 
 import ApiOrder from '@/api/Order/api_orderinfo.js'
-
+import UserStorage from '@/cache/userStorage.js'
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
@@ -106,7 +106,7 @@ const data = reactive({
     // 店铺信息
     shop: {
         id: '',
-        userId : localStorage.getItem('userId'),
+        userId : UserStorage.getUserId(),
         name : '',
         province : '',
         county : '',
@@ -129,7 +129,7 @@ const data = reactive({
         id:'',
         // 菜品信息
         orderItems:[],
-        userId: localStorage.getItem('userId'),
+        userId: UserStorage.getUserId(),
         shopId: '',
         deliveryRiderId: '',
         packingCharges: '',

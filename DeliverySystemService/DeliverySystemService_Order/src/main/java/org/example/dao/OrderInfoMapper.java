@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.domain.order.OrderItem;
 import org.example.domain.shop.ShopItem;
 import org.example.domain.shop.ShopItemVO;
+import org.example.vo.EarningsDataVo;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,8 @@ import java.util.Map;
  */
 @Mapper
 public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
+    EarningsDataVo getEarningsData(@Param("params") Map<String, String> params);
+
     List<OrderItem> listOrderItemById(@Param("params") Map<String, String> params);
     /**
      * 分页查询-自定义sql-Wrapper

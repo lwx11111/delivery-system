@@ -1,12 +1,15 @@
 package org.example.config;
 
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.example.algorithm.RiderOrderAllocation;
 import org.example.dao.OrderInfoMapper;
 import org.example.dao.OrderStatusMapper;
+import org.example.dao.RiderOrderMapper;
 import org.example.domain.OrderStatusDomain;
 import org.example.domain.order.OrderInfo;
+import org.example.domain.user.RiderOrder;
 import org.example.enums.OrderStatus;
 import org.example.enums.OrderStatusChangeEvent;
 import org.example.feign.ShopFeignApi;
@@ -32,6 +35,9 @@ public class OrderStateListenerImpl{
     @Autowired
     private RiderOrderAllocation riderOrderAllocation;
 
+    @Autowired
+    private RiderOrderMapper riderOrderMapper;
+
     /**
      * 订单基本信息数据库操作
      */
@@ -44,7 +50,7 @@ public class OrderStateListenerImpl{
     @Autowired
     private OrderStatusMapper orderStatusMapper;
 
-    @Autowired
+    @Resource
     private ShopFeignApi shopFeignApi;
 
     /**
@@ -139,6 +145,11 @@ public class OrderStateListenerImpl{
         try {
             // 销量加一
             shopFeignApi.salesVolumePlus(order.getShopId());
+            // 骑手订单数量加一
+            LambdaUpdateWrapper<RiderOrder> updateWrapper = new LambdaUpdateWrapper<RiderOrder>()
+                    .eq(RiderOrder::getAccountId, order.getRiderId())
+                    .setSql("num = num + 1");
+            riderOrderMapper.update(null, updateWrapper);
             // 修改状态
             order.setStatus(OrderStatus.FINISH.getValue());
             order.setStatusName("消费者收货");

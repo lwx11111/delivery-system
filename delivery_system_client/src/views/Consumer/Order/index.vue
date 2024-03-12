@@ -53,7 +53,7 @@
                 <el-row style="margin-bottom: 10px">
                     <el-col :span="6"
                             style="margin-right: 5px">
-                        <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                        <el-image :src="it.shopItem.picture"></el-image>
                     </el-col>
                     <el-col :span="6">
                         {{it.shopItem.name}}
@@ -116,7 +116,7 @@ import Api from '@/api/Order/api_orderinfo.js'
 import ApiDict from '@/api/Common/api_sysdict.js'
 import OrderCardList from "./components/orderCardList.vue";
 import PublishComment from "../Comment/publishComment.vue";
-
+import UserStorage from '@/cache/userStorage.js'
 const store = useStore();
 const router = useRouter()
 
@@ -160,10 +160,6 @@ const data = reactive({
                     },
                     amount: 0
                 },
-                {
-                    shopItem: {},
-                    amount: 0
-                },
             ],
             // 店铺信息
             shop: {
@@ -185,10 +181,10 @@ const data = reactive({
                 salesVolume:1,
                 score:1,
                 status:1,
-                userId:localStorage.getItem('userId'),
+                userId:UserStorage.getUserId(),
             },
             shopId:"1",
-            userId:localStorage.getItem('userId'),
+            userId:UserStorage.getUserId(),
         },
     ],
     // 菜单栏名称
@@ -196,7 +192,7 @@ const data = reactive({
     // 查询参数
     params: {
         name:'',
-        userId: localStorage.getItem('userId'),
+        userId: UserStorage.getUserId(),
         status: '',
         pageIndex: 1,
         pageSize: 10
@@ -332,10 +328,10 @@ const orderRefund = (key) => {
     let orderId = data.orderList[key].id
     // 提示确认
     ElMessageBox.confirm(
-        '确认取消？',
+        '确认退款？',
         '警告',
         {
-            confirmButtonText: '确认取消',
+            confirmButtonText: '确认退款',
             cancelButtonText: '取消',
             type: 'warning',
         }
@@ -347,7 +343,7 @@ const orderRefund = (key) => {
             if (res.code === 200 && res.data === true){
                 ElMessage({
                     type: 'success',
-                    message: '取消订单成功',
+                    message: '退款成功',
                 })
                 getOrderList(0);
             } else {

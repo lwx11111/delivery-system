@@ -50,7 +50,8 @@ import { reactive, onMounted, ref } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import ApiUser from '@/api/User/auth.js'
-import { removeToken } from '@/utils/auth/auth.js'
+import UserStorage from '@/cache/userStorage.js';
+import AuthStorage from '@/cache/authStorage.js';
 import { getEncryptPassword } from "@/utils/passwordEncrypt";
 import { ElMessage } from "element-plus";
 
@@ -62,11 +63,11 @@ const data = reactive({
     // 密码修改
     dialogVisible: false,
     form: {
-        name: localStorage.getItem("userName"),
+        name: UserStorage.getUserName(),
         oldPass: '',
         newPass: '',
         confirmPass: '',
-        accountId: localStorage.getItem("userId"),
+        accountId: UserStorage.getUserId(),
     },
     rules: {
         oldPass: [
@@ -98,7 +99,7 @@ onMounted(() => {
 const logout = () => {
     ApiUser.logout().then(res => {
         console.log(res);
-        removeToken();
+        AuthStorage.removeToken();
         router.push({
             path: '/login',
         })

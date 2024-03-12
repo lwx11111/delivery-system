@@ -55,7 +55,7 @@
                                     <el-col :span="11"
                                             @click="toShopItemDetail(key)"
                                             style="margin-right: 5px">
-                                        <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                                        <el-image :src="item.picture"></el-image>
                                     </el-col>
                                     <!--名字 价格-->
                                     <el-col :span="12">
@@ -172,9 +172,10 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import ApiShop from '@/api/Shop/api_shop.js'
 import ApiShopItem from '@/api/Shop/api_shop_item.js'
 import ApiShopItemCategory from '@/api/Shop/api_shopItemCategory.js'
-
 import ApiCollection from '@/api/Shop/api_collection.js'
 import ApiCart from '@/api/Shop/api_cart.js'
+
+import UserStorage from '@/cache/userStorage.js'
 import { Search, CirclePlus, Remove } from '@element-plus/icons-vue'
 import ShopItemDetail from "./shopItemDetail.vue";
 import CommentList from "../Comment/commentList.vue";
@@ -190,7 +191,7 @@ const data = reactive({
     // 店铺信息
     shop: {
         id: '',
-        userId : localStorage.getItem('userId'),
+        userId : UserStorage.getUserId(),
         name : '',
         province : '',
         county : '',
@@ -222,7 +223,7 @@ const data = reactive({
         id:'',
         // 菜品信息
         orderItems:[],
-        userId: localStorage.getItem('userId'),
+        userId: UserStorage.getUserId(),
         shopId: '',
         deliveryRiderId: '',
         packingCharges: '',
@@ -269,7 +270,7 @@ const showOrderConfirm = () => {
 const cancelCollection = () => {
     const param = {
         shopId: data.shop.id,
-        userId: localStorage.getItem('userId'),
+        userId: UserStorage.getUserId(),
     }
     ApiCollection.cancelCollection(param).then(res => {
         if (res.code === 200 ){
@@ -284,7 +285,7 @@ const cancelCollection = () => {
 const isHaveCollection = () => {
     const param = {
         shopId: data.shop.id,
-        userId: localStorage.getItem('userId'),
+        userId: UserStorage.getUserId(),
     }
     ApiCollection.isHaveCollection(param).then(res => {
         if (res.code === 200){
@@ -298,7 +299,7 @@ const isHaveCollection = () => {
 const addCollection = () => {
     const param = {
         shopId: data.shop.id,
-        userId: localStorage.getItem('userId'),
+        userId: UserStorage.getUserId(),
     }
     ApiCollection.add4collection(param).then(res => {
         if (res.code === 200){
@@ -376,14 +377,14 @@ const saveCart = () => {
     let shopItems = [];
     data.order.forEach((value, key) => {
         shopItems.push({
-            shopItemId: data.shopItemList[key].id,
+            shopItemId: key,
             amount: value
         })
     })
     // 封装参数
     let params = {
         shopId: data.shop.id,
-        userId: localStorage.getItem('userId'),
+        userId: UserStorage.getUserId(),
         shopItems: shopItems
     }
     console.log(params)

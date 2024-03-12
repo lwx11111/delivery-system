@@ -53,7 +53,7 @@ import { reactive, onMounted } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
-
+import UserStorage from '@/cache/userStorage.js'
 const store = useStore();
 const router = useRouter()
 
@@ -102,7 +102,7 @@ const submit = () => {
         return;
     }
     const param = {
-        userId: localStorage.getItem('userId'),
+        userId: UserStorage.getUserId(),
         orderId: data.orderId,
         riderId: data.rider.id,
         shopId: data.shop.id,

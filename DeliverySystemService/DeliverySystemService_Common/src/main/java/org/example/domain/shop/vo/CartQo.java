@@ -24,4 +24,5 @@ public class CartQo {
     private String shopItemName;
     private Double price;
     private String shopName;
+    private String shopItemPicture;
 }

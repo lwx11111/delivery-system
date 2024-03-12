@@ -55,7 +55,8 @@ import {getEncryptPassword} from '../../utils/passwordEncrypt.js';
 import Api from '@/api/auth.js';
 import ApiShop from '@/api/Shop/api_shop.js'
 import ApiUser from '@/api/User/auth.js';
-import { setToken } from '@/utils/auth/auth.js'
+import UserStorage from '@/cache/userStorage.js';
+import AuthStorage from '@/cache/authStorage.js';
 import { useStore } from "vuex";
 import { useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
@@ -75,11 +76,10 @@ const form = reactive({
 // Mounted
 onMounted(() => {
     // 已经登录
-    console.log(localStorage.getItem('userId'))
-    console.log(localStorage.getItem('customAccountId'))
-    if (localStorage.getItem('userId') !== null && localStorage.getItem('customAccountId') !== null){
-        console.log("123")
-        routerPushByType(localStorage.getItem('customAccountId'), localStorage.getItem('userId'));
+    if (AuthStorage.getToken() !== null && UserStorage.getUser() !== null){
+        let user = UserStorage.getUser();
+        console.log(user)
+        routerPushByType(user.customAccountId,user.userId);
     }
     setCaptchaUrl();
 })
@@ -140,16 +140,9 @@ const loginWithCode = () => {
     Api.loginWithCode(params).then(res => {
         if (res.code === "20000"){
             let account = res.data.info.account
-            // store存储
-            store.commit('setAccount',res.data.info.account);
-            store.commit('setUser',res.data.info.user);
-            store.commit('setSuperAdmin',res.data.info.superAdmin);
-            store.commit('setToken',res.data.token);
-            // 本地存储
-            localStorage.setItem('userId', account.accountId)
-            localStorage.setItem('userName', account.loginName)
-            localStorage.setItem('customAccountId', account.customAccountId)
-            setToken(res.data.token.accessToken);
+            console.log(account)
+            UserStorage.setUser(account);
+            AuthStorage.setToken(res.data.token.accessToken);
             // 跳转
             routerPushByType(account.customAccountId, account.accountId);
 
@@ -184,6 +177,7 @@ const routerPushByType = (customAccountId, accountId) => {
                         path: '/Merchant/register',
                     })
                 } else {
+                    localStorage.setItem("shopId", res.data.records[0].id);
                     router.push({
                         path: '/homepage',
                     })

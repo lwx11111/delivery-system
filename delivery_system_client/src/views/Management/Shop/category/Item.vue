@@ -70,12 +70,10 @@
                                 label="图片"
                                 prop="picture"
                                 label-width="150px">
-                            <MinioUpload :file-list="data.fileList"
-                                         :show="data.show"
-                                         ref="uploadRef"
-                                         @uploadCallback="uploadCallback"
-                                         :limit="1">
-                            </MinioUpload>
+                            <MinioUploadNew :disabled="type === 'detail'"
+                                            :url="data.item.picture"
+                                            @getUrl="getUrl">
+                            </MinioUploadNew>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -106,10 +104,10 @@
     import { useRouter } from 'vue-router'
     import {ElMessage, ElMessageBox} from "element-plus";
     import StringUtil from '@/utils/StringUtil.js';
-
     const store = useStore();
     const router = useRouter()
-    import MinioUpload from "../../../components/MinioUpload.vue";
+    import MinioUpload from "@/views/components/MinioUpload.vue";
+
     // Data
     const data = reactive({
         // 是否有父级分类
@@ -121,10 +119,7 @@
                 name: '11'
             }
         ],
-        // 上传的文件列表 { name: '',url: '',},
-        fileList: [],
         operateTitle: '新增',
-        backUrl: '/category/index',
         type: '',
         showBtn: true,
         disabled: false,
@@ -133,17 +128,12 @@
             id: '',
             name: '',
             parentName: '',
+            picture:'',
         },
         params: {
             id: '',
             name: '',
             parentId: '',
-        },
-        OperatorLogParam: {
-          operateContent: '',
-          operateFeatures: '',
-          operateState: '',
-          operateType: ''
         },
         showDialog: false,
         rules: {
@@ -171,6 +161,17 @@
     // Methods
 
     /**
+     * 获取url
+     * @param url
+     * @param key1
+     * @param key2
+     */
+    const getUrl = (url, key1, key2) => {
+        console.log(url)
+        data.item.picture = url;
+    }
+
+    /**
      * 父级分类店铺列表
      */
     const getParentCategoryList = () => {
@@ -182,15 +183,6 @@
                 data.parentCategoryList = res.data.records;
             }
         })
-    }
-
-    /**
-     *
-     * @param response
-     * @param url
-     */
-    const uploadCallback = (response, url) => {
-        data.item.picture = url
     }
 
     const init = (id, type) => {
@@ -252,14 +244,7 @@
                             }
                         })
                     }
-                    // 上传图片
-                    if (!StringUtil.isEmpty(res.data.picture)){
-                        data.fileList = [
-                            {
-                                url: res.data.picture,
-                            },
-                        ]
-                    }
+
                 } else {
                     ElMessage({
                       message: '获取数据失败，请重试',
@@ -273,22 +258,12 @@
             data.showDialog = true;
             getParentCategoryList();
         }
-
-        //菜单界面生成时日志记录
-        // const islog = Vue.prototype.$config.ISLOG;
-        // if (true==islog){
-        //     data.OperatorLogParam.operateFeatures = '详情表单'
-        //     data.OperatorLogParam.operateType = LogType.Query
-        //     data.OperatorLogParam.operateState = '成功'
-        //     OperatorLog.setOperationLog(data.OperatorLogParam)
-        // }
-
     }
+
     const back = () => {
         // 返回操作
         data.showDialog = false;
         location.reload()
-        // router.push("/logs/account-change-pass-log");
     }
 
     // 表单ref

@@ -15,12 +15,12 @@
                     type="selection"
                     width="60">
             </el-table-column>
-            <el-table-column
-                    prop="id"
-                    label="id"
-                    width="200"
-                    align="center">
-            </el-table-column>
+<!--            <el-table-column-->
+<!--                    prop="id"-->
+<!--                    label="id"-->
+<!--                    width="200"-->
+<!--                    align="center">-->
+<!--            </el-table-column>-->
             <el-table-column
                     prop="name"
                     label="店铺名"
@@ -95,14 +95,6 @@
                 <template #default="scope">
                     <el-link
                             style="margin-right: 20px"
-                            @click="showShopItemDialog(scope)"
-                            type="primary"
-                            size="small"
-                            :underline="false">
-                        编辑物品
-                    </el-link>
-                    <el-link
-                            style="margin-right: 20px"
                             @click="toUpdate(scope)"
                             type="primary"
                             size="small"
@@ -128,7 +120,6 @@
             </el-table-column>
         </el-table>
     </el-card>
-    <ShopItemDialog ref="shopItemDialog"></ShopItemDialog>
     <ItemDialog ref="itemDialog" :type="data.type"></ItemDialog>
 </template>
 <script lang="ts" setup>
@@ -138,8 +129,7 @@
     import { useStore } from "vuex";
     import { useRouter } from 'vue-router'
     import {ElMessage, ElMessageBox} from "element-plus";
-    import ShopItemDialog from "@/views/components/shopItemDialog.vue";
-
+    import UserStorage from '@/cache/userStorage.js';
     const store = useStore();
     const router = useRouter()
 
@@ -152,7 +142,7 @@
         // dialog
         type: '',
         shopId: "1",
-        userId: localStorage.getItem("userId")
+        userId: UserStorage.getUserId(),
     })
 
     // Mounted
@@ -229,12 +219,6 @@
             })
         })
     }
-
-    const shopItemDialog = ref();
-    const showShopItemDialog = (scope) => {
-        shopItemDialog.value.init(scope.row.id);
-    }
-
 
 </script>
 <style lang="css" scoped>

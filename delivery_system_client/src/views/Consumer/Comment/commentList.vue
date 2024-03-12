@@ -29,6 +29,7 @@ import { reactive, onMounted,defineProps } from 'vue'
 import { useStore } from "vuex";
 import {useRoute, useRouter} from 'vue-router'
 import Api from '@/api/Comment/api_comment.js'
+import UserStorage from '@/cache/userStorage.js'
 const store = useStore();
 const router = useRouter()
 const route = useRoute();
@@ -54,7 +55,7 @@ const data = reactive({
             releaseTime: "2023-12-19 12:04:58",
             riderId: "1",
             shopId: null,
-            userId: localStorage.getItem('userId'),
+            userId: UserStorage.getUserId(),
             userName: "11"
         }
     ],

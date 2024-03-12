@@ -4,7 +4,8 @@
 import axios from 'axios'
 import {ElMessage} from 'element-plus'
 import qs from "qs";
-import {getToken, removeToken} from '@/utils/auth/auth'
+import AuthStorage from '@/cache/authStorage.js';
+import UserStorage from "@/cache/userStorage";
 
 // axios默认配置
 axios.defaults.timeout = 10000 // 超时时间
@@ -20,8 +21,8 @@ axios.defaults.transformRequest = function(data) {
 // 路由请求拦截
 axios.interceptors.request.use(
     config => {
-        if (getToken()) {
-            config.headers['Authorization'] = getToken()
+        if (AuthStorage.getToken()) {
+            config.headers['Authorization'] = AuthStorage.getToken()
         }
         if (config.type === 'form'){
             // 后端@RequestParams注解接收
@@ -70,7 +71,8 @@ axios.interceptors.response.use(
             const {status} = error.response;
             if (status === 401) {
                 ElMessage.error('Token值无效，请重新登录');
-                removeToken();
+                AuthStorage.removeToken();
+                UserStorage.removeUser();
                 router.replace('/login');
             } else {
                 // Message({

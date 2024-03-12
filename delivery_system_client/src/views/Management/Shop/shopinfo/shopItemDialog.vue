@@ -103,7 +103,7 @@
     import { useRouter } from 'vue-router'
     import { ElMessage } from "element-plus";
     import StringUtil from '@/utils/stringUtil.js'
-    import MinioUpload from "../../../components/MinioUpload.vue";
+    import MinioUpload from "../../../components/MinioUploadOld.vue";
 
     const store = useStore();
     const router = useRouter()

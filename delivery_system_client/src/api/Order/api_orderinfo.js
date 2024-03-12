@@ -3,6 +3,14 @@ const serverName = '/order'
 
 
 export default {
+  getEarningsData(data) {
+    return request({
+      url: serverName + '/order/getEarningsData',
+      method: 'post',
+      data: data
+    })
+  },
+
   // ========================================== 订单状态
 
   orderPay(data) {

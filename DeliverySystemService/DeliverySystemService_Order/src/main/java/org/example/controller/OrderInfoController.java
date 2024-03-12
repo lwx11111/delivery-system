@@ -32,6 +32,22 @@ public class OrderInfoController {
     @Autowired
     private IOrderInfoService service;
 
+    @PostMapping("/getEarningsData")
+    @ResponseBody
+    public SimpleResponse getEarningsData(@RequestBody Map<String,String> params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+
+            response.setData(service.getEarningsData(params));
+            System.out.println(response.getData().toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
     // ======================================= 订单状态 =======================================
 
     @PostMapping("/orderPay")

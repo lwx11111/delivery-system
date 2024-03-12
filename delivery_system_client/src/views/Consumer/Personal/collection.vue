@@ -14,14 +14,14 @@ import { useRouter } from 'vue-router'
 import ApiCollection from "@/api/Shop/api_collection";
 const store = useStore();
 const router = useRouter()
-
+import UserStorage from '@/cache/userStorage.js';
 import ShopCardList from "../Shop/components/shopCardList.vue";
 import {ElMessage} from "element-plus";
 // Data
 const data = reactive({
     //用户信息
     user: {
-        id: localStorage.getItem("userId"),
+        id: UserStorage.getUserId(),
 
     },
     // 店铺信息

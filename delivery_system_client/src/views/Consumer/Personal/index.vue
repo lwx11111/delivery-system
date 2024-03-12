@@ -89,7 +89,7 @@ import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
 import ApiOrder from '../../../api/api_order.js'
-
+import UserStorage from '@/cache/userStorage.js';
 const store = useStore();
 const router = useRouter()
 import { Search } from '@element-plus/icons-vue'
@@ -98,8 +98,8 @@ const data = reactive({
     imageURL:'',
     //用户信息
     user: {
-        id: localStorage.getItem("userId"),
-        name: localStorage.getItem("userName"),
+        id: UserStorage.getUserId(),
+        name: UserStorage.getUserName(),
     }
 
 })

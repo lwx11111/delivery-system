@@ -15,7 +15,7 @@ public class RiderOrderAllocation {
     private RiderOrderMapper riderOrderMapper;
 
     /**
-     * 轮询分配
+     * 轮询分配 按配送单量
      * 1.获取所有在线骑手
      * 2.分配
      */

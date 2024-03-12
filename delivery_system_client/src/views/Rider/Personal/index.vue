@@ -21,7 +21,7 @@
                 <h1>收益：</h1>
             </el-col>
             <el-col :span="12">
-                <h1 style="color: red">{{ data.riderOrder.earnings }} ￥</h1>
+                <h1 style="color: red">{{ data.earningsData.deliveryChargeTotal }} ￥</h1>
             </el-col>
         </el-row>
         <el-row>
@@ -29,17 +29,18 @@
                 <h1>完成订单数：</h1>
             </el-col>
             <el-col :span="12">
-                <h1>{{data.riderOrder.num}}</h1>
+                <h1>{{data.earningsData.num}}</h1>
             </el-col>
         </el-row>
     </el-card>
 </template>
 
 <script lang="ts" setup>
+import ApiOrder from '@/api/Order/api_orderinfo.js'
 import { reactive, ref, onMounted, toRefs } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
-
+import UserStorage from '@/cache/userStorage.js';
 const store = useStore();
 const router = useRouter()
 
@@ -48,23 +49,51 @@ const data = reactive({
     imageURL:'',
     //用户信息
     user: {
-        id: localStorage.getItem("userId"),
-        name: localStorage.getItem("userName"),
+        id: UserStorage.getUserId(),
+        name: UserStorage.getUserName(),
     },
     riderOrder:{
         id:'',
         num:'',
         earnings:''
+    },
+    // 收益数据
+    earningsData: {
+        total:'',
+        num:'',
+        deliveryChargeTotal: ''
     }
 
 })
 
 // Mounted
 onMounted(() => {
-    data.imageURL = new URL(`@/assets/profile.png`, import.meta.url).href
+    let user = UserStorage.getUser();
+    data.user.id = user.accountId;
+    data.user.name = user.accountName;
+    data.imageURL = new URL(`@/assets/profile.png`, import.meta.url).href;
+    getEarningsData();
 })
 
 // Methods
+
+/**
+ * 查询本周收益
+ */
+const getEarningsData = () => {
+    const params = {
+        riderId: UserStorage.getUserId(),
+    }
+
+    ApiOrder.getEarningsData(params).then(res => {
+        console.log(res)
+        if (res.code === 200){
+            data.earningsData = res.data;
+        }
+    })
+
+}
+
 const toSetting = () => {
     router.push({
         path: '/Rider/Personal/setting',

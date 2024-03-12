@@ -16,6 +16,7 @@
       <module>DeliverySystemService_Common</module>
       <module>DeliverySystemService_Basic</module>
       <module>DeliverySystemService_Comment</module>
+      <module>DeliverySystemService_Address</module>
   </modules>
 
   <parent>

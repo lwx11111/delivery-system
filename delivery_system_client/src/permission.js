@@ -1,6 +1,6 @@
 import router from './router'
 
-import { getToken, setToken } from '@/utils/auth/auth' // get token from cookie
+import AuthStorage from '@/cache/authStorage.js';
 import { pagePermApi } from '@/api/function'
 
 const whiteList = ['/login','/register'] // no redirect whitelist
@@ -18,11 +18,11 @@ router.beforeEach(async (to, from, next) => {
 
     const query = to.query
     if (query.hasOwnProperty('token')) {
-        setToken(query.token);
+        AuthStorage.setToken(query.token);
     }
 
     // 检查用户是否已经登录
-    const hasToken = getToken()
+    const hasToken = AuthStorage.getToken()
     if (hasToken) {
         if (to.path === '/login') {
             next({path: '/'})

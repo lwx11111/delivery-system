@@ -19,7 +19,7 @@
                           :item="route"
                           :base-path="route.url"/>
             </el-menu>
-            <img alt="name" src="../../assets/tree.png" class="sidebar-foot">
+            <img alt="name" src="../../assets/e-car.png" class="sidebar-foot">
         </el-scrollbar>
 
     </div>
@@ -32,7 +32,7 @@
     import SidebarItem from './SidebarItem.vue'
     import {leftMenuApi} from '@/api/function'
     import {onMounted, reactive} from "vue";
-
+    import UserStorage from '@/cache/userStorage.js';
     const store = useStore();
     const router = useRouter()
 
@@ -61,7 +61,7 @@
             for (let i = 0;i < response.data.length; i++){
                 if (response.data[i].funName !== '权限系统监控' && response.data[i].funName !== '系统管理' && response.data[i].funName !== '权限管理'){
                     // 管理端不加载消费 商家 骑手端
-                    if (localStorage.getItem("userId") === '1'){
+                    if (UserStorage.getUserId() === '1'){
                         if (response.data[i].funName !== '消费端' && response.data[i].funName !== '商家端' && response.data[i].funName !== '骑手端'){
                             data.menuData.push(response.data[i])
                         }

@@ -51,7 +51,7 @@ import {ElMessage, ElMessageBox} from "element-plus";
 
 import ApiOrder from '@/api/Order/api_orderinfo.js'
 import ApiShop from '@/api/Shop/api_shop.js'
-
+import UserStorage from '@/cache/userStorage.js'
 import { ArrowRight, ChatDotRound } from '@element-plus/icons-vue'
 const store = useStore();
 const router = useRouter();
@@ -62,7 +62,7 @@ const data = reactive({
     // 店铺信息
     shop: {
         id: '',
-        userId : localStorage.getItem('userId'),
+        userId : UserStorage.getUserId(),
         name : 'name',
         province : '',
         county : '',

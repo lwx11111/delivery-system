@@ -82,6 +82,22 @@ public class ShopItem extends Model<ShopItem> {
     private String categoryName;
 
     /**
+     * 分类名
+     */
+    @Schema(description = "主料")
+    @Excel(name = "主料")
+    @TableField("main_ingredient")
+    private String mainIngredient;
+
+    /**
+     * 分类名
+     */
+    @Schema(description = "辅料")
+    @Excel(name = "辅料")
+    @TableField("vice_ingredient")
+    private String viceIngredient;
+
+    /**
      * 适配购物车的字段，todo 优化
      */
     @TableField(exist = false)

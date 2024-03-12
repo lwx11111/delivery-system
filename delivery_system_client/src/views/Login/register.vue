@@ -221,6 +221,10 @@ const submitForm = () => {
         margin: 0;
         padding: 0;
     }
+
+    .loginBack{
+
+    }
 }
 
 .loginBack{
@@ -246,10 +250,10 @@ const submitForm = () => {
 
 .login-form-content {
     text-align: center;
-    margin-top: 5%;
+    margin-top: 2%;
     margin-left: 17%;
     width: 70%;
-    height: 140%;
+    height: 135%;
     .input-item {
         margin: 20px auto;
         height: 45px;

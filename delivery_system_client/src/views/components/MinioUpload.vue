@@ -1,159 +1,135 @@
 <template>
-<!--    :limit="props.limit"-->
-<!--    :on-exceed="handleExceed"-->
-    <div>
-        <div v-if="props.show" v-for="(item,key) in props.fileList">
-            <el-image style="width: 100px; height: 100px"
-                      :src="item.url">
-            </el-image>
-        </div>
-        <el-upload v-else
-                   ref="upload"
-                   :file-list="data.fileList"
-                   :auto-upload="true"
-                   list-type="picture"
+    <el-upload :class="{ hide_box: data.upload_btn }"
+        :action="data.minioUrl"
+               :file-list="fileList"
+               :on-remove="handleRemove"
+               list-type="picture-card"
+               :on-success="handleSuccess"
+               :limit="1"
+               :auto-upload="true">
+        <!--添加-->
+        <el-icon><Plus /></el-icon>
+        <!--上传文件展示-->
+        <template #file="{ file }">
+            <div>
+                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                <span class="el-upload-list__item-actions">
+                    <!-- 放大-->
+                    <span
+                            class="el-upload-list__item-preview"
+                            @click="handlePictureCardPreview(file)"
+                    >
+                      <el-icon><zoom-in /></el-icon>
+                    </span>
+                    <!-- 下载-->
+                    <span
+                            v-if="!disabled"
+                            class="el-upload-list__item-delete"
+                            @click="handleDownload(file)"
+                    >
+                      <el-icon><Download /></el-icon>
+                    </span>
+                    <!-- 删除-->
+                    <span
+                            v-if="!disabled"
+                            class="el-upload-list__item-delete"
+                            @click="handleRemove(file)"
+                    >
+                      <el-icon><Delete /></el-icon>
+                    </span>
+                </span>
+            </div>
+        </template>
+    </el-upload>
 
-                   :action="data.minioUrl"
-                   :data="data.fileData"
-                   :on-preview="handlePreview"
-                   :on-remove="handleRemove"
-                   :on-success="handleSuccess"
-                   :on-error="handleError"
-                   :before-upload="handleBeforeUpload"
-
-                   :on-change="handleChange">
-            <el-button type="primary">点击上传</el-button>
-            <template #tip>
-                <div class="el-upload__tip text-red">
-                    文件大小不能超过2MB!
-                </div>
-            </template>
-        </el-upload>
-    </div>
+    <el-dialog style="width: 800px" v-model="dialogVisible">
+        <img :src="dialogImageUrl" alt="Preview Image" />
+    </el-dialog>
 </template>
-
 <script lang="ts" setup>
-import { reactive, ref, onMounted, toRefs } from 'vue'
-import { useStore } from "vuex";
-import { useRouter } from 'vue-router'
-import {ElMessage, ElMessageBox} from "element-plus";
-import ApiOss from "@/api/api_sysoss";
-
-const emits = defineEmits(["uploadCallback"]);
-const store = useStore();
-const router = useRouter()
+import { reactive, ref, onMounted } from 'vue'
+import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
 import type { UploadProps, UploadUserFile, UploadInstance, UploadRawFile } from 'element-plus'
-import { genFileId } from 'element-plus'
+
+import type { UploadFile } from 'element-plus'
+import {ElMessageBox} from "element-plus";
+
+const dialogImageUrl = ref('')
+const dialogVisible = ref(false)
+const disabled = ref(false)
+
 // Data
 const data = reactive({
-    fileData: {
-        groupId: '',
-        groupName:''
-    },
+    // 达到limit限制时隐藏上传按钮
+    upload_btn: false,
     minioUrl: "http://localhost:6001/sysoss/uploadOSS",
     minioServerUrl: "http://127.0.0.1:9000/",
-    fileList: [],
 })
 
+const fileList = ref<UploadUserFile[]>([
+    // {
+    //     name: '',
+    //     url: '',
+    // },
+])
 // Props
 const props = defineProps({
-    limit: {
-        type: Number,
-        default: 100
-    },
-    // 上传的文件列表
-    fileList: {
-        type: Array,
-        default: [],
+    key1:{
+        type: String,
         required: false
     },
-    show: {
+    key2:{
+        type: Number,
+        required: false
+    },
+    // 上传的url 用来展示
+    url: {
+        type: String,
+        required: false
+    },
+    // 只展示标志
+    disabled: {
         type: Boolean,
         default: false,
         required: false
     },
-    // 指定上传的文件列表下标
-    i: {
-        type: Number,
-        default: -1,
-        required: false
-    },
-    j: {
-        type: Number,
-        default: -1,
-        required: false
-    }
-
 })
 
 // Mounted
 onMounted(() => {
-    data.fileList = props.fileList;
-    console.log(props.show)
-    console.log(data.fileList)
+    if (props.url) {
+        let obj = {
+            name: 'pic',
+            url: props.url
+        }
+        fileList.value.push(obj);
+        data.upload_btn = true
+    }
+
+    if (props.disabled) {
+        disabled.value = props.disabled
+    }
 })
 
-// Methods
-
-/**
- *  限制只能上传一个文件，再次上传则覆盖之前的文件
- */
-const upload = ref<UploadInstance>()
-const handleExceed: UploadProps['onExceed'] = (files) => {
-    ElMessageBox.confirm('重复上传会覆盖之前的材料，是否继续?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-    }).then(() => {
-        // 先从oss删除之前的文件
-        console.log(data.fileData)
-        // if (data.fileData != null){
-        //     deleteFile();
-        // }
-        // 删除fileList中的文件
-        data.fileList = [];
-        upload.value!.clearFiles()
-        const file = files[0] as UploadRawFile
-        file.uid = genFileId()
-        upload.value!.handleStart(file)
-        console.log(file)
-        upload.value!.submit()
-        console.log(upload.value!)
-        console.log(file)
-    })
+const handleRemove = (file: UploadFile) => {
+    console.log(file)
+    // return ElMessageBox.confirm(
+    //     `Cancel the transfer of file ?`
+    // ).then(
+    //     () => true,
+    //     () => false
+    // )
 }
 
-/**
- * 删除目前的文件
- */
-const deleteFile = () => {
-    ApiOss.deleteFileByStorageFileName(data.fileData.storageFileName).then(res => {
-        console.log(res);
-        if (res.code === 200){
-            data.fileData = null;
-        }
-    })
-}
-/**
- *
- * @param rawFile
- */
-const handleBeforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
-    //文件类型和大小限制
-    // if (rawFile.type !== 'image/jpeg') {
-    //     ElMessage.error('图片必须是JPG类型')
-    //     return false
-    // } else if (rawFile.size / 1024 / 1024 > 2) {
-    //     ElMessage.error('图片大小不能超过2MB!')
-    //     return false
-    // }
+const handlePictureCardPreview = (file: UploadFile) => {
+    console.log(file)
+    dialogImageUrl.value = file.url!
+    dialogVisible.value = true
 
-    // 文件数量限制
-    if (data.fileList.length >= props.limit) {
-        ElMessage.error(`最多只能上传${props.limit}个文件`)
-        return false
-    }
-    return true
+}
+
+const handleDownload = (file: UploadFile) => {
+    console.log(file)
 }
 
 /**
@@ -163,111 +139,21 @@ const handleBeforeUpload: UploadProps['beforeUpload'] = (rawFile) => {
  * @param file
  * @param fileList
  */
+const emits = defineEmits(["getUrl"]);
 const handleSuccess: UploadProps['onSuccess'] = (response, file, fileList) => {
-    console.log(response)
     if (response.code === 200){
         // 封装文件信息
-        data.fileData = response.data;
         const url = data.minioServerUrl + response.data.bucket + "/" + response.data.storageFileName;
         // 上传路径
         console.log(url)
-        let item = {
-            url: url
-        }
-        data.fileList.push(item)
-        if (props.i !== -1 && props.j !== -1){
-            emits("uploadCallback", response, url,props.i,props.j);
-        } else {
-            emits("uploadCallback", response, url);
-        }
-
-
+        data.upload_btn = true
+        // 回调
+        emits("getUrl",url,props.i,props.j);
     }
-    // this.uploadStatus = false
-    // if (response.data.result=='true') {
-    //     this.data.groupId = response.data.groupId
-    //     this.getFiles()
-    //     this.$notify({
-    //         type: 'success',
-    //         title: '成功',
-    //         message: '上传成功',
-    //         duration: 5000
-    //     })
-    //     this.$emit('changeGroupId', response.data.groupId)
-    // }else if (response.data.result=='false') {
-    //     this.getFiles()
-    //     this.$notify({
-    //         type: 'warning',
-    //         title: '失败',
-    //         message: response.data.message,
-    //         duration: 5000
-    //     })
-    //
-    // }
-    // this.$emit('callback', 'put', true, this.data.groupId, response,this.data.groupName)
 }
-
-/**
- * 上传失败的回调函数，对象存储：提示失败，同时返回 response，调用回调函数，由调用者处理
- * excel导入：只返回 response，调用回调函数，由调用者处理
- * @param err
- * @param file
- * @param fileList
- */
-const handleError: UploadProps['onError'] = (err, file, fileList) => {
-    console.log(file)
-    this.uploadStatus = false
-    if (this.oss) {
-        this.$notify.error({
-            title: '错误',
-            message: err.message,
-            duration: 5000
-        })
-    }
-    this.$emit('callback', 'put', false, this.data.groupId, err,this.data.groupName)
-}
-
-/**
- *
- * @param uploadFile
- * @param uploadFiles
- */
-const handleRemove: UploadProps['onRemove'] = (uploadFile, uploadFiles) => {
-    console.log(uploadFile)
-    return ElMessageBox.confirm(
-        `Cancel the transfer of ${uploadFile.name} ?`
-    ).then(
-        () => true,
-        () => false
-    )
-}
-
-/**
- *
- * @param file
- */
-const handlePreview: UploadProps['onPreview'] = (file) => {
-    console.log(file)
-}
-
-/**
- * 文件状态改变时的钩子，添加文件、上传成功和上传失败时都会被调用
- * @param file
- */
-const handleChange: UploadProps['onChange'] = (file) => {
-    console.log(file)
-    console.log(data.fileList)
-    // if (data.fileList.length > 0) {
-    //     data.fileList = [data.fileList[data.fileList.length - 1]]//这一步，是 展示最后一次选择文件
-    // }
-}
-
-defineExpose({
-    deleteFile,
-});
-
 </script>
-
-<style scoped>
-
+<style>
+    .hide_box .el-upload--picture-card {
+        display: none;
+    }
 </style>

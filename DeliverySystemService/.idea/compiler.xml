@@ -11,6 +11,7 @@
         <module name="DeliverySystemService_Shop" />
         <module name="DeliverySystemService_Order" />
         <module name="DeliverySystemService_Common" />
+        <module name="DeliverySystemService_Address" />
         <module name="DeliverySystemService_Basic" />
         <module name="DeliverySystemService_Comment" />
       </profile>
@@ -21,6 +22,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="DeliverySystemService_Address" options="-parameters" />
       <module name="DeliverySystemService_Basic" options="-parameters" />
       <module name="DeliverySystemService_Comment" options="-parameters" />
       <module name="DeliverySystemService_Common" options="-parameters" />

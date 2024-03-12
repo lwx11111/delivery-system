@@ -46,6 +46,7 @@ import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import Api from '@/api/Order/api_orderinfo.js'
 import ApiUser from '@/api/User/auth.js';
+import UserStorage from '@/cache/userStorage.js';
 import {ElMessage, ElMessageBox} from "element-plus";
 
 const store = useStore();
@@ -69,7 +70,7 @@ const data = reactive({
     ],
     // 骑手信息
     rider:{
-        accountId: localStorage.getItem("userId"),
+        accountId: UserStorage.getUserId(),
         status: 0
     }
 })
@@ -77,7 +78,7 @@ const data = reactive({
 
 // Mounted
 onMounted(() => {
-    console.log(localStorage.getItem("userId"))
+
     listOrderByRiderId();
 })
 
@@ -122,7 +123,7 @@ const orderReceive = (key) => {
                 type: 'success',
                 message: '收货成功',
             })
-
+            listOrderByRiderId();
         } else {
             ElMessage({
                 type: 'warning',

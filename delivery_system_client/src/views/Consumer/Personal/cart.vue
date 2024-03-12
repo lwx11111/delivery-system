@@ -23,7 +23,7 @@
                 <el-row style="margin-bottom: 10px">
                     <el-col :span="6"
                             style="margin-right: 5px">
-                        <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                        <el-image :src="it.shopItemPicture"></el-image>
                     </el-col>
                     <el-col :span="4">
                         {{it.shopItemName}}
@@ -37,9 +37,9 @@
                 </el-row>
             </div>
             <!--操作-->
-            <el-row>
-                <el-button>去结算</el-button>
-            </el-row>
+<!--            <el-row>-->
+<!--                <el-button>去结算</el-button>-->
+<!--            </el-row>-->
         </el-card>
     </div>
 </template>
@@ -51,7 +51,7 @@ import { useRouter } from 'vue-router'
 import ApiShop from '@/api/Shop/api_shop.js'
 import ApiCart from '@/api/Shop/api_cart.js'
 import {ElMessage} from "element-plus";
-
+import UserStorage from '@/cache/userStorage.js';
 const store = useStore();
 const router = useRouter()
 
@@ -59,8 +59,8 @@ const router = useRouter()
 const data = reactive({
     //用户信息
     user: {
-        id: localStorage.getItem("userId"),
-        name: 'lwx'
+        id: UserStorage.getUserId(),
+        name: ''
     },
     // 购物车信息
     shoppingCarts:[
@@ -74,6 +74,7 @@ const data = reactive({
                     shopItemId: "1",
                     shopItemName: "物品1",
                     shopName: "店铺1",
+                    shopItemPicture:''
                 }
             ],
             picture:'',

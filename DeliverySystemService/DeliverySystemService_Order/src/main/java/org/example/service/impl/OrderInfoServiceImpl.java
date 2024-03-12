@@ -10,15 +10,19 @@ import org.example.domain.order.OrderItem;
 import org.example.domain.order.OrderShopItem;
 import org.example.domain.order.vo.OrderRiderVO;
 import org.example.domain.shop.Shop;
+import org.example.domain.user.SysAccount;
 import org.example.dto.OrderPayDto;
 import org.example.feign.ShopFeignApi;
+import org.example.feign.UserFeignApi;
 import org.example.service.IOrderInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.service.OrderStateService;
+import org.example.vo.EarningsDataVo;
 import org.example.web.SimpleResponse;
+import org.example.web.SimpleResponseOld;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
@@ -61,11 +65,19 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Resource
     private ShopFeignApi shopFeignApi;
 
+    @Resource
+    private UserFeignApi userFeignApi;
+
     /**
      * 订单状态
      */
     @Autowired
     private OrderStateService orderStateService;
+
+    @Override
+    public EarningsDataVo getEarningsData(Map<String, String> params) throws Exception {
+        return orderInfoMapper.getEarningsData(params);
+    }
 
     // =============================== 订单状态 ===============================
 
@@ -287,6 +299,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         IPage<OrderInfo> result = this.page(page, query);
 
         for (OrderInfo orderInfo : result.getRecords()) {
+            System.out.println(orderInfo);
             // 查询订单物品
             Map<String, String> param = new HashMap<>();
             param.put("id", orderInfo.getId());
@@ -301,6 +314,25 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 Shop shop = JSON.parseObject(JSON.toJSONString(simpleResponse.getData()), Shop.class);
                 System.out.println("shop:"+shop);
                 orderInfo.setShop(shop);
+            }
+
+            // 用户 骑手名字
+            if (orderInfo.getUserId() != null) {
+                SimpleResponseOld userRes = userFeignApi.getAccountById(orderInfo.getUserId());
+                if  ("20000".equals(userRes.getCode())) {
+                    // LinkedHashMap To Object
+                    SysAccount user = JSON.parseObject(JSON.toJSONString(userRes.getData()), SysAccount.class);
+                    orderInfo.setUserName(user.getAccountName());
+                }
+            }
+
+            if (orderInfo.getRiderId() != null) {
+                SimpleResponseOld riderRes = userFeignApi.getAccountById(orderInfo.getRiderId());
+                if  ("20000".equals(riderRes.getCode())) {
+                    // LinkedHashMap To Object
+                    SysAccount rider = JSON.parseObject(JSON.toJSONString(riderRes.getData()), SysAccount.class);
+                    orderInfo.setRiderName(rider.getAccountName());
+                }
             }
         }
 
@@ -390,6 +422,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             }
             if("shopId".equals(entry.getKey())){
                 query.eq("shop_id",entry.getValue());
+            }
+            if("userId".equals(entry.getKey())){
+                query.eq("user_id",entry.getValue());
             }
             if("shopItem".equals(entry.getKey())){
                 query.eq("shop_item",entry.getValue());

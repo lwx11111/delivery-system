@@ -1,19 +1,26 @@
 <template>
     <el-card>
-        <el-row style="margin-bottom: 10px">
-            <el-button @click="logout()"
-                       type="warning">
-                退出登录
-            </el-button>
+        <el-row style="margin-bottom: 10px" @click="toInfo()">
+            <el-text>个人信息</el-text>
+            <el-icon><ArrowRight /></el-icon>
         </el-row>
-        <el-row>
-            <el-button @click="handleModifyPass()"
-                       type="warning">
-                修改密码
-            </el-button>
+        <el-divider></el-divider>
+        <el-row @click="handleModifyPass()">
+            <el-text>修改密码</el-text>
+            <el-icon><ArrowRight /></el-icon>
         </el-row>
-
     </el-card>
+
+    <el-card style="margin-top: 10px">
+        <el-row style="margin-bottom: 10px" @click="toAddress()">
+            <el-text>地址管理</el-text>
+            <el-icon><ArrowRight /></el-icon>
+        </el-row>
+    </el-card>
+
+    <el-row>
+        <el-button style="width: 100%; margin-top: 400px" type="warning" @click="logout">退出登录</el-button>
+    </el-row>
 
     <el-dialog title="修改密码"
                :modal="true"
@@ -50,10 +57,10 @@ import { reactive, onMounted, ref } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import ApiUser from '@/api/User/auth.js'
-import { removeToken } from '@/utils/auth/auth.js'
+import AuthStorage from '@/cache/authStorage.js';
 import { getEncryptPassword } from "@/utils/passwordEncrypt";
 import { ElMessage } from "element-plus";
-
+import UserStorage from '@/cache/userStorage.js';
 const store = useStore();
 const router = useRouter()
 
@@ -62,11 +69,11 @@ const data = reactive({
     // 密码修改
     dialogVisible: false,
     form: {
-        name: localStorage.getItem("userName"),
+        name: UserStorage.getUserName(),
         oldPass: '',
         newPass: '',
         confirmPass: '',
-        accountId: localStorage.getItem("userId"),
+        accountId: UserStorage.getUserId(),
     },
     rules: {
         oldPass: [
@@ -92,13 +99,31 @@ onMounted(() => {
 })
 
 // Methods
+
+/**
+ * 跳转到个人信息
+ */
+const toInfo = () => {
+    router.push({
+        path: '/Consumer/Personal/info',
+    })
+}
+
+/**
+ * 跳转到地址管理
+ */
+const toAddress = () => {
+    router.push({
+        path: '/Consumer/Address/index',
+    })
+}
 /**
  * 退出系统
  */
 const logout = () => {
     ApiUser.logout().then(res => {
         console.log(res);
-        removeToken();
+        AuthStorage.removeToken();
         router.push({
             path: '/login',
         })

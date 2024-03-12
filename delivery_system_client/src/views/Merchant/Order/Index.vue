@@ -27,7 +27,7 @@
                             </el-form-item>
                             <el-form-item label="骑手ID">
                                 <el-input placeholder="请输入骑手ID"
-                                            v-model="data.formList.deliveryRiderId"
+                                            v-model="data.formList.riderId"
                                             style="width: 200px"
                                             @keyup.enter.native="getData">
                                   </el-input>
@@ -93,15 +93,16 @@
                         width="180"
                         align="center">
                 </el-table-column>
-                 <el-table-column
-                        prop="deliveryRiderId"
+
+                <el-table-column
+                        prop="riderName"
                         label="配送骑手"
                         width="180"
                         align="center">
                 </el-table-column>
-                 <el-table-column
-                        prop="userId"
-                        label="用户ID"
+                <el-table-column
+                        prop="userName"
+                        label="用户"
                         width="180"
                         align="center">
                 </el-table-column>
@@ -235,7 +236,7 @@
     import { useRouter } from 'vue-router'
     import {ElMessage, ElMessageBox} from "element-plus";
     import OrderItemDialog from "@/views/components/orderItemDialog.vue";
-
+    import UserStorage from '@/cache/userStorage.js';
     const store = useStore();
     const router = useRouter()
 
@@ -248,8 +249,10 @@
         formList: {
             id:'',
             shopId: '',
-            deliveryRiderId: '',
-            userId: localStorage.getItem("userId"),
+            riderId: '',
+            riderName: '',
+            userId: '',
+            userName:'',
             shopItem: '',
             packingCharges: '',
             deliveryCharge: '',
@@ -341,9 +344,12 @@
         })
     }
 
+    /**
+     * 获取商铺ID
+     */
     const listShopId = () => {
         let param = {
-            userId: localStorage.getItem("userId"),
+            userId: UserStorage.getUserId(),
         }
         ApiShop.selpage4shop(param).then(res => {
             console.log(res.data.records[0].id);
@@ -354,15 +360,18 @@
         })
 
     }
+
+    /**
+     * 获取订单列表
+     */
     const getData = () => {
-        // 查询方法
         // 查询参数
         const params = {
             shopId: data.formList.shopId,
             pageIndex : data.pageConfig.currentPage,
             pageSize : data.pageConfig.pageSize
         }
-        console.log(params)
+
         // 后台请求
         Api.selpage4orderinfo(params).then(res => {
             console.log(res)

@@ -17,7 +17,7 @@
                 <h1>收益：</h1>
             </el-col>
             <el-col :span="12">
-                <h1 style="color: red">{{ data.shop.earnings }} ￥</h1>
+                <h1 style="color: red">{{ data.earningsData.total - data.earningsData.deliveryChargeTotal }} ￥</h1>
             </el-col>
         </el-row>
         <el-row>
@@ -25,7 +25,7 @@
                 <h1>完成订单数：</h1>
             </el-col>
             <el-col :span="12">
-                <h1>{{data.shop.num}}</h1>
+                <h1>{{data.earningsData.num}}</h1>
             </el-col>
         </el-row>
     </el-card>
@@ -38,7 +38,8 @@ import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import {ElMessage} from "element-plus";
 import Api from '@/api/Shop/api_shop.js'
-
+import ApiOrder from '@/api/Order/api_orderinfo.js'
+import UserStorage from '@/cache/userStorage.js';
 const store = useStore();
 const router = useRouter()
 
@@ -46,15 +47,18 @@ const router = useRouter()
 const data = reactive({
     //用户信息
     user: {
-        id: localStorage.getItem("userId"),
-        name: localStorage.getItem("userName"),
+        id: UserStorage.getUserId(),
+        name: UserStorage.getUserName(),
     },
     // 店铺信息
     shop:{
-        picture:'',
-        name:'',
+
+    },
+    // 收益数据
+    earningsData: {
+        total:'',
         num:'',
-        earnings:''
+        deliveryChargeTotal: ''
     }
 
 })
@@ -62,6 +66,7 @@ const data = reactive({
 // Mounted
 onMounted(() => {
     getData()
+
 })
 
 // Methods
@@ -80,8 +85,26 @@ const getData = () => {
         console.log(res)
         if (res.code === 200){
             data.shop = res.data.records[0];
+            getEarningsData()
         }
     })
+}
+
+/**
+ * 查询本周收益
+ */
+const getEarningsData = () => {
+    const params = {
+        shopId: data.shop.id
+    }
+
+    ApiOrder.getEarningsData(params).then(res => {
+        console.log(res)
+        if (res.code === 200){
+            data.earningsData = res.data;
+        }
+    })
+
 }
 </script>
 

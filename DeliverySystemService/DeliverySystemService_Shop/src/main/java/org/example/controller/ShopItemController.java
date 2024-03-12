@@ -49,7 +49,7 @@ public class ShopItemController {
     @PutMapping("/{id}")
     @ResponseBody
     @Operation(description = "更新店铺物品表")
-    public SimpleResponse update(@PathVariable(name = "id") Integer id,@RequestBody ShopItem obj){
+    public SimpleResponse update(@PathVariable(name = "id") String id,@RequestBody ShopItem obj){
         SimpleResponse response = new SimpleResponse();
         try {
             service.updateByParam(obj,obj.getParams());
@@ -64,7 +64,7 @@ public class ShopItemController {
     @DeleteMapping("/{id}")
     @ResponseBody
     @Operation(description = "按ID删除店铺物品表")
-    public SimpleResponse remove(@PathVariable(name = "id") Integer id){
+    public SimpleResponse remove(@PathVariable(name = "id") String id){
         SimpleResponse response = new SimpleResponse();
         try {
         service.removeById(id);
@@ -79,7 +79,7 @@ public class ShopItemController {
     @GetMapping("/{id}")
     @Operation(description = "按ID查询店铺物品表")
     @ResponseBody
-    public SimpleResponse select(@PathVariable(name = "id") Integer id) {
+    public SimpleResponse select(@PathVariable(name = "id") String id) {
         SimpleResponse response = new SimpleResponse();
         try {
             response.setData(service.getById(id));
@@ -94,7 +94,7 @@ public class ShopItemController {
     @PostMapping("/dels")
     @ResponseBody
     @Operation(description = "按ID删除多个店铺物品表")
-    public SimpleResponse removes(@RequestBody List<Integer> ids){
+    public SimpleResponse removes(@RequestBody List<String> ids){
         SimpleResponse response = new SimpleResponse();
         try {
             service.removeByIds(ids);

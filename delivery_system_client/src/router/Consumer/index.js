@@ -16,6 +16,16 @@ const UserDetail = () => import("@/views/Consumer/Personal/userDetail.vue")
 const ShoppingCart = () => import("@/views/Consumer/Personal/cart.vue")
 const Collection = () => import("@/views/Consumer/Personal/collection.vue")
 const Setting = () => import("@/views/Consumer/Personal/setting.vue")
+const Info = () => import("@/views/Consumer/Personal/info.vue")
+/**
+ * 地址管理
+ * @returns {Promise<*>}
+ * @constructor
+ */
+const MapChoose = () => import("@/views/Consumer/Address/mapChoose.vue")
+
+const AddressIndex = () => import("@/views/Consumer/Address/index.vue")
+
 const consumerRouter = {
         path: '/Consumer',
         component: PageFrame,
@@ -99,6 +109,21 @@ const consumerRouter = {
                 path: '/Consumer/Personal/setting',
                 component: Setting,
                 name: 'Setting',
+            },
+            {
+                path: '/Consumer/Personal/info',
+                component: Info,
+                name: 'Info',
+            },
+            {
+                path: '/Consumer/Address/mapChoose',
+                component: MapChoose,
+                name: 'MapChoose',
+            },
+            {
+                path: '/Consumer/Address/index',
+                component: AddressIndex,
+                name: 'AddressIndex',
             },
         ]
     }

@@ -4,7 +4,7 @@
             <Sidebar class="sidebar-container"></Sidebar>
         </el-aside>
         <el-container>
-            <el-header style="border-bottom: 1px solid gold">
+            <el-header>
                 <Navbar></Navbar>
             </el-header>
             <el-main>
@@ -23,7 +23,7 @@
 <style>
 .sidebar-container {
     transition: width 0.28s;
-    width: 210px;
+    width: 200px;
     background-color: #BCD2EE;
     height: 100%;
     position: fixed;
@@ -33,6 +33,11 @@
     left: 0;
     z-index: 1001;
     overflow: hidden;
+}
+
+/*默认有padding*/
+.el-header {
+    padding: 0 ;
 }
 </style>
 

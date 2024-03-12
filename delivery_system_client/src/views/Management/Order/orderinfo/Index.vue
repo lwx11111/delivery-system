@@ -283,7 +283,7 @@
     import { useRouter } from 'vue-router'
     import {ElMessage, ElMessageBox} from "element-plus";
     import OrderItemDialog from "./orderItemDialog.vue";
-
+    import UserStorage from '@/cache/userStorage.js'
     const store = useStore();
     const router = useRouter()
 
@@ -300,7 +300,7 @@
             id:'',
             shopId: '',
             deliveryRiderId: '',
-            userId: localStorage.getItem('userId'),
+            userId: UserStorage.getUserId(),
             shopItem: '',
             packingCharges: '',
             deliveryCharge: '',
