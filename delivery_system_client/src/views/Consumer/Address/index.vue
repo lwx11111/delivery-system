@@ -79,6 +79,9 @@ const updateAddress = (index) => {
     addressRef.value.init(data.addressData[index]);
 }
 const listAddressData = () => {
+    const params = {
+        accountId: UserStorage.getUserId(),
+    }
     Api.selpage4address(data.params).then(res => {
         console.log(res);
         data.addressData = res.data.records;

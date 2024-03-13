@@ -63,7 +63,7 @@
                 style="margin-bottom: 5px">
             <el-col style="margin-right: 5px"
                     :span="6">
-                <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                <el-image :src="item.shopItem.picture"></el-image>
             </el-col>
             <el-col :span="6">
                 {{item.shopItem.name}}

@@ -166,6 +166,7 @@
             console.log(res)
             if (res.code === 200){
                 data.tableData = res.data.records;
+                localStorage.setItem("shopId", res.data.records[0].id);
             }
         })
     }

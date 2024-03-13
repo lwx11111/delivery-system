@@ -8,7 +8,7 @@
         <el-row class="div-class">
             <el-image class="el-image"
                       style="height: 300px; width: 300px"
-                      src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg">
+                      :src="data.shopItemInfo.picture">
             </el-image>
         </el-row>
 

@@ -70,10 +70,10 @@
                                 label="图片"
                                 prop="picture"
                                 label-width="150px">
-                            <MinioUploadNew :disabled="type === 'detail'"
+                            <MinioUpload :disabled="type === 'detail'"
                                             :url="data.item.picture"
                                             @getUrl="getUrl">
-                            </MinioUploadNew>
+                            </MinioUpload>
                         </el-form-item>
                     </el-col>
                 </el-row>

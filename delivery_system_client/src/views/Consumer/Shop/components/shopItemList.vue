@@ -19,7 +19,7 @@
                 <el-row style="margin-bottom: 10px">
                     <el-col :span="7"
                             style="margin-right: 5px">
-                        <el-image src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"></el-image>
+                        <el-image :src="it.picture"></el-image>
                     </el-col>
                     <el-col :span="10">
                         {{it.name}}

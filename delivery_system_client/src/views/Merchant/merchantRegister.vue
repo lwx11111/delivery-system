@@ -230,7 +230,7 @@ const getCounty = () => {
 onMounted(() => {
     getProvinces();
     // 用户信息
-    data.item.userId = UserStorage.getUserId(),
+    data.item.userId = UserStorage.getUserId();
     // 店铺类型
     ApiCategory.listTreeCategory().then(res => {
         console.log(res)

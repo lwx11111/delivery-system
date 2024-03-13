@@ -183,6 +183,9 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
             if("phone".equals(entry.getKey())){
                 query.eq("phone",entry.getValue());
             }
+            if("accountId".equals(entry.getKey())){
+                query.eq("account_id",entry.getValue());
+            }
         }
         return  query;
     }

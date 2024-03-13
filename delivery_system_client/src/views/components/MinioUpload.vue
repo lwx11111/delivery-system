@@ -148,7 +148,7 @@ const handleSuccess: UploadProps['onSuccess'] = (response, file, fileList) => {
         console.log(url)
         data.upload_btn = true
         // 回调
-        emits("getUrl",url,props.i,props.j);
+        emits("getUrl",url,props.key1,props.key2);
     }
 }
 </script>

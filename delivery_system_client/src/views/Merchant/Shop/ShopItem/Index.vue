@@ -210,32 +210,11 @@
     // Mounted
     onMounted(() => {
         getData();
-
     })
 
     // Methods
     const getData = () => {
-        if (localStorage.getItem("shopId") === null){
-            // 先查询一下 因为第一次注册来没有
-            const params = {
-                userId: UserStorage.getUserId()
-            }
-            ApiShop.selpage4shop(params).then(res => {
-                if (res.code === 200){
-                    console.log(res)
-                    if (res.data.records.length === 0){
-                        ElMessage({
-                            type: 'warning',
-                            message: '店铺信息不存在, 请重新登录',
-                        })
-                        router.push("/login");
-                        return
-                    }
-                    localStorage.setItem("shopId", res.data.records[0].id)
-                }
-            })
-
-        }
+        console.log(localStorage.getItem("shopId"))
 
         // 查询参数
         const params = {
@@ -258,6 +237,28 @@
                 data.isSearch = false
             }
         })
+
+        // if (localStorage.getItem("shopId") === null){
+        //     // 先查询一下 因为第一次注册来没有
+        //     const params = {
+        //         userId: UserStorage.getUserId()
+        //     }
+        //     ApiShop.selpage4shop(params).then(res => {
+        //         if (res.code === 200){
+        //             console.log(res)
+        //             if (res.data.records.length === 0){
+        //                 ElMessage({
+        //                     type: 'warning',
+        //                     message: '店铺信息不存在, 请重新登录',
+        //                 })
+        //                 router.push("/login");
+        //                 return
+        //             }
+        //             localStorage.setItem("shopId", res.data.records[0].id)
+        //         }
+        //     })
+        // }
+
     }
     // 添加记录
     const itemDialog = ref();

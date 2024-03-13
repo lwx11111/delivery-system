@@ -14,16 +14,16 @@
                     ref="itemForm"
                     label-width="100px">
                 <el-row>
-                    <el-col :span="6">
-                        <el-form-item
-                                label="userId"
-                                prop="userId">
-                            <el-input
-                                    v-model="data.item.userId"
-                                    :disabled="data.disabled">
-                            </el-input>
-                        </el-form-item>
-                    </el-col>
+<!--                    <el-col :span="6">-->
+<!--                        <el-form-item-->
+<!--                                label="userId"-->
+<!--                                prop="userId">-->
+<!--                            <el-input-->
+<!--                                    v-model="data.item.userId"-->
+<!--                                    :disabled="data.disabled">-->
+<!--                            </el-input>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
                     <el-col :span="6">
                         <el-form-item
                                 label="店铺名"
@@ -46,30 +46,30 @@
                 </el-row>
 
                 <el-row>
-                    <el-col :span="6">
-                        <el-form-item
-                                label="省"
-                                prop="province">
-                            <el-select v-model="data.item.province" placeholder="请选择">
-                                <el-option :disabled="data.disabled"
-                                           v-for="(item, index) in data.provinces"
-                                           :label="item.name"
-                                           :value="item.id" />
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item
-                                label="县"
-                                prop="county">
-                            <el-select v-model="data.item.county" placeholder="请选择">
-                                <el-option :disabled="data.disabled"
-                                            v-for="(item, index) in data.counties"
-                                           :label="item.name"
-                                           :value="item.id" />
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
+<!--                    <el-col :span="6">-->
+<!--                        <el-form-item-->
+<!--                                label="省"-->
+<!--                                prop="province">-->
+<!--                            <el-select v-model="data.item.province" placeholder="请选择">-->
+<!--                                <el-option :disabled="data.disabled"-->
+<!--                                           v-for="(item, index) in data.provinces"-->
+<!--                                           :label="item.name"-->
+<!--                                           :value="item.id" />-->
+<!--                            </el-select>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="6">-->
+<!--                        <el-form-item-->
+<!--                                label="县"-->
+<!--                                prop="county">-->
+<!--                            <el-select v-model="data.item.county" placeholder="请选择">-->
+<!--                                <el-option :disabled="data.disabled"-->
+<!--                                            v-for="(item, index) in data.counties"-->
+<!--                                           :label="item.name"-->
+<!--                                           :value="item.id" />-->
+<!--                            </el-select>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
                     <el-col :span="6">
                         <el-form-item
                                 label="具体地址"
@@ -143,30 +143,29 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <!--todo 图片显示-->
+
                 <el-row>
                     <el-col :span="6">
                         <el-form-item
                                 label="店铺图片"
                                 prop="picture"
                                 label-width="150px">
-                            <MinioUpload :file-list="data.fileList1"
-                                         :show="data.show"
-                                         ref="uploadRef"
-                                         @uploadCallback="uploadCallbackPicture"
-                                         :limit="1"></MinioUpload>
+                            <MinioUpload :disabled="type === 'detail'"
+                                         key1="picture"
+                                         :url="data.item.picture"
+                                         @getUrl="getUrl">
+                            </MinioUpload>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item
                                 label="安全档案图片"
-                                prop="picture"
+                                prop="safetyFile"
                                 label-width="150px">
-                            <MinioUpload :file-list="data.fileList2"
-                                         :show="data.show"
-                                         ref="uploadRef"
-                                         @uploadCallback="uploadCallbackSafetyFile"
-                                         :limit="1">
+                            <MinioUpload :disabled="type === 'detail'"
+                                         key1="safetyFile"
+                                         :url="data.item.picture"
+                                         @getUrl="getUrl">
                             </MinioUpload>
                         </el-form-item>
                     </el-col>
@@ -215,8 +214,8 @@
     import { useStore } from "vuex";
     import { useRouter } from 'vue-router'
     import {ElMessage, ElMessageBox} from "element-plus";
-    import MinioUpload from "../../../components/MinioUploadOld.vue";
-
+    import MinioUpload from "@/views/components/MinioUpload.vue";
+    import UserStorage from '@/cache/userStorage.js';
     const store = useStore();
     const router = useRouter()
 
@@ -248,7 +247,6 @@
             }
         ],
         operateTitle: '新增',
-        backUrl: '/name/shop/index',
         type: '',
         showBtn: true,
         disabled: false,
@@ -275,24 +273,12 @@
             // 选择的类型
             categoryIds:[],
         },
-        OperatorLogParam: {
-            operateContent: '',
-            operateFeatures: '',
-            operateState: '',
-            operateType: ''
-        },
         showDialog: false,
         // 类型选择
         categoryTree: [],
         rules: {
             name: [
                 { required: true, message: '店铺名不能为空', trigger: 'blur' }
-            ],
-            province: [
-                { required: true, message: '省不能为空', trigger: 'blur' }
-            ],
-            county: [
-                { required: true, message: '县不能为空', trigger: 'blur' }
             ],
             location: [
                 { required: true, message: '具体地址不能为空', trigger: 'blur' }
@@ -315,9 +301,9 @@
             // description: [
             //     { required: true, message: '店铺描述不能为空', trigger: 'blur' }
             // ],
-            // picture: [
-            //     { required: true, message: '店铺图片路径不能为空', trigger: 'blur' }
-            // ]
+            picture: [
+                { required: true, message: '店铺图片路径不能为空', trigger: 'blur' }
+            ]
         },
     })
 
@@ -347,6 +333,22 @@
     })
 
     // Methods
+
+    /**
+     * 获取url
+     * @param url
+     * @param key1
+     * @param key2
+     */
+    const getUrl = (url, key1, key2) => {
+        console.log(url)
+        if (key1 === 'picture'){
+            data.item.picture = url
+        } else if (key1 === 'safetyFile'){
+            data.item.safetyFile = url
+        }
+    }
+
     const uploadCallbackPicture = (response, url) => {
         data.item.picture = url
     }
@@ -426,21 +428,11 @@
             data.showDialog = true;
         }
 
-        //菜单界面生成时日志记录
-        // const islog = Vue.prototype.$config.ISLOG;
-        // if (true==islog){
-        //     data.OperatorLogParam.operateFeatures = '详情表单'
-        //     data.OperatorLogParam.operateType = LogType.Query
-        //     data.OperatorLogParam.operateState = '成功'
-        //     OperatorLog.setOperationLog(data.OperatorLogParam)
-        // }
-
     }
     const back = () => {
         // 返回操作
         data.showDialog = false;
         location.reload()
-        // router.push("/logs/account-change-pass-log");
     }
 
     // 表单ref
@@ -484,6 +476,7 @@
             })
         } else if (data.type === 'add') {
             console.log(data.item)
+            data.item.userId = UserStorage.getUserId();
             Api.add4shop(data.item).then(res => {
                 console.log(res)
                 if (res.code === 200){

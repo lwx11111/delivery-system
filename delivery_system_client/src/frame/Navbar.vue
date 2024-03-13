@@ -206,6 +206,8 @@ const logout = () => {
     Api.logout().then(res => {
         console.log(res);
         AuthStorage.removeToken();
+        UserStorage.removeUser();
+        localStorage.removeItem("shopId");
         router.push({
             path: '/login',
         })

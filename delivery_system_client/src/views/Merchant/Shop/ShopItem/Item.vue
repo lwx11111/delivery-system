@@ -84,8 +84,7 @@
                         <el-form-item
                             label="物品图片"
                             prop="picture">
-                            <MinioUpload :file-list="data.item.picture"
-                                         @uploadCallback="uploadCallback">
+                            <MinioUpload key1="picture" @getUrl="getUrl">
                             </MinioUpload>
                         </el-form-item>
                     </el-col>
@@ -116,7 +115,8 @@
     import { useStore } from "vuex";
     import { useRouter } from 'vue-router'
     import {ElMessage, ElMessageBox} from "element-plus";
-    import MinioUpload from "../../../components/MinioUploadOld.vue";
+    import MinioUpload from "@/views/components/MinioUpload.vue";
+
 
     const store = useStore();
     const router = useRouter()
@@ -188,10 +188,22 @@
 
     // Mounted
     onMounted(() => {
-
+        console.log(localStorage.getItem("shopId"));
     })
 
     // Methods
+
+    /**
+     * 获取url
+     * @param url
+     * @param key1
+     * @param key2
+     */
+    const getUrl = (url, key1, key2) => {
+        console.log(url)
+        data.item.picture = url
+    }
+
     const uploadCallback = (response, url) => {
         console.log(url)
         // 保证每次只有一个物品图片没上传，循环找到这个元素
@@ -313,6 +325,7 @@
                 }
             })
         } else if (data.type === 'add') {
+            console.log(data.item)
             Api.add4shopitem(data.item).then(res => {
                 console.log(res)
                 if (res.code === 200){
