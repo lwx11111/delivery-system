@@ -1,13 +1,20 @@
 package org.example.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import jakarta.annotation.Resource;
 import org.example.domain.Address;
 import org.example.dao.AddressMapper;
+import org.example.dto.DistanceDto;
 import org.example.service.IAddressService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.geo.Distance;
+import org.springframework.data.geo.Point;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
@@ -24,6 +31,9 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import org.example.utils.PageUtils;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +47,44 @@ import java.util.Map;
  */
 @Service
 public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> implements IAddressService {
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+
+    @Override
+    public Address getAddressByShopId(String shopId) {
+        LambdaQueryWrapper<Address> queryWrapper = new LambdaQueryWrapper<Address>()
+                .eq(Address::getShopId, shopId);
+        return this.getOne(queryWrapper);
+    }
+
+    @Override
+    public DistanceDto getDistanceByAddress(Address departure, Address arrival) {
+        // 判空
+        if (departure.getLongitude() == null || departure.getLatitude() == null) {
+            return null;
+        }
+        if (arrival.getLongitude() == null || arrival.getLatitude() == null){
+            return null;
+        }
+
+        // 插入位置信息
+        redisTemplate.opsForGeo().add("TestKey",
+                new Point(departure.getLongitude().doubleValue(), departure.getLatitude().doubleValue()), "departure");
+        redisTemplate.opsForGeo().add("TestKey",
+                new Point(arrival.getLongitude().doubleValue(), arrival.getLatitude().doubleValue()), "arrival");
+
+        // 计算距离
+        Distance distance = redisTemplate.opsForGeo().distance("TestKey", "departure", "arrival");
+        double distanceInKm = distance.getValue() / 1000;
+        // 一位小数
+        DecimalFormat df = new DecimalFormat("#.0");
+        // 封装出参
+        DistanceDto distanceDto = new DistanceDto();
+        distanceDto.setDistanceKm(df.format(distanceInKm));
+        distanceDto.setDuration(df.format(distanceInKm / 10));
+        return distanceDto;
+    }
 
     @Override
     public void saveByParam(Address obj,Map<String, String> params){

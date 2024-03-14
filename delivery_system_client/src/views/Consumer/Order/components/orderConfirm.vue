@@ -1,8 +1,22 @@
 <!-- 提交订单确认页面 -->
 <template>
     <el-dialog v-model="data.dialogVisible">
+        <!--地址信息-->
         <el-card>
-            地址
+            <h4>配送地址</h4>
+            <el-row style="width: 100%">
+                <el-col :span="15">
+                    <h4>{{data.addressData.detailAddress}}</h4>
+                </el-col>
+            </el-row>
+            <el-row style="width: 100%">
+                <el-col :span="6">
+                    {{data.addressData.contacts}}
+                </el-col>
+                <el-col :span="6">
+                    {{data.addressData.phone}}
+                </el-col>
+            </el-row>
         </el-card>
 
         <el-card style="margin-top: 10px">
@@ -93,7 +107,7 @@ import { reactive, watch, onMounted, ref, defineProps } from 'vue'
 import { useStore } from "vuex";
 import { useRouter, useRoute } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
-
+import ApiAddress from '@/api/Address/api_address.js'
 import ApiOrder from '@/api/Order/api_orderinfo.js'
 import UserStorage from '@/cache/userStorage.js'
 const store = useStore();
@@ -102,6 +116,22 @@ const route = useRoute();
 
 // Data
 const data = reactive({
+    // 地址信息
+    addressData: {
+        id: '',
+        accountId: '',
+        longitude: '',
+        latitude: '',
+        cityName: '',
+        cityId: '',
+        provinceName: '',
+        provinceId: '',
+        countyName: '',
+        countyId: '',
+        detailAddress: '',
+        contacts: '',
+        phone: '',
+    },
     dialogVisible: false,
     // 店铺信息
     shop: {
@@ -153,10 +183,19 @@ const props = defineProps({
 
 // Mounted
 onMounted(() => {
-
+    listAddressData();
 })
 
 // Methods
+const listAddressData = () => {
+    const params = {
+        accountId: UserStorage.getUserId(),
+    }
+    ApiAddress.selpage4address(data.params).then(res => {
+        console.log(res);
+        data.addressData = res.data.records[0];
+    })
+}
 
 /**
  * 提交订单

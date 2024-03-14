@@ -1,6 +1,8 @@
 package org.example.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.example.domain.Address;
 import org.example.domain.shop.ShopItemVO;
 import org.example.params.UpdateSumScoreParams;
 import org.example.web.SimpleResponse;
@@ -109,8 +111,6 @@ public class ShopController {
         return response;
     }
 
-
-
     @PostMapping
     @ResponseBody
     @Operation(description = "创建店铺信息")
@@ -118,6 +118,7 @@ public class ShopController {
         SimpleResponse response = new SimpleResponse();
         try {
             service.saveByParam(obj,obj.getParams());
+            response.setData(obj.getId());
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);
@@ -202,8 +203,17 @@ public class ShopController {
     public SimpleResponse selectPage(@RequestBody Map<String, String> params) {
         SimpleResponse response = new SimpleResponse();
         try {
-            IPage<Shop> page = service.selectPage(params);
-            response.setData(page);
+            String addressObject = params.get("address");
+            if (addressObject != null && !("").equals(addressObject)) {
+                System.out.println(addressObject);
+                // 字段值为null 会失败
+                Address address =  JSONObject.parseObject(addressObject, Address.class);
+                IPage<Shop> page = service.selectPage(params, address);
+                response.setData(page);
+
+            } else {
+                throw new Exception("地址信息能为空");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);

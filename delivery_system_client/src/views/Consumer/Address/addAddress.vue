@@ -107,7 +107,7 @@ onActivated(() => {
 // Methods
 const mapChoose = () => {
     router.push({
-        path: '/Consumer/Address/mapChoose',
+        path: '/Address/mapChoose',
     })
 }
 

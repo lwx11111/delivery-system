@@ -1,17 +1,23 @@
 package org.example.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import jakarta.annotation.Resource;
 import org.example.dao.ShopCategoryMapper;
 import org.example.dao.ShopItemMapper;
+import org.example.domain.Address;
 import org.example.domain.shop.Shop;
 import org.example.dao.ShopMapper;
 import org.example.domain.shop.ShopCategory;
 import org.example.domain.shop.ShopItem;
 import org.example.domain.shop.ShopItemVO;
 import org.example.domain.shop.vo.ShopWithItemVO;
+import org.example.dto.DistanceDto;
+import org.example.dto.DoubleAddressDto;
+import org.example.feign.AddressFeignApi;
 import org.example.params.UpdateSumScoreParams;
 import org.example.service.IShopService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -19,6 +25,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.utils.PageUtils;
+import org.example.web.SimpleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
@@ -60,6 +67,9 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     // 商铺基础信息表
     @Autowired
     private ShopMapper shopMapper;
+
+    @Resource
+    private AddressFeignApi addressFeignApi;
 
     @Override
     public void updateSumScore(UpdateSumScoreParams updateSumScoreParams) throws Exception {
@@ -187,7 +197,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     }
 
     @Override
-    public IPage<Shop> selectPage(Map<String, String> params) {
+    public IPage<Shop> selectPage(Map<String, String> params, Address address) {
         Page<Shop> page = PageUtils.pageHandler(params);
         QueryWrapper<Shop> query = getQuery(params);
         IPage<Shop> result = this.page(page, query);
@@ -199,7 +209,18 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
                 categoryIds[i] = shopCategories.get(i).getCategoryId();
             }
             item.setCategoryIds(categoryIds);
-            System.out.println(categoryIds.length);
+            // 得到店铺位置信息
+            SimpleResponse addressRes = addressFeignApi.getAddressByShopId(item.getId());
+            Address shopAddress = JSON.parseObject(JSON.toJSONString(addressRes.getData()), Address.class);
+            // 计算距离和时间
+            DoubleAddressDto dto = new DoubleAddressDto();
+            dto.setDeparture(shopAddress);
+            dto.setArrival(address);
+            SimpleResponse simpleResponse = addressFeignApi.getDistanceByAddress(dto);
+            DistanceDto distanceDto = JSON.parseObject(JSON.toJSONString(simpleResponse.getData()), DistanceDto.class);
+            // 赋值
+            item.setDistanceKm(distanceDto.getDistanceKm());
+            item.setDuration(distanceDto.getDuration());
         }
         return result;
     }

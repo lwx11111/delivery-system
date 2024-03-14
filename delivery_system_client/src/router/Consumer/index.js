@@ -22,8 +22,6 @@ const Info = () => import("@/views/Consumer/Personal/info.vue")
  * @returns {Promise<*>}
  * @constructor
  */
-const MapChoose = () => import("@/views/Consumer/Address/mapChoose.vue")
-
 const AddressIndex = () => import("@/views/Consumer/Address/index.vue")
 
 const consumerRouter = {
@@ -115,11 +113,7 @@ const consumerRouter = {
                 component: Info,
                 name: 'Info',
             },
-            {
-                path: '/Consumer/Address/mapChoose',
-                component: MapChoose,
-                name: 'MapChoose',
-            },
+            // 地址管理
             {
                 path: '/Consumer/Address/index',
                 component: AddressIndex,

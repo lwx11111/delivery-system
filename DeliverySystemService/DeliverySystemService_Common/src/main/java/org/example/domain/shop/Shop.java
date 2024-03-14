@@ -170,6 +170,12 @@ public class Shop extends Model<Shop> {
     @TableField("sum_people")
     Integer sumPeople;
 
+    @TableField(exist = false)
+    private String distanceKm;
+
+    @TableField(exist = false)
+    private String duration;
+
 
     @TableField(exist = false)
     private Map<String,String> params;

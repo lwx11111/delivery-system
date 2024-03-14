@@ -10,6 +10,8 @@ import org.example.dao.TestDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -27,6 +29,36 @@ public class TestController {
 
     @Autowired
     private TestDao testDao;
+
+    @GetMapping("/base")
+    public void base64Test(){
+        String path1 = "C:\\Users\\lwx20\\Desktop\\test1.jpg";
+        String base64 = Toolkit.image2Base64(path1);
+        FileWriter writer;
+        try {
+            writer = new FileWriter("C:\\Users\\lwx20\\Desktop\\test1.txt");
+            writer.write("");//清空原文件内容
+            writer.write(base64);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String path2 = "C:\\Users\\lwx20\\Desktop\\test2.jpg";
+        String base641 = Toolkit.image2Base64(path2);
+        FileWriter writer2;
+        try {
+            writer = new FileWriter("C:\\Users\\lwx20\\Desktop\\test2.txt");
+            writer.write("");//清空原文件内容
+            writer.write(base641);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public static String unicodeDecode(String string) {
         Pattern pattern = Pattern.compile("(\\\\u(\\p{XDigit}{4}))");

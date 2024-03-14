@@ -2,6 +2,7 @@ package org.example.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.apache.ibatis.annotations.Param;
+import org.example.domain.Address;
 import org.example.domain.shop.Shop;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -75,7 +76,7 @@ public interface IShopService extends IService<Shop> {
      * @param params
      * @return: IPage<Shop>
     */
-    IPage<Shop> selectPage(Map<String, String> params);
+    IPage<Shop> selectPage(Map<String, String> params, Address address);
 
     /**
      * 分页查询某分类店铺信息

@@ -22,7 +22,6 @@
             </el-row>
             <el-divider></el-divider>
         </el-row>
-
     </el-card>
     <AddAddress ref="addressRef"></AddAddress>
 

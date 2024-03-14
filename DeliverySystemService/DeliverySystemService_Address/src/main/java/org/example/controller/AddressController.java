@@ -1,7 +1,11 @@
 package org.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.apache.commons.math3.analysis.function.Add;
+import org.example.dto.DoubleAddressDto;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.math.BigDecimal;
 import java.util.*;
 import org.example.web.SimpleResponse;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +34,51 @@ import org.springframework.web.bind.annotation.RestController;
 public class AddressController {
     @Autowired
     private IAddressService service;
+
+//    @GetMapping("/test")
+//    public void test(){
+//        Address a1 = new Address();
+//        a1.setLatitude(BigDecimal.valueOf(43.82147) );
+//        a1.setLongitude(BigDecimal.valueOf(87.581768));
+//
+//        Address a2 = new Address();
+//        a2.setLatitude(BigDecimal.valueOf(43.856205) );
+//        a2.setLongitude(BigDecimal.valueOf(87.570099));
+//
+//        this.getDistanceByAddress(a1, a2);
+//    }
+
+    @GetMapping("/getAddressByShopId/{shopId}")
+    @ResponseBody
+    @Operation(description = "根据")
+    public SimpleResponse getAddressByShopId(@PathVariable String shopId){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.getAddressByShopId(shopId));
+        } catch (Exception e) {
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+            e.printStackTrace();
+        }
+        return response;
+    }
+
+    @PostMapping("/getDistanceByAddress")
+    @ResponseBody
+    @Operation(description = "根据经纬度获得距离信息")
+    public SimpleResponse getDistanceByAddress(@RequestBody DoubleAddressDto dto){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            Address departure = dto.getDeparture();
+            Address arrival = dto.getArrival();
+            response.setData(service.getDistanceByAddress(departure, arrival));
+        } catch (Exception e) {
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+            e.printStackTrace();
+        }
+        return response;
+    }
 
     @PostMapping
     @ResponseBody

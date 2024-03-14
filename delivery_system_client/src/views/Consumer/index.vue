@@ -36,37 +36,57 @@ import { reactive, ref, onMounted, toRefs } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import ApiShop from '@/api/Shop/api_shop.js'
+import ApiAddress from '@/api/Address/api_address.js'
 import { Search } from '@element-plus/icons-vue'
 import ShopCardList from "./Shop/components/shopCardList.vue";
 import ScreeningList from "./Shop/components/screeningList.vue";
 import CategoryInfo from "./Shop/components/categoryInfo.vue";
+import UserStorage from '@/cache/userStorage.js';
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const store = useStore();
 const router = useRouter()
 // Data
 const data = reactive({
+    //地址信息
+    address: {
+        id: '',
+        accountId: UserStorage.getUserId(),
+        longitude: '',
+        latitude: '',
+        cityName: '',
+        cityId: '',
+        provinceName: '',
+        provinceId: '',
+        countyName: '',
+        countyId: '',
+        detailAddress: '',
+        contacts: '',
+        phone: '',
+        houseNumber: '',
+    },
     // 店铺信息
     shopList: [
         {
-            categoryIds: null,
-            closeTime: "15:31:12",
-            county: "1",
-            deliveryCharge: 2,
-            description: "这是一家店",
-            id:"1",
-            itemCategory: "1",
-            location: "1",
-            minPrice: 2,
-            name: "店铺1",
-            openTime: "08:00:01",
-            params: null,
-            picture: "http://127.0.0.1:9000/sys/shop1.png",
-            province: "1",
-            safetyFile: "http://127.0.0.1:9000/sys/shop1.png",
-            salesVolume: 1,
-            score: 1,
-            status: 1,
-            userId: "1",
+            // categoryIds: '',
+            // closeTime: "",
+            // county: "",
+            // deliveryCharge: 2,
+            // description: "这是一家店",
+            // id:"1",
+            // itemCategory: "1",
+            // location: "1",
+            // minPrice: 2,
+            // name: "店铺1",
+            // openTime: "08:00:01",
+            // params: null,
+            // picture: "http://127.0.0.1:9000/sys/shop1.png",
+            // province: "1",
+            // safetyFile: "http://127.0.0.1:9000/sys/shop1.png",
+            // salesVolume: 1,
+            // score: 1,
+            // status: 1,
+            // userId: "1",
         }
     ],
     // 查询参数
@@ -81,15 +101,63 @@ const data = reactive({
 
 // Mounted
 onMounted(() => {
-    getShopList();
+    getAddressData();
 })
 
 // Methods
+
+/**
+ * 获取地址信息
+ */
+const getAddressData = () => {
+    const params = {
+        accountId: UserStorage.getUserId(),
+    }
+    ApiAddress.selpage4address(params).then(res => {
+        console.log(res)
+        if (res.code === 200){
+            data.address = res.data.records[0];
+            // 没有地址信息
+            if (!data.address){
+                ElMessageBox.confirm(
+                    '请先添加地址信息',
+                    '提示',
+                    {
+                        confirmButtonText: '确认',
+                        cancelButtonText: '取消',
+                        type: 'success',
+                    }
+                ).then(() => {
+                    router.push({
+                        path: '/Consumer/Address/index',
+                    })
+                }).catch(() => {
+                    ElMessage({
+                        type: 'success',
+                        message: '取消你也得添加嘻嘻',
+                    })
+                    router.push({
+                        path: '/Consumer/Address/index',
+                    })
+                })
+            } else {
+                getShopList();
+            }
+
+        }
+    })
+}
+
 /**
  * 店铺列表
  */
 const getShopList = () => {
+    delete data.address.shopId;
+    delete data.address.params;
+    data.params.address = JSON.stringify(data.address) ;
+    console.log(data.params)
     ApiShop.selpage4shop(data.params).then(res => {
+        console.log(res)
         if (res.code === 200){
             data.shopList = res.data.records;
         }

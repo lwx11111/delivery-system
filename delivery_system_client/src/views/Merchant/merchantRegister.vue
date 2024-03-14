@@ -1,177 +1,205 @@
 <template>
-    <div class="back">
-        <div class="loginBack">
-            <el-card class="login-form-content">
-                <h1 style="text-align: center">商铺注册</h1>
-                <el-form :model="data.item"
-                         :rules="data.rules"
-                         ref="itemForm"
-                         label-width="100px">
-                    <el-row v-if="false">
-                        <el-col :span="6">
-                            <el-form-item
-                                label="userId"
-                                prop="userId">
-                                <el-input v-model="data.item.userId">
-                                </el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
+    <keep-alive>
+        <div class="back">
+            <div class="loginBack">
+                <el-card class="login-form-content">
+                    <h1 style="text-align: center">商铺注册</h1>
+                    <el-form :model="data.item"
+                             :rules="data.rules"
+                             ref="itemForm"
+                             label-width="100px">
+                        <el-row v-if="false">
+                            <el-col :span="6">
+                                <el-form-item
+                                    label="userId"
+                                    prop="userId">
+                                    <el-input v-model="data.item.userId">
+                                    </el-input>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
 
-                    <el-input v-model="data.item.name"
-                              class="input-item"
-                              placeholder="店铺名">
-                        <template #prefix>
-                            <el-icon style="color: gold"><Avatar /></el-icon>
-                        </template>
-                    </el-input>
+                        <el-input v-model="data.item.name"
+                                  class="input-item"
+                                  placeholder="店铺名">
+                            <template #prefix>
+                                <el-icon style="color: gold"><Avatar /></el-icon>
+                            </template>
+                        </el-input>
 
-                    <el-input v-model="data.item.description"
-                              class="input-item"
-                              style="margin-bottom: 30px;"
-                              placeholder="店铺描述"
-                              type="textarea">
+                        <el-input v-model="data.item.description"
+                                  class="input-item"
+                                  style="margin-bottom: 30px;"
+                                  placeholder="店铺描述"
+                                  type="textarea">
+                        </el-input>
 
-                    </el-input>
+                        <div>
+                            <el-row style="margin-bottom: 10px">
+                                <el-button v-if="data.address.detailAddress !== ''" type="warning"
+                                           style="width: 100%;" @click="mapChoose()">
+                                    修改收货地址<el-icon><Location /></el-icon>
+                                </el-button>
+                                <el-button  v-else type="warning" style="width: 100%;" @click="mapChoose()">
+                                    选择收货地址<el-icon><Location /></el-icon>
+                                </el-button>
+                            </el-row>
+                        </div>
 
-                    <el-input v-model="data.item.location"
-                              class="input-item"
-                              placeholder="具体地址">
-                    </el-input>
+                        <div v-if="data.address.detailAddress !== '' ">
+                            <el-row>
+                                <el-col :span="3">
+                                    <el-text tag="b">选中的地址：</el-text>
+                                </el-col>
+                                <el-col :span="21" style="text-align: left">
+                                    {{data.address.detailAddress}}
+                                </el-col>
+                            </el-row>
 
-                    <el-row>
-                        <el-col :span="12">
-                            <el-form-item
-                                label="起送价格"
-                                class="input-item"
-                                prop="minPrice">
-                                <el-input-number v-model="data.item.minPrice"
-                                                 placeholder="起送价格"
-                                                 :precision="2"
-                                                 :step="1">
-                                </el-input-number>
-                            </el-form-item>
+                            <el-row>
+                                <el-col :span="3">
+                                    <el-text tag="b">省:</el-text>
+                                </el-col>
+                                <el-col :span="21" style="text-align: left">
+                                    {{data.address.provinceName}}
+                                </el-col>
+                            </el-row>
 
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item
-                                label="配送费"
-                                class="input-item"
-                                prop="deliveryCharge">
-                                <el-input-number v-model="data.item.deliveryCharge"
-                                                 placeholder="配送费"
-                                                 :precision="2"
-                                                 :step="1">
-                                </el-input-number>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
+                            <el-row v-if="data.address.detailAddress !== '' ">
+                                <el-col :span="3">
+                                    <el-text tag="b">市:</el-text>
+                                </el-col>
+                                <el-col :span="21" style="text-align: left">
+                                    {{data.address.cityName}}
+                                </el-col>
+                            </el-row>
 
-                    <el-row>
-                        <el-col :span="12">
-                            <el-form-item
-                                label="店铺图片"
-                                prop="picture">
-                                <MinioUploadNew key1="picture" @getUrl="getUrl">
-                                </MinioUploadNew>
-<!--                                <MinioUpload ref="uploadRef"-->
-<!--                                             :file-list="data.fileList1"-->
-<!--                                             @uploadCallback="uploadCallbackPicture"-->
-<!--                                             :limit="1">-->
-<!--                                </MinioUpload>-->
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="12">
-                            <el-form-item
-                                label="档案图片"
-                                prop="safetyFile">
-                                <MinioUploadNew key1="safetyFile" @getUrl="getUrl">
-                                </MinioUploadNew>
-                                <!--                                <MinioUpload ref="uploadRef"-->
-                                <!--                                             :file-list="data.fileList2"-->
-                                <!--                                             @uploadCallback="uploadCallbackSafetyFile"-->
-                                <!--                                             :limit="1">-->
-                                <!--                                </MinioUpload>-->
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
+                            <el-row v-if="data.address.detailAddress !== '' ">
+                                <el-col :span="3">
+                                    <el-text tag="b">县:</el-text>
+                                </el-col>
+                                <el-col :span="21" style="text-align: left">
+                                    {{data.address.countyName}}
+                                </el-col>
+                            </el-row>
+                        </div>
 
-<!--                    <el-row>-->
-<!--                       -->
-<!--                    </el-row>-->
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item
+                                    label="起送价格"
+                                    class="input-item"
+                                    prop="minPrice">
+                                    <el-input-number v-model="data.item.minPrice"
+                                                     placeholder="起送价格"
+                                                     :precision="2"
+                                                     :step="1">
+                                    </el-input-number>
+                                </el-form-item>
 
-                    <el-row>
-                        <el-col :span="12">
-                            <el-form-item
-                                label="商铺类型"
-                                prop="categoryId">
-                                <el-tree-select v-model="data.item.categoryIds"
-                                                :data="data.categoryTree"
-                                                :render-after-expand="false"
-                                                show-checkbox
-                                                multiple>
-                                </el-tree-select>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item
+                                    label="配送费"
+                                    class="input-item"
+                                    prop="deliveryCharge">
+                                    <el-input-number v-model="data.item.deliveryCharge"
+                                                     placeholder="配送费"
+                                                     :precision="2"
+                                                     :step="1">
+                                    </el-input-number>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
 
-                    <el-form-item>
-                        <el-button type="primary"
-                                   @click="submitForm()">
-                            保存
-                        </el-button>
-                        <el-button @click="resetForm()">
-                            重置
-                        </el-button>
-                    </el-form-item>
-                </el-form>
-            </el-card>
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item
+                                    label="店铺图片"
+                                    prop="picture">
+                                    <MinioUploadNew key1="picture" @getUrl="getUrl">
+                                    </MinioUploadNew>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="12">
+                                <el-form-item
+                                    label="档案图片"
+                                    prop="safetyFile">
+                                    <MinioUploadNew key1="safetyFile" @getUrl="getUrl">
+                                    </MinioUploadNew>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-row>
+                            <el-col :span="12">
+                                <el-form-item
+                                    label="商铺类型"
+                                    prop="categoryId">
+                                    <el-tree-select v-model="data.item.categoryIds"
+                                                    :data="data.categoryTree"
+                                                    :render-after-expand="false"
+                                                    show-checkbox
+                                                    multiple>
+                                    </el-tree-select>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+
+                        <el-form-item>
+                            <el-button type="primary"
+                                       @click="submitForm()">
+                                保存
+                            </el-button>
+                            <el-button @click="resetForm()">
+                                重置
+                            </el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-card>
+            </div>
         </div>
-    </div>
+    </keep-alive>
 </template>
 
 <script lang="ts" setup>
-import {reactive, onMounted, ref } from 'vue';
+import {reactive, onMounted, ref, onActivated} from 'vue';
 import ApiCategory from '@/api/Shop/api_category.js'
 import ApiShop from '@/api/Shop/api_shop.js'
-import ApiDict from '@/api/Common/api_sysdict.js'
+import ApiAddress from '@/api/Address/api_address.js'
 import { useStore } from "vuex";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
-import MinioUpload from "../components/MinioUploadOld.vue";
 import UserStorage from '@/cache/userStorage.js';
 import MinioUploadNew from "../components/MinioUpload.vue";
+
 const store = useStore();
 const router = useRouter()
 
 // Data
 const data = reactive({
-    // 图片
-    fileList1: [],
-    fileList2: [],
-    // todo
-    provinces: [
-        {
-            name:"北京市",
-            areaId:'1'
-        },
-    ],
-    cities: [],
-    counties: [],
+    //地址信息
+    address: {
+        id: '',
+        accountId: UserStorage.getUserId(),
+        longitude: '',
+        latitude: '',
+        cityName: '',
+        cityId: '',
+        provinceName: '',
+        provinceId: '',
+        countyName: '',
+        countyId: '',
+        detailAddress: '',
+        contacts: '',
+        phone: '',
+        houseNumber: '',
+    },
+
     // 类型选择
     categoryTree: [],
     item: {},
     rules: {
-        // province: [
-        //     { required: true, message: '省不能为空', trigger: 'blur' }
-        // ],
-        // city: [
-        //     { required: true, message: '市不能为空', trigger: 'blur' }
-        // ],
-        // county: [
-        //     { required: true, message: '县不能为空', trigger: 'blur' }
-        // ],
-
         minPrice: [
             { required: true, message: '起送价格不能为空', trigger: 'blur' }
         ],
@@ -181,12 +209,12 @@ const data = reactive({
         safetyFile: [
             { required: true, message: '安全档案图片不能为空', trigger: 'blur' }
         ],
-        // openTime: [
-        //     { required: true, message: '开门时间不能为空', trigger: 'blur' }
-        // ],
-        // closeTime: [
-        //     { required: true, message: '关门时间不能为空', trigger: 'blur' }
-        // ],
+        openTime: [
+            { required: true, message: '开门时间不能为空', trigger: 'blur' }
+        ],
+        closeTime: [
+            { required: true, message: '关门时间不能为空', trigger: 'blur' }
+        ],
         categoryIds: [
             { required: true, message: '商铺类型不能为空', trigger: 'blur' }
         ],
@@ -196,39 +224,33 @@ const data = reactive({
     },
 })
 
+onActivated(() => {
+    console.log("Activated")
+    // 从地图选择的地址
+    const position = JSON.parse(sessionStorage.getItem('position'))
+    console.log(position)
+    if (position) {
+        console.log(position.detailAddress)
+        data.address.detailAddress = position.detailAddress;
+        data.address.provinceName = position.provinceName;
+        data.address.provinceId = position.provinceId;
+        data.address.cityName = position.cityName;
+        data.address.cityId = position.cityId;
+        data.address.countyName = position.countyName;
+        data.address.countyId = position.countyId;
+        data.address.longitude = position.longitude;
+        data.address.latitude = position.latitude;
+        sessionStorage.removeItem('position')
+        // 向shop赋值
+        data.item.province = data.address.provinceId;
+        data.item.city = data.address.cityId;
+        data.item.countyId = data.address.countyId;
+        data.item.location = data.address.detailAddress;
+    }
+})
 
 // Mounted
-const getProvinces = () => {
-    // 省市县信息
-    ApiDict.getProvinces().then(res => {
-        console.log(res)
-        data.provinces = res.data
-    })
-}
-
-const getCity = () => {
-    if (data.item.province === undefined){
-        return;
-    }
-    // 省市县信息
-    ApiDict.getCity(data.item.province).then(res => {
-        console.log(res)
-        data.cities = res.data
-    })
-}
-
-const getCounty = () => {
-    if (data.item.city === undefined){
-        return;
-    }
-    // 省市县信息
-    ApiDict.getCounty(data.item.city).then(res => {
-        console.log(res)
-        data.counties = res.data
-    })
-}
 onMounted(() => {
-    getProvinces();
     // 用户信息
     data.item.userId = UserStorage.getUserId();
     // 店铺类型
@@ -245,6 +267,17 @@ onMounted(() => {
         }
     })
 })
+
+/**
+ * 跳转图片
+ */
+const mapChoose = () => {
+    router.push({
+        path: '/Address/mapChoose',
+    })
+}
+
+
 
 /**
  * 获取url
@@ -272,17 +305,24 @@ const submitForm = () => {
                 return;
             }
             if (data.item.location === ''){
-                ElMessage.error('具体地址不能为空');
+                ElMessage({
+                    message: '请选择收货地址',
+                    type: 'warning',
+                })
                 return;
             }
             // 表单验证通过
             ApiShop.add4shop(data.item).then(res => {
+                console.log(res)
                 if (res.code === 200){
-                    ElMessage({
-                        message: '添加成功',
-                        type: 'success',
-                    })
-                    router.push('/Merchant/Shop/index')
+                    data.item.shopId = res.data;
+                    if (saveShopAddress()){
+                        ElMessage({
+                            message: '添加成功',
+                            type: 'success',
+                        })
+                        router.push('/Merchant/Shop/index')
+                    }
                 } else {
                     ElMessage({
                         message: '添加失败，请重试',
@@ -295,29 +335,40 @@ const submitForm = () => {
     })
 }
 
+const saveShopAddress = () => {
+    if (data.address.detailAddress === ''){
+        ElMessage({
+            message: '请选择地址',
+            type: 'warning',
+        })
+        return false;
+    }
+
+    console.log(UserStorage.getUser())
+
+    data.address.shopId =  data.item.shopId;
+    data.address.accountId = UserStorage.getUserId();
+    data.address.contacts = UserStorage.getUser().accountName;
+    // data.address.phone = UserStorage.getUser().phone;
+
+    ApiAddress.add4address(data.address).then(res => {
+        console.log(res);
+        if (res.code !== 200){
+            ElMessage({
+                message: '保存地址失败',
+                type: 'warning',
+            })
+            return false;
+        }
+    })
+    return true;
+}
+
 const resetForm = () => {
     // 重置按钮
     itemForm.value.resetFields();
 }
 
-const uploadCallbackPicture = (response, url) => {
-    data.item.picture = url
-    // 图片
-    let item1 = {
-        url: data.item.picture
-    }
-    data.fileList1 = [];
-    data.fileList1.push(item1)
-
-}
-const uploadCallbackSafetyFile = (response, url) => {
-    data.item.safetyFile = url
-    let item2 = {
-        url: data.item.safetyFile
-    }
-    data.fileList2 = [];
-    data.fileList2.push(item2)
-}
 </script>
 
 <style scoped>

@@ -27,6 +27,9 @@ spring:
     initialSize: 100
     maxWait: 60000
     minIdle: 500
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
 mybatis:
   type-aliases-package: org.example.domain   #  定义所有操作类的别名所在包

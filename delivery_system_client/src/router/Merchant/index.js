@@ -7,6 +7,7 @@ const ShopItemIndex = () => import('@/views/Merchant/Shop/ShopItem/index.vue')
 const MerchantOrderIndex = () => import('@/views/Merchant/Order/index.vue')
 // Personal
 const MerchantPersonalIndex = () => import('@/views/Merchant/Personal/index.vue')
+
 const merchantRouter = {
     path: '/Merchant',
     component: Frame,
@@ -35,8 +36,7 @@ const merchantRouter = {
             component: ShopItemIndex,
             name: '店铺物品管理',
         },
-
-    ]
+    ],
 }
 
 export default merchantRouter;

@@ -1,34 +1,33 @@
 <template>
-    <el-row>
-        <el-col :span="24">
-            <el-input v-model="positionInput"
-                      id="searchInputId"
-                      class="common-layout"
-                      size="small"
-                      placeholder="输入关键词搜索位置"
-                      style="height:25px;width:26%;margin-left:1%;"/>
-            <el-button>搜索</el-button>
-            <el-button type="primary" @click="submitPosition()">确定</el-button>
-        </el-col>
-    </el-row>
-    <el-row style="margin-top: 10px; margin-bottom: 10px">
-        <el-col>
-            <div>
-                选中的地址：{{data.position.detailAddress}}
-            </div>
-        </el-col>
-    </el-row>
-
-
+    <div style="text-align: center; align-items: center">
+        <el-row>
+            <el-col :span="24">
+                <el-input v-model="positionInput"
+                          id="searchInputId"
+                          class="common-layout"
+                          size="small"
+                          placeholder="输入关键词搜索位置"
+                          style="height:25px;width:26%;margin-left:1%;"/>
+                <el-button>搜索</el-button>
+                <el-button type="primary" @click="submitPosition()">确定</el-button>
+            </el-col>
+        </el-row>
+        <el-row style="margin-top: 10px; margin-bottom: 10px">
+            <el-col>
+                <div>
+                    选中的地址：{{data.position.detailAddress}}
+                </div>
+            </el-col>
+        </el-row>
+    </div>
     <div class="gdmap-container">
         <div id="container"></div>
     </div>
-
 </template>
 
 <script lang="ts" setup>
 import AMapLoader from "@amap/amap-jsapi-loader";
-import { onMounted, onUnmounted, ref, reactive } from 'vue';
+import { onMounted, ref, reactive } from 'vue';
 import { ElMessage } from "element-plus";
 import {useStore} from "vuex";
 import {useRouter} from "vue-router";
@@ -58,6 +57,7 @@ const submitPosition = () => {
         ElMessage.error('请选择地址');
         return;
     }
+    console.log(data.position)
     sessionStorage.setItem('position', JSON.stringify(data.position))
     router.go(-1)
 }
@@ -191,18 +191,16 @@ const initMap = () => {
 
     })
 }
+
 onMounted(() => {
-    console.log("onmounted");
     initMap();
-});
-onUnmounted(() => {
-    // map?.destroy();
 });
 
 </script>
 
 <style scoped>
 .gdmap-container{
+    margin-left: 20%;
     width: 800px;
     height: 800px;
 }

@@ -29,10 +29,10 @@
                     </el-row>
                     <el-row style="margin-top: 5px">
                         <el-col :span="10">
-                            <span>预计时间:40分钟</span>
+                            <span>预计时间:{{item.duration}} 分钟</span>
                         </el-col>
                         <el-col :span="10">
-                            <span>距离：2.2km</span>
+                            <span>距离：{{item.distanceKm}} 公里</span>
                         </el-col>
                     </el-row>
                 </el-col>

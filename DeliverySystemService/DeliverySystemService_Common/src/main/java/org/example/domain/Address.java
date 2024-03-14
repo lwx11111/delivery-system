@@ -135,6 +135,11 @@ public class Address extends Model<Address> {
     @TableField("house_number")
     private String houseNumber;
 
+    @Schema(description = "店铺号")
+    @Excel(name = "店铺号")
+    @TableField("shop_id")
+    private String shopId;
+
     @TableField(exist = false)
     private Map<String,String> params;
 

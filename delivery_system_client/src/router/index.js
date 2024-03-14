@@ -13,6 +13,10 @@ import consumerRouter from "@/router/Consumer/index";
 import merchantRouter from "@/router/Merchant/index";
 // 骑手端
 import riderRouter from "@/router/Rider";
+import Frame from "@/frame/index.vue";
+
+const EmptyLayout = () => import('@/router/EmptyLayout.vue')
+const MapChoose = () => import('@/views/components/mapChoose.vue')
 
 const MerchantRegister = () => import('@/views/Merchant/merchantRegister.vue')
 
@@ -33,11 +37,22 @@ const routes = [
         component: Register,
         name: '注册'
     },
-    // 注册
     {
-        path: '/Merchant/register',
-        component: MerchantRegister,
-        name: '商家注册',
+        // 通用模块
+        path: '/Components',
+        component: EmptyLayout,
+        children: [
+            {
+                path: '/Address/mapChoose',
+                component: MapChoose,
+                name: 'MapChoose',
+            },
+            {
+                path: '/Merchant/register',
+                component: MerchantRegister,
+                name: '商家注册',
+            },
+        ],
     },
     managementRouter,
     consumerRouter,
