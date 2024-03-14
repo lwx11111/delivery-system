@@ -9,7 +9,6 @@ import lombok.Data;
 @Data
 public class GetExpectedTimeParams {
 
-    @NotB
     private String userAddressId;
 
     private String shopAddressId;

@@ -9,6 +9,7 @@ import org.example.domain.order.OrderItem;
 import org.example.domain.order.vo.OrderRiderVO;
 import org.example.domain.shop.ShopItem;
 import org.example.domain.shop.ShopItemVO;
+import org.example.params.GetExpectedTimeParams;
 import org.example.vo.EarningsDataVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +26,10 @@ import java.util.Map;
  * @since 2023-10-31
  */
 public interface IOrderInfoService extends IService<OrderInfo> {
+
+    String getExpectedTime(GetExpectedTimeParams params);
+
+
     EarningsDataVo getEarningsData(Map<String,String> params) throws Exception;
     // ================================ 订单状态 ================================
     Boolean orderPay(Map<String,String> params) throws Exception;

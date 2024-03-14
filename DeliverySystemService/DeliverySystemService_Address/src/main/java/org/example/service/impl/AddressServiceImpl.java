@@ -6,6 +6,7 @@ import jakarta.annotation.Resource;
 import org.example.domain.Address;
 import org.example.dao.AddressMapper;
 import org.example.dto.DistanceDto;
+import org.example.params.GetExpectedTimeParams;
 import org.example.service.IAddressService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -52,6 +53,13 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
     private StringRedisTemplate redisTemplate;
 
     @Override
+    public DistanceDto getDistanceByIds(GetExpectedTimeParams params) {
+        Address departure = this.getById(params.getShopAddressId());
+        Address arrival = this.getById(params.getUserAddressId());
+        return getDistanceByAddress(departure, arrival);
+    }
+
+    @Override
     public Address getAddressByShopId(String shopId) {
         LambdaQueryWrapper<Address> queryWrapper = new LambdaQueryWrapper<Address>()
                 .eq(Address::getShopId, shopId);
@@ -79,10 +87,11 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
         double distanceInKm = distance.getValue() / 1000;
         // 一位小数
         DecimalFormat df = new DecimalFormat("#.0");
+        DecimalFormat df1 = new DecimalFormat("#");
         // 封装出参
         DistanceDto distanceDto = new DistanceDto();
         distanceDto.setDistanceKm(df.format(distanceInKm));
-        distanceDto.setDuration(df.format(distanceInKm / 10));
+        distanceDto.setDuration(df1.format(distanceInKm / 10 * 60));
         return distanceDto;
     }
 

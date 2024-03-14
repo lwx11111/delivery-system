@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import jakarta.annotation.Resource;
 import org.example.dao.OrderShopItemMapper;
+import org.example.domain.Address;
 import org.example.domain.order.OrderInfo;
 import org.example.dao.OrderInfoMapper;
 import org.example.domain.order.OrderItem;
@@ -11,9 +12,13 @@ import org.example.domain.order.OrderShopItem;
 import org.example.domain.order.vo.OrderRiderVO;
 import org.example.domain.shop.Shop;
 import org.example.domain.user.SysAccount;
+import org.example.dto.DistanceDto;
+import org.example.dto.DoubleAddressDto;
 import org.example.dto.OrderPayDto;
+import org.example.feign.AddressFeignApi;
 import org.example.feign.ShopFeignApi;
 import org.example.feign.UserFeignApi;
+import org.example.params.GetExpectedTimeParams;
 import org.example.service.IOrderInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -41,6 +46,8 @@ import cn.afterturn.easypoi.excel.imports.ExcelImportService;
 import java.io.InputStream;
 import org.example.utils.PageUtils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -68,11 +75,27 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Resource
     private UserFeignApi userFeignApi;
 
+    @Resource
+    private AddressFeignApi addressFeignApi;
+
     /**
      * 订单状态
      */
     @Autowired
     private OrderStateService orderStateService;
+
+    @Override
+    public String getExpectedTime(GetExpectedTimeParams params) {
+        // 得到店铺位置信息
+        SimpleResponse addressRes = addressFeignApi.getDistanceByIds(params);
+        DistanceDto dto = JSON.parseObject(JSON.toJSONString(addressRes.getData()), DistanceDto.class);
+        // 得到当前时间
+        LocalDateTime now = LocalDateTime.now();
+        // 计算预计送达时间
+        now = now.plusMinutes(Long.parseLong(dto.getDuration()));
+
+        return now.format(DateTimeFormatter.ofPattern("HH-mm"));
+    }
 
     @Override
     public EarningsDataVo getEarningsData(Map<String, String> params) throws Exception {

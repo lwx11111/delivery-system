@@ -3,6 +3,7 @@ package org.example.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.apache.commons.math3.analysis.function.Add;
 import org.example.dto.DoubleAddressDto;
+import org.example.params.GetExpectedTimeParams;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -47,6 +48,22 @@ public class AddressController {
 //
 //        this.getDistanceByAddress(a1, a2);
 //    }
+
+
+    @PostMapping("/getDistanceByIds")
+    @ResponseBody
+    @Operation(description = "根据")
+    public SimpleResponse getDistanceByIds(@RequestBody GetExpectedTimeParams params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.getDistanceByIds(params));
+        } catch (Exception e) {
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+            e.printStackTrace();
+        }
+        return response;
+    }
 
     @GetMapping("/getAddressByShopId/{shopId}")
     @ResponseBody

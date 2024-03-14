@@ -143,7 +143,7 @@ public class TestController {
 
     @PostMapping("/json")
     public void json(@RequestBody String address){
-        Base64.Encoder
+
     }
 
     // form-data

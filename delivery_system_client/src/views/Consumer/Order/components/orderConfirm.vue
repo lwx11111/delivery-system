@@ -187,11 +187,12 @@ onMounted(() => {
  */
 const calculateExpectedTime = () => {
     const params = {
-        shopAddressId: data.shopAddressId;
-        userAddressId: data.addressData.id;
+        shopAddressId: data.shopAddressId,
+        userAddressId: data.addressData.id
     }
     // 获取预计送达时间
     ApiOrder.getExpectedTime(params).then(res => {
+        console.log(res)
         if (res.code === 200){
             data.orderInfo.expectedTime = res.data;
         } else {

@@ -2,6 +2,7 @@ package org.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.domain.shop.ShopItemVO;
+import org.example.params.GetExpectedTimeParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import org.example.web.SimpleResponse;
@@ -37,9 +38,7 @@ public class OrderInfoController {
     public SimpleResponse getExpectedTime(@RequestBody GetExpectedTimeParams params){
         SimpleResponse response = new SimpleResponse();
         try {
-
-            response.setData(service.getEarningsData(params));
-            System.out.println(response.getData().toString());
+            response.setData(service.getExpectedTime(params));
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);

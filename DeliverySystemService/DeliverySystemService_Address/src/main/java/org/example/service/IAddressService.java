@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.example.dto.DistanceDto;
+import org.example.params.GetExpectedTimeParams;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,6 +22,8 @@ import java.util.Map;
  * @since 2024-03-08
  */
 public interface IAddressService extends IService<Address> {
+
+    DistanceDto getDistanceByIds(GetExpectedTimeParams params);
 
     Address getAddressByShopId(String shopId);
 
