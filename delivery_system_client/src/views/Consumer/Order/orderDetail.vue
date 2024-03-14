@@ -1,55 +1,59 @@
 <template>
-    <!--点单状态-->
-    <el-row>
-        <h1 style="text-align: center">点单完成</h1>
+    <!--订单状态-->
+    <el-row @click="showOrderStatus">
+        <el-col :span="3">
+            <h1 style="text-align: center">{{data.order.statusName}}</h1>
+        </el-col>
+        <el-col :span="2" style="padding-top: 25px">
+            <el-icon><ArrowRight /></el-icon>
+        </el-col>
     </el-row>
     <!-- 操作-->
     <el-card style="margin-bottom: 10px">
-<!--        标语-->
+        <!--标语-->
         <el-row>
-            <div>期待再次关联</div>
+            <div>期待再次光联</div>
         </el-row>
         <el-divider></el-divider>
         <el-row>
-            <div style="margin: 10px;"
-                 @click="toAfterSale">
-                <el-icon> <ChatDotRound></ChatDotRound></el-icon>
-                <div>申请售后</div>
-            </div>
-            <div style="margin: 10px;"
-                 @click="toRiderDetail">
-                <el-icon> <ChatDotRound></ChatDotRound></el-icon>
-                <div>打赏骑手</div>
-            </div>
+<!--            <div style="margin: 10px;"-->
+<!--                 @click="toAfterSale">-->
+<!--                <el-icon> <ChatDotRound></ChatDotRound></el-icon>-->
+<!--                <div>申请售后</div>-->
+<!--            </div>-->
+<!--            <div style="margin: 10px;"-->
+<!--                 @click="toRiderDetail">-->
+<!--                <el-icon> <ChatDotRound></ChatDotRound></el-icon>-->
+<!--                <div>打赏骑手</div>-->
+<!--            </div>-->
             <div style="margin: 10px;"
                  @click="orderAgain">
                 <el-icon> <ChatDotRound></ChatDotRound></el-icon>
                 <div>再来一单</div>
             </div>
             <div style="margin: 10px;"
-                 @click="toComment">
+                 @click="toComment()">
                 <el-icon> <ChatDotRound></ChatDotRound></el-icon>
                 <div>评价</div>
             </div>
-            <div style="margin: 10px;"
-            >
-                <el-icon> <ChatDotRound></ChatDotRound></el-icon>
-                <div>联系商家</div>
-            </div>
-            <div style="margin: 10px;">
-                <el-icon> <ChatDotRound></ChatDotRound></el-icon>
-                <div>联系骑手</div>
-            </div>
-            <div style="margin: 10px;">
-                <el-icon> <ChatDotRound></ChatDotRound></el-icon>
-                <div>发票</div>
-            </div>
+<!--            <div style="margin: 10px;">-->
+<!--                <el-icon> <ChatDotRound></ChatDotRound></el-icon>-->
+<!--                <div>联系商家</div>-->
+<!--            </div>-->
+<!--            <div style="margin: 10px;">-->
+<!--                <el-icon> <ChatDotRound></ChatDotRound></el-icon>-->
+<!--                <div>联系骑手</div>-->
+<!--            </div>-->
+<!--            <div style="margin: 10px;">-->
+<!--                <el-icon> <ChatDotRound></ChatDotRound></el-icon>-->
+<!--                <div>发票</div>-->
+<!--            </div>-->
         </el-row>
     </el-card>
     <!--理赔-->
-    <el-card style="margin-bottom: 10px">
-        理赔
-    </el-card>
+<!--    <el-card style="margin-bottom: 10px">-->
+<!--        理赔-->
+<!--    </el-card>-->
     <!--点单金额-->
     <el-card style="margin-bottom: 10px">
         <!--头部店铺信息-->
@@ -101,10 +105,10 @@
             期望时间: {{data.order.expectedTime}}
         </el-row>
         <el-row style="margin-bottom: 5px">
-            配送地址: {{data.order.location}}
+            配送地址: {{data.addressData.detailAddress}}
         </el-row>
         <el-row style="margin-bottom: 5px">
-            用户信息: {{data.user.name}} {{data.user.phone}}
+            用户信息: {{data.addressData.contacts}} ---- {{data.addressData.phone}}
         </el-row>
         <el-row style="margin-bottom: 5px">
             配送服务: {{data.order.deliveryService}}
@@ -127,29 +131,45 @@
             点单备注: {{data.order.remark}}
         </el-row>
         <el-row style="margin-bottom: 5px">
-            餐具数量: {{data.order.tableware}}
+            餐具数量:
+            <div v-if="data.order.tableware === '1'">需要</div>
+            <div v-else>不需要</div>
         </el-row>
     </el-card>
+
+    <!--订单状态流转-->
+    <OrderStatus ref="orderStatusDialog"></OrderStatus>
+
+    <PublishComment ref="commentDialog"></PublishComment>
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted } from 'vue'
+import { reactive, onMounted, ref } from 'vue'
 import { useStore } from "vuex";
 import { useRouter, useRoute } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
 import UserStorage from '@/cache/userStorage.js'
 import Api from '@/api/Order/api_orderinfo.js'
-
-
+import ApiOrderStatus from '@/api/Order/api_orderstatus.js'
+import ApiAddress from '@/api/Address/api_address.js'
 import { ArrowRight, ChatDotRound } from '@element-plus/icons-vue'
+import OrderStatus from "./components/orderStatus.vue";
+import PublishComment from "../Comment/publishComment.vue";
+
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
 
 // Data
 const data = reactive({
+    // 用户地址信息
+    addressData: {},
+    // 订单状态
+    orderStatus: [],
     // 订单信息
     order: {
+        // 地址信息
+        addressData: {},
         // 基本信息
         deliveryCharge: 1,
         deliveryRiderId: "1",
@@ -224,11 +244,50 @@ onMounted(() => {
 })
 
 // Methods
+
+const commentDialog = ref();
+const toComment = (key) => {
+    commentDialog.value.init(data.order.id);
+}
+
+/**
+ * 查看订单状态流转信息
+ */
+const orderStatusDialog = ref();
+const showOrderStatus = () => {
+    const params = {
+        orderId: data.order.id
+    }
+    ApiOrderStatus.selpage4orderstatus(params).then(res =>{
+        if (res.code === 200){
+            data.orderStatus = res.data.records;
+            orderStatusDialog.value.init(data.orderStatus);
+        } else {
+            ElMessage.error(res.message);
+        }
+    })
+
+}
+
 const getOrder = (id) => {
     Api.sel4orderinfo(id).then(res => {
         console.log(res)
         if (res.code === 200){
             data.order = res.data;
+            // 获得地址信息
+            getAddress(data.order.userAddressId);
+        }
+    })
+}
+
+/**
+ * 获取地址信息
+ * @param id
+ */
+const getAddress = (id) => {
+    ApiAddress.sel4address(id).then(res => {
+        if (res.code === 200){
+            data.addressData = res.data;
         }
     })
 }

@@ -1,7 +1,7 @@
 package org.example.service.impl;
 
-import org.example.domain.OrderStatusDomain;
 import org.example.dao.OrderStatusMapper;
+import org.example.domain.order.OrderStatusDomain;
 import org.example.service.IOrderStatusService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -31,7 +31,7 @@ import java.util.Map;
  * </p>
  *
  * @author lwx20
- * @since 2023-12-06
+ * @since 2024-03-15
  */
 @Service
 public class OrderStatusServiceImpl extends ServiceImpl<OrderStatusMapper, OrderStatusDomain> implements IOrderStatusService {

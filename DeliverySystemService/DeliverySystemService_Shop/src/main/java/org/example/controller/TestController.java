@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -142,9 +143,7 @@ public class TestController {
 
     @PostMapping("/json")
     public void json(@RequestBody String address){
-        System.out.println(address);
-        Address add =  JSONObject.parseObject(address, Address.class, Feature.AllowArbitraryCommas);
-        System.out.println(add);
+        Base64.Encoder
     }
 
     // form-data

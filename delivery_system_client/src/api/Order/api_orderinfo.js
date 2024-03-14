@@ -3,6 +3,15 @@ const serverName = '/order'
 
 
 export default {
+
+  getExpectedTime(data) {
+    return request({
+      url: serverName + '/order/getExpectedTime',
+      method: 'post',
+      data: data
+    })
+  },
+
   getEarningsData(data) {
     return request({
       url: serverName + '/order/getEarningsData',

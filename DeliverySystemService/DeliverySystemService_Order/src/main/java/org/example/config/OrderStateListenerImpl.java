@@ -7,7 +7,7 @@ import org.example.algorithm.RiderOrderAllocation;
 import org.example.dao.OrderInfoMapper;
 import org.example.dao.OrderStatusMapper;
 import org.example.dao.RiderOrderMapper;
-import org.example.domain.OrderStatusDomain;
+import org.example.domain.order.OrderStatusDomain;
 import org.example.domain.order.OrderInfo;
 import org.example.domain.user.RiderOrder;
 import org.example.enums.OrderStatus;

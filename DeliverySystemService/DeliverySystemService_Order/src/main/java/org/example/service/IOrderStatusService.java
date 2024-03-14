@@ -1,10 +1,10 @@
 package org.example.service;
 
-import org.example.domain.OrderStatusDomain;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.example.domain.order.OrderStatusDomain;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -16,7 +16,7 @@ import java.util.Map;
  * </p>
  *
  * @author lwx20
- * @since 2023-12-06
+ * @since 2024-03-15
  */
 public interface IOrderStatusService extends IService<OrderStatusDomain> {
     /**
@@ -25,7 +25,7 @@ public interface IOrderStatusService extends IService<OrderStatusDomain> {
      * @param params
      * @return: void
      */
-    void saveByParam(OrderStatusDomain obj, Map<String, String> params);
+    void saveByParam(OrderStatusDomain obj,Map<String, String> params);
 
     /**
      * 根据参数更新
@@ -33,7 +33,7 @@ public interface IOrderStatusService extends IService<OrderStatusDomain> {
      * @param params
      * @return: void
      */
-    void updateByParam(OrderStatusDomain obj, Map<String, String> params);
+    void updateByParam(OrderStatusDomain obj,Map<String, String> params);
     /**
      * 根据条件删除
      *

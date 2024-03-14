@@ -1,6 +1,5 @@
 package org.example.dao;
 
-import org.example.domain.OrderStatusDomain;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -8,6 +7,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Constants;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import org.example.domain.order.OrderStatusDomain;
+
 import java.util.Map;
 
 /**
@@ -16,7 +17,7 @@ import java.util.Map;
  * </p>
  *
  * @author lwx20
- * @since 2023-12-06
+ * @since 2024-03-15
  */
 @Mapper
 public interface OrderStatusMapper extends BaseMapper<OrderStatusDomain> {

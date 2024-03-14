@@ -3,7 +3,7 @@
         <el-row>
             选择支付方式
         </el-row>
-        <el-card>
+        <el-card style="margin-top: 10px">
             <el-radio-group v-model="data.paymentMethod">
                 <el-radio value="wx" size="large" border label="微信支付"></el-radio>
                 <el-radio value="zfb" size="large" border label="支付宝支付"></el-radio>
@@ -11,7 +11,7 @@
         </el-card>
 
         <el-button @click="orderPay()"
-                   style="background: gold; margin-top: 500px;width: 90%;">
+                   style="background: gold; margin-top: 500px;width: 100%; height: 50px">
             支付
         </el-button>
     </div>

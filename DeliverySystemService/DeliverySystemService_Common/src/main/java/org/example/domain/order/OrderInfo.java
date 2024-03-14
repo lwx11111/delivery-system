@@ -149,6 +149,16 @@ public class OrderInfo extends Model<OrderInfo> {
     @TableField("tableware")
     private String tableware;
 
+    @Schema(description = "店铺地址ID")
+    @Excel(name = "店铺地址ID")
+    @TableField("shop_address_id")
+    private String shopAddressId;
+
+    @Schema(description = "用户地址ID")
+    @Excel(name = "用户地址ID")
+    @TableField("user_address_id")
+    private String userAddressId;
+
     @TableField(exist = false)
     private Shop shop;
 
@@ -158,9 +168,5 @@ public class OrderInfo extends Model<OrderInfo> {
     @TableField(exist = false)
     private Map<String,String> params;
 
-//    @Override
-//    protected Serializable pkVal(){
-//            return this.id;
-//        }
 
 }

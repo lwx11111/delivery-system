@@ -12,6 +12,12 @@
     <artifactId>DeliverySystemService_Order</artifactId>
 
     <dependencies>
+        <!--支付宝-->
+        <dependency>
+            <groupId>com.alipay.sdk</groupId>
+            <artifactId>alipay-sdk-java</artifactId>
+            <version>4.39.2.ALL</version>
+        </dependency>
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>DeliverySystemService_Common</artifactId>

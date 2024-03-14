@@ -113,7 +113,6 @@
                     </el-scrollbar>
                 </el-col>
             </el-row>
-
             <!--购物车-->
             <el-card style="border: 1px solid gold ">
                 <el-row>
@@ -122,13 +121,13 @@
                     </el-col>
                     <el-col :span="3">
                         <el-button @click="saveCart()"
-                                   style="background: cornflowerblue">
+                                   color="skyblue">
                             加入购物车
                         </el-button>
                     </el-col>
                     <el-col :span="3">
                         <el-button @click="submitOrder()"
-                                   style="background: gold">
+                                   color="gold">
                             提交订单
                         </el-button>
                     </el-col>
@@ -202,7 +201,7 @@ const route = useRoute();
 
 // Data
 const data = reactive({
-    // 地址信息
+    // 商家地址信息
     address:{},
     // 收藏信息
     isCollected: false,
@@ -293,7 +292,7 @@ const getAddressByShopId = () => {
  */
 const orderConfirmDialog = ref();
 const showOrderConfirm = () => {
-    orderConfirmDialog.value.init(data.shop, data.orderInfo);
+    orderConfirmDialog.value.init(data.shop, data.orderInfo, data.address.id);
 }
 
 const cancelCollection = () => {

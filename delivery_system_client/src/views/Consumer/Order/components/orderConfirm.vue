@@ -3,11 +3,8 @@
     <el-dialog v-model="data.dialogVisible">
         <!--地址信息-->
         <el-card>
-            <h4>配送地址</h4>
             <el-row style="width: 100%">
-                <el-col :span="15">
-                    <h4>{{data.addressData.detailAddress}}</h4>
-                </el-col>
+                <h4>{{data.addressData.detailAddress}}</h4>
             </el-row>
             <el-row style="width: 100%">
                 <el-col :span="6">
@@ -17,8 +14,18 @@
                     {{data.addressData.phone}}
                 </el-col>
             </el-row>
+            <!--预计时间-->
+            <el-row style="margin-top: 10px">
+                <el-col :span="6">
+                    预计送达时间：
+                </el-col>
+                <el-col :span="6">
+                    {{data.orderInfo.expectedTime}}
+                </el-col>
+            </el-row>
         </el-card>
 
+        <!--订单信息-->
         <el-card style="margin-top: 10px">
             <!--头部店铺信息-->
             <el-row style="margin-bottom: 10px">
@@ -26,7 +33,6 @@
                     <h1>{{data.shop.name}}</h1>
                 </el-col>
             </el-row>
-
             <!-- 物品列表 -->
             <div v-for="(item, index) in data.orderInfo.orderItems">
                 <el-row style="margin-bottom: 10px">
@@ -45,7 +51,6 @@
                     </el-col>
                 </el-row>
             </div>
-
             <!--餐具和备注  -->
             <el-row style="margin-top: 10px">
                 <el-col :span="12">
@@ -86,8 +91,8 @@
                 </el-col>
             </el-row>
         </el-card>
-
-        <el-card style="border: 1px solid gold ">
+        <!--提交订单按钮-->
+        <el-card style="border: 1px solid gold;margin-top: 10px">
             <el-row>
                 <el-col :span="18"></el-col>
                 <el-col :span="3">
@@ -110,28 +115,17 @@ import {ElMessage, ElMessageBox} from "element-plus";
 import ApiAddress from '@/api/Address/api_address.js'
 import ApiOrder from '@/api/Order/api_orderinfo.js'
 import UserStorage from '@/cache/userStorage.js'
+import AddressStorage from '@/cache/addressStorage.js'
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
 
 // Data
 const data = reactive({
-    // 地址信息
-    addressData: {
-        id: '',
-        accountId: '',
-        longitude: '',
-        latitude: '',
-        cityName: '',
-        cityId: '',
-        provinceName: '',
-        provinceId: '',
-        countyName: '',
-        countyId: '',
-        detailAddress: '',
-        contacts: '',
-        phone: '',
-    },
+    // 用户地址信息
+    addressData: AddressStorage.getAddress(),
+    // 商家地州信息ID
+    shopAddressId: '',
     dialogVisible: false,
     // 店铺信息
     shop: {
@@ -183,24 +177,38 @@ const props = defineProps({
 
 // Mounted
 onMounted(() => {
-    listAddressData();
+
 })
 
 // Methods
-const listAddressData = () => {
+
+/**
+ * 计算预计送达时间
+ */
+const calculateExpectedTime = () => {
     const params = {
-        accountId: UserStorage.getUserId(),
+        shopAddressId: data.shopAddressId;
+        userAddressId: data.addressData.id;
     }
-    ApiAddress.selpage4address(data.params).then(res => {
-        console.log(res);
-        data.addressData = res.data.records[0];
+    // 获取预计送达时间
+    ApiOrder.getExpectedTime(params).then(res => {
+        if (res.code === 200){
+            data.orderInfo.expectedTime = res.data;
+        } else {
+            ElMessage.error(res.msg)
+        }
     })
 }
+
+
 
 /**
  * 提交订单
  */
 const submitOrder = () => {
+    // 地址信息
+    data.orderInfo.shopAddressId = data.shopAddressId;
+    data.orderInfo.userAddressId = data.addressData.id;
     ApiOrder.add4orderinfo(data.orderInfo).then(res => {
         if (res.code === 200){
             // 主键保存
@@ -217,11 +225,13 @@ const submitOrder = () => {
         }
     })
 }
-const init = (shop, orderInfo) => {
+const init = (shop, orderInfo, shopAddressId) => {
     // 界面初始化接收参数
     data.shop = shop;
     data.orderInfo = orderInfo;
+    data.shopAddressId = shopAddressId;
     data.dialogVisible  = true;
+    calculateExpectedTime();
 }
 
 //暴露方法
