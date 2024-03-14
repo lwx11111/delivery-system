@@ -13,7 +13,7 @@
                     </el-row>
                     <el-row style="margin-top: 5px">
                         <el-col :span="10" >
-                            <span style="font-size: 15px;">{{item.score}}分</span>
+                            <span style="color:orange; font-size: 20px;">{{item.score}}分</span>
                         </el-col>
                         <el-col :span="10">
                             <span style="font-size: 15px;">月售{{item.salesVolume}}</span>

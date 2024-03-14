@@ -97,6 +97,7 @@ const props = defineProps({
 
 // Mounted
 onMounted(() => {
+    console.log(props.url)
     if (props.url) {
         let obj = {
             name: 'pic',

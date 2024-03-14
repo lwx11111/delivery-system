@@ -1,26 +1,50 @@
 <template>
-    <el-row>
-        <h1>评价</h1>
-    </el-row>
+    <el-card style="margin-bottom: 10px">
+        店铺评分
+        <el-rate
+                v-model="props.score"
+                size="large"
+                disabled
+                show-score
+                text-color="#ff9900"
+                score-template="{value} 分">
+
+        </el-rate>
+    </el-card>
+
     <el-card v-for="(item, key) in data.comments"
             style="margin-bottom: 10px">
         <!--用户信息-->
-        <el-row >
-<!--            <el-col :span="10">-->
-<!--                <el-image :src="require('src/assets/profile.png')"></el-image>-->
-<!--            </el-col>-->
-            <el-col :span="5">
-                {{item.userName}}
+        <el-row>
+            <el-col :span="3">
+                <el-image style="width: 100px;height: 100px" src="http://127.0.0.1:9000/test/038915195d79a495ab8ed3db4aa7f8c5_.jpg"></el-image>
             </el-col>
-            <el-col :span="5">
-                {{item.releaseTime}}
+            <el-col :span="10">
+                <el-row>
+                    <el-text style="color:black; font-size: 20px" size="large" tag="b">
+                        {{item.userName}}</el-text>
+                </el-row>
+                <el-row>
+                    {{item.releaseTime}}
+                </el-row>
             </el-col>
         </el-row>
-        <el-divider></el-divider>
+        <!--评分信息-->
+        <el-row>
+            <el-rate
+                v-model="props.score"
+                disabled
+                show-score
+                text-color="#ff9900"
+                score-template="{value} 分">
+
+            </el-rate>
+        </el-row>
         <!--评价信息-->
         <el-row >
             {{item.content}}
         </el-row>
+        <el-divider></el-divider>
     </el-card>
 </template>
 
@@ -39,6 +63,11 @@ const props = defineProps({
     shopId: {
         type: String,
         required: false,
+    },
+    // 评分
+    score: {
+        type: Number,
+        required: true,
     }
 })
 

@@ -87,12 +87,12 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
     }
 
     @Override
-    public void saveByParam(Address obj,Map<String, String> params){
+    public void saveByParam(Address obj){
         this.save(obj);
     }
 
     @Override
-    public void updateByParam(Address obj,Map<String, String> params){
+    public void updateByParam(Address obj){
         this.updateById(obj);
     }
 

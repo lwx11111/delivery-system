@@ -32,7 +32,7 @@ public interface IAddressService extends IService<Address> {
      * @param params
      * @return: void
      */
-    void saveByParam(Address obj,Map<String, String> params);
+    void saveByParam(Address obj);
 
     /**
      * 根据参数更新
@@ -40,7 +40,7 @@ public interface IAddressService extends IService<Address> {
      * @param params
      * @return: void
      */
-    void updateByParam(Address obj,Map<String, String> params);
+    void updateByParam(Address obj);
     /**
      * 根据条件删除
      *

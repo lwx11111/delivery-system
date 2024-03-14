@@ -86,7 +86,7 @@ public class AddressController {
     public SimpleResponse save(@RequestBody Address obj){
         SimpleResponse response = new SimpleResponse();
         try {
-            service.saveByParam(obj,obj.getParams());
+            service.saveByParam(obj);
         } catch (Exception e) {
             response.setCode(500);
             response.setMessage(e.getMessage());
@@ -101,7 +101,7 @@ public class AddressController {
     public SimpleResponse update(@PathVariable(name = "id") String id,@RequestBody Address obj){
         SimpleResponse response = new SimpleResponse();
         try {
-            service.updateByParam(obj,obj.getParams());
+            service.updateByParam(obj);
         } catch (Exception e) {
             response.setCode(500);
             response.setMessage(e.getMessage());

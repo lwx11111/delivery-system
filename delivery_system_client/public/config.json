@@ -5,6 +5,7 @@
   "AUTH_NAME": "manager",
   "CAPTCHA_URL": "v1/public/anon/verification-code/create?uuid=",
   "USER_TOKEN_NAME": "Delivery-UserId",
+  "ADDRESS_TOKEN_NAME": "Delivery-Address",
   "AUTH_TOKEN_NAME": "Delivery-Auth-Token"
 }
 

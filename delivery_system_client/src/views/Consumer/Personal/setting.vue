@@ -58,6 +58,7 @@ import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import ApiUser from '@/api/User/auth.js'
 import AuthStorage from '@/cache/authStorage.js';
+import AddressStorage from '@/cache/addressStorage.js';
 import { getEncryptPassword } from "@/utils/passwordEncrypt";
 import { ElMessage } from "element-plus";
 import UserStorage from '@/cache/userStorage.js';
@@ -124,6 +125,8 @@ const logout = () => {
     ApiUser.logout().then(res => {
         console.log(res);
         AuthStorage.removeToken();
+        AddressStorage.removeToken();
+        UserStorage.removeToken();
         router.push({
             path: '/login',
         })

@@ -135,20 +135,35 @@
                 </el-row>
             </el-card>
         </el-tab-pane>
-
+        <!--评价信息-->
         <el-tab-pane label="评价" name="shopComment">
-            <CommentList></CommentList>
+            <CommentList :score="data.shop.score"></CommentList>
         </el-tab-pane>
-
+        <!--档案信息-->
         <el-tab-pane label="店铺" name="shopInfo">
-            <div>
+            <el-card>
                 <el-row>
-                    {{data.shop.name}}
+                    <el-col :span="2"><el-icon><Location /></el-icon></el-col>
+                    <el-col :span="10">{{data.address.detailAddress}}</el-col>
                 </el-row>
-            </div>
-            <!--安全档案图片-->
-            <h3>安全档案图片</h3>
-            <el-image :src="data.shop.safetyFile" style="width: 100px; height: 100px"></el-image>
+                <el-divider></el-divider>
+                <!--解决组件快于数据获取-->
+                <el-row v-if="data.shop.safetyFile !== '' ">
+                    <el-col :span="3">
+                        安全档案图片
+                    </el-col>
+                    <el-col :span="5">
+                        <MinioUpload :url="data.shop.safetyFile"
+                                     :disabled="true">
+                        </MinioUpload>
+                    </el-col>
+
+                </el-row>
+            </el-card>
+
+            <el-card style="margin-top: 10px">
+                配送时间：{{data.shop.openTime}}-{{data.shop.closeTime}}
+            </el-card>
         </el-tab-pane>
     </el-tabs>
 
@@ -174,18 +189,21 @@ import ApiShopItem from '@/api/Shop/api_shop_item.js'
 import ApiShopItemCategory from '@/api/Shop/api_shopItemCategory.js'
 import ApiCollection from '@/api/Shop/api_collection.js'
 import ApiCart from '@/api/Shop/api_cart.js'
-
+import ApiAddress from '@/api/Address/api_address.js'
 import UserStorage from '@/cache/userStorage.js'
 import { Search, CirclePlus, Remove } from '@element-plus/icons-vue'
 import ShopItemDetail from "./shopItemDetail.vue";
 import CommentList from "../Comment/commentList.vue";
 import OrderConfirm from "../Order/components/orderConfirm.vue";
+import MinioUpload from "../../components/MinioUpload.vue";
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
 
 // Data
 const data = reactive({
+    // 地址信息
+    address:{},
     // 收藏信息
     isCollected: false,
     // 店铺信息
@@ -206,7 +224,9 @@ const data = reactive({
         status : '',
         description : '',
         itemCategory : '',
-        picture : ''
+        picture : '',
+        duration:'',
+        distanceKm:''
     },
     // el-tab 选中的name
     tabName: 'order',
@@ -251,6 +271,7 @@ onMounted(() => {
     data.shop.id = route.query.shopId;
     data.params.shopId = route.query.shopId;
     getShop();
+    getAddressByShopId();
     getShopItemList();
     getShopItemCategoryList();
     isHaveCollection();
@@ -258,6 +279,14 @@ onMounted(() => {
 
 // Methods
 
+const getAddressByShopId = () => {
+    ApiAddress.getAddressByShopId(data.shop.id).then(res => {
+        console.log(res)
+        if (res.code === 200){
+            data.address = res.data;
+        }
+    })
+}
 /**
  * 打开订单确认Dialog
  * 传参

@@ -3,10 +3,12 @@ package org.example.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.Feature;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.models.auth.In;
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.dao.TestDao;
+import org.example.domain.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -135,6 +138,13 @@ public class TestController {
         System.out.println(BigDecimal.valueOf((int) 1 + Math.random() * 11));
         System.out.println((BigDecimal.valueOf(1 + Math.random() * 3)));
         System.out.println(BigDecimal.valueOf(20 + Math.random() * 20));
+    }
+
+    @PostMapping("/json")
+    public void json(@RequestBody String address){
+        System.out.println(address);
+        Address add =  JSONObject.parseObject(address, Address.class, Feature.AllowArbitraryCommas);
+        System.out.println(add);
     }
 
     // form-data

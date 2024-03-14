@@ -1,11 +1,16 @@
 <template>
     <div>
         <!--外卖首页信息和地址-->
-        <el-row style="text-align: center">
-            <el-col
-                :span="24"
-                style="background: #DAA520; height: 50px">
-                <h1>外卖</h1>
+        <el-row style="text-align: center;background: #DAA520; height: 50px" >
+            <el-col :span="2" style="padding-top: 10px; text-align: right">
+                <el-text style="color:black;" tag="b">配送至：</el-text>
+            </el-col>
+            <el-col :span="6" style="padding-top: 12px; text-align: left">
+                <el-text truncated>{{data.address.detailAddress}}</el-text>
+            </el-col>
+            <el-col :span="8" style="padding-top: 12px;">
+                <el-text style="color:black;" size="large" tag="b">
+                    外卖</el-text>
             </el-col>
         </el-row>
         <!-- 搜索框-->
@@ -32,7 +37,7 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted, toRefs } from 'vue'
+import { reactive, ref, onMounted, toRefs, inject } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import ApiShop from '@/api/Shop/api_shop.js'
@@ -42,6 +47,7 @@ import ShopCardList from "./Shop/components/shopCardList.vue";
 import ScreeningList from "./Shop/components/screeningList.vue";
 import CategoryInfo from "./Shop/components/categoryInfo.vue";
 import UserStorage from '@/cache/userStorage.js';
+import AddressStorage from '@/cache/addressStorage.js';
 import {ElMessage, ElMessageBox} from "element-plus";
 
 const store = useStore();
@@ -141,6 +147,7 @@ const getAddressData = () => {
                     })
                 })
             } else {
+                AddressStorage.setAddress(data.address);
                 getShopList();
             }
 

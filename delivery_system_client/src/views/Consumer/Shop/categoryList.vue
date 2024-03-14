@@ -1,10 +1,16 @@
 <template>
     <div>
         <!--外卖首页信息和地址-->
-        <el-row>
-            <el-col :span="24"
-                style="text-align: center;background: #DAA520; height: 50px">
-                <h1>分类店铺</h1>
+        <el-row style="text-align: center;background: #DAA520; height: 50px" >
+            <el-col :span="2" style="padding-top: 10px; text-align: right">
+                <el-text style="color:black;" tag="b">配送至：</el-text>
+            </el-col>
+            <el-col :span="6" style="padding-top: 12px; text-align: left">
+                <el-text truncated>{{data.address.detailAddress}}</el-text>
+            </el-col>
+            <el-col :span="8" style="padding-top: 12px;">
+                <el-text style="color:black;" size="large" tag="b">
+                    分类店铺</el-text>
             </el-col>
         </el-row>
         <!-- 搜索框-->
@@ -36,7 +42,7 @@ import ScreeningList from './components/screeningList.vue'
 import ShopCardList from "./components/shopCardList.vue";
 import { Search } from '@element-plus/icons-vue'
 import ApiShop from '@/api/Shop/api_shop.js'
-import { onBeforeRouteUpdate } from "vue-router";
+import AddressStorage from '@/cache/addressStorage.js';
 
 const store = useStore();
 const router = useRouter()
@@ -44,6 +50,8 @@ const route = useRoute()
 
 // Data
 const data = reactive({
+    // 地址信息
+    address:{},
     // 店铺信息
     shopList: [],
     // 查询参数
@@ -55,7 +63,8 @@ const data = reactive({
         screening: '',
         name:'',
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        address: JSON.stringify(AddressStorage.getAddress()),
     },
 })
 
@@ -67,6 +76,7 @@ onMounted(() => {
 
 // 每次打开界面时，刷新界面，否则只有组件初始化时才会刷新，路由也监听不到
 onActivated(() => {
+    data.address = AddressStorage.getAddress();
     data.params.isParentId = route.query.isParentId
     data.params.categoryId = route.query.categoryId
     getShopList();

@@ -9,6 +9,8 @@ import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 // permission control
 import './permission'
 import './utils/stringUtil'
+// Cache
+import AddressStorage from "@/cache/addressStorage.js";
 
 // 全局变量
 import dataJson from "../public/config.json";
@@ -30,4 +32,7 @@ app.config.globalProperties = {
     CAPTCHA_URL: dataJson.CAPTCHA_URL,
     APP_ID: dataJson.APP_ID,
 };
+
+// 全局JS文件
+app.provide('$addressStorage', AddressStorage)
 

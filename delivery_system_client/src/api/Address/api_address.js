@@ -4,6 +4,13 @@ const serverName = '/address'
 
 export default {
 
+  getAddressByShopId(shopId) {
+    return request({
+      url: serverName + '/address/getAddressByShopId/' + shopId,
+      method: 'get',
+    })
+  },
+
   // 分页查询
   selpage4address(data) {
     return request({

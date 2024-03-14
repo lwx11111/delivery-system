@@ -83,7 +83,7 @@ public interface IShopService extends IService<Shop> {
      * @param params
      * @return
      */
-    Page<Shop> listShopsByCategoryId(Map<String, String> params) throws Exception;
+    Page<Shop> listShopsByCategoryId(Map<String, String> params, Address address) throws Exception;
 
     /**
      * 分页查询-自定义sql-Wrapper

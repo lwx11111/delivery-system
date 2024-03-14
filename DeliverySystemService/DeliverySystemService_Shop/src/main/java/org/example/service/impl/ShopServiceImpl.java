@@ -380,7 +380,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
      * @return
      */
     @Override
-    public Page<Shop> listShopsByCategoryId(Map<String, String> params) throws Exception {
+    public Page<Shop> listShopsByCategoryId(Map<String, String> params, Address address) throws Exception {
         Integer pageSize = Integer.parseInt(params.get("pageSize"));
         Integer pageNum = Integer.parseInt(params.get("pageNum"));
         Boolean isParentId = Boolean.parseBoolean(params.get("isParentId"));
@@ -391,6 +391,21 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         PageHelper.startPage(pageNum, pageSize);
         // todo 如何优化
         List<Shop> list = shopMapper.listShopsByCategoryId(categoryId, isParentId,name,screening);
+        for (Shop item : list) {
+            // 得到店铺位置信息
+            SimpleResponse addressRes = addressFeignApi.getAddressByShopId(item.getId());
+            Address shopAddress = JSON.parseObject(JSON.toJSONString(addressRes.getData()), Address.class);
+            // 计算距离和时间
+            DoubleAddressDto dto = new DoubleAddressDto();
+            dto.setDeparture(shopAddress);
+            dto.setArrival(address);
+            SimpleResponse simpleResponse = addressFeignApi.getDistanceByAddress(dto);
+            DistanceDto distanceDto = JSON.parseObject(JSON.toJSONString(simpleResponse.getData()), DistanceDto.class);
+            // 赋值
+            item.setDistanceKm(distanceDto.getDistanceKm());
+            item.setDuration(distanceDto.getDuration());
+        }
+
         PageInfo<Shop> pageInfo = new PageInfo<>(list);
 
         Page<Shop> page = new Page<>();

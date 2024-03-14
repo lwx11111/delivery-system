@@ -206,7 +206,7 @@ public class ShopController {
             String addressObject = params.get("address");
             if (addressObject != null && !("").equals(addressObject)) {
                 System.out.println(addressObject);
-                // 字段值为null 会失败
+                // param字段值为null 会失败
                 Address address =  JSONObject.parseObject(addressObject, Address.class);
                 IPage<Shop> page = service.selectPage(params, address);
                 response.setData(page);
@@ -271,7 +271,9 @@ public class ShopController {
     public SimpleResponse listShopsByCategoryId(@RequestBody Map<String, String> params) {
         SimpleResponse response = new SimpleResponse();
         try {
-            response.setData(service.listShopsByCategoryId(params));
+            String addressJson = params.get("address");
+            Address address =  JSONObject.parseObject(addressJson, Address.class);
+            response.setData(service.listShopsByCategoryId(params, address));
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);

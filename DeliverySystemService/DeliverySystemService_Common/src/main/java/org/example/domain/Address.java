@@ -140,8 +140,4 @@ public class Address extends Model<Address> {
     @TableField("shop_id")
     private String shopId;
 
-    @TableField(exist = false)
-    private Map<String,String> params;
-
-
 }
