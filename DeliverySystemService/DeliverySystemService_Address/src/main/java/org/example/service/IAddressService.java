@@ -23,11 +23,11 @@ import java.util.Map;
  */
 public interface IAddressService extends IService<Address> {
 
-    DistanceDto getDistanceByIds(GetExpectedTimeParams params);
+    DistanceDto getDistanceByIds(GetExpectedTimeParams params) throws Exception;
 
     Address getAddressByShopId(String shopId);
 
-    DistanceDto getDistanceByAddress(Address departure, Address arrival);
+    DistanceDto getDistanceByAddress(Address departure, Address arrival) throws Exception;
 
     /**
      * 根据参数保存

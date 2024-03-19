@@ -9,6 +9,7 @@ import io.swagger.models.auth.In;
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.dao.TestDao;
 import org.example.domain.Address;
+import org.example.web.SimpleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,23 @@ public class TestController {
 
     @Autowired
     private TestDao testDao;
+
+    @ResponseBody
+    public SimpleResponse ttt(){
+        SimpleResponse response = new SimpleResponse();
+        response.setCode(200);
+        response.setMessage("请求成功");
+        return response;
+    }
+
+
+    @PostMapping("/fastjson")
+    public void test2(@RequestBody String json) throws Exception {
+        System.out.println();
+        SimpleResponse simpleResponse = JSONObject.parseObject(json, SimpleResponse.class);
+        System.out.println(simpleResponse);
+        return;
+    }
 
     @GetMapping("/base")
     public void base64Test(){

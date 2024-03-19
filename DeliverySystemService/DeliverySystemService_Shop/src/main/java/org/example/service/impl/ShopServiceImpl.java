@@ -209,18 +209,23 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
                 categoryIds[i] = shopCategories.get(i).getCategoryId();
             }
             item.setCategoryIds(categoryIds);
-            // 得到店铺位置信息
-            SimpleResponse addressRes = addressFeignApi.getAddressByShopId(item.getId());
-            Address shopAddress = JSON.parseObject(JSON.toJSONString(addressRes.getData()), Address.class);
-            // 计算距离和时间
-            DoubleAddressDto dto = new DoubleAddressDto();
-            dto.setDeparture(shopAddress);
-            dto.setArrival(address);
-            SimpleResponse simpleResponse = addressFeignApi.getDistanceByAddress(dto);
-            DistanceDto distanceDto = JSON.parseObject(JSON.toJSONString(simpleResponse.getData()), DistanceDto.class);
-            // 赋值
-            item.setDistanceKm(distanceDto.getDistanceKm());
-            item.setDuration(distanceDto.getDuration());
+            if (address != null) {
+                // 得到店铺位置信息
+                SimpleResponse addressRes = addressFeignApi.getAddressByShopId(item.getId());
+                Address shopAddress = JSON.parseObject(JSON.toJSONString(addressRes.getData()), Address.class);
+                // 计算距离和时间
+                DoubleAddressDto dto = new DoubleAddressDto();
+                dto.setDeparture(shopAddress);
+                dto.setArrival(address);
+                SimpleResponse simpleResponse = addressFeignApi.getDistanceByAddress(dto);
+                System.out.println(simpleResponse);
+                if (simpleResponse.getCode() == 200) {
+                    DistanceDto distanceDto = JSON.parseObject(JSON.toJSONString(simpleResponse.getData()), DistanceDto.class);
+                    // 赋值
+                    item.setDistanceKm(distanceDto.getDistanceKm());
+                    item.setDuration(distanceDto.getDuration());
+                }
+            }
         }
         return result;
     }

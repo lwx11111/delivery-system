@@ -3,6 +3,7 @@ package org.example.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.example.domain.Address;
 import org.example.dao.AddressMapper;
 import org.example.dto.DistanceDto;
@@ -47,13 +48,14 @@ import java.util.Map;
  * @since 2024-03-08
  */
 @Service
+@Slf4j
 public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> implements IAddressService {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
 
     @Override
-    public DistanceDto getDistanceByIds(GetExpectedTimeParams params) {
+    public DistanceDto getDistanceByIds(GetExpectedTimeParams params) throws Exception {
         Address departure = this.getById(params.getShopAddressId());
         Address arrival = this.getById(params.getUserAddressId());
         return getDistanceByAddress(departure, arrival);
@@ -67,32 +69,32 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
     }
 
     @Override
-    public DistanceDto getDistanceByAddress(Address departure, Address arrival) {
-        // 判空
-        if (departure.getLongitude() == null || departure.getLatitude() == null) {
-            return null;
-        }
-        if (arrival.getLongitude() == null || arrival.getLatitude() == null){
-            return null;
-        }
+    public DistanceDto getDistanceByAddress(Address departure, Address arrival) throws Exception {
+            // 判空
+            if (departure.getLongitude() == null || departure.getLatitude() == null) {
+                return null;
+            }
+            if (arrival.getLongitude() == null || arrival.getLatitude() == null){
+                return null;
+            }
 
-        // 插入位置信息
-        redisTemplate.opsForGeo().add("TestKey",
-                new Point(departure.getLongitude().doubleValue(), departure.getLatitude().doubleValue()), "departure");
-        redisTemplate.opsForGeo().add("TestKey",
-                new Point(arrival.getLongitude().doubleValue(), arrival.getLatitude().doubleValue()), "arrival");
+            // 插入位置信息
+            redisTemplate.opsForGeo().add("TestKey",
+                    new Point(departure.getLongitude().doubleValue(), departure.getLatitude().doubleValue()), "departure");
+            redisTemplate.opsForGeo().add("TestKey",
+                    new Point(arrival.getLongitude().doubleValue(), arrival.getLatitude().doubleValue()), "arrival");
 
-        // 计算距离
-        Distance distance = redisTemplate.opsForGeo().distance("TestKey", "departure", "arrival");
-        double distanceInKm = distance.getValue() / 1000;
-        // 一位小数
-        DecimalFormat df = new DecimalFormat("#.0");
-        DecimalFormat df1 = new DecimalFormat("#");
-        // 封装出参
-        DistanceDto distanceDto = new DistanceDto();
-        distanceDto.setDistanceKm(df.format(distanceInKm));
-        distanceDto.setDuration(df1.format(distanceInKm / 10 * 60));
-        return distanceDto;
+            // 计算距离
+            Distance distance = redisTemplate.opsForGeo().distance("TestKey", "departure", "arrival");
+            double distanceInKm = distance.getValue() / 1000;
+            // 一位小数
+            DecimalFormat df = new DecimalFormat("#.0");
+            DecimalFormat df1 = new DecimalFormat("#");
+            // 封装出参
+            DistanceDto distanceDto = new DistanceDto();
+            distanceDto.setDistanceKm(df.format(distanceInKm));
+            distanceDto.setDuration(df1.format(distanceInKm / 10 * 60));
+            return distanceDto;
     }
 
     @Override

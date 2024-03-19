@@ -98,11 +98,11 @@ const consumerRouter = {
                 component: Collection,
                 name: 'Collection',
             },
-            {
-                path: '/Consumer/Personal/userDetail',
-                component: UserDetail,
-                name: 'UserDetail',
-            },
+            // {
+            //     path: '/Consumer/Personal/userDetail',
+            //     component: UserDetail,
+            //     name: 'UserDetail',
+            // },
             {
                 path: '/Consumer/Personal/setting',
                 component: Setting,

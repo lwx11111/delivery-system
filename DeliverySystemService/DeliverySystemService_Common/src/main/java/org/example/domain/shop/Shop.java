@@ -147,13 +147,6 @@ public class Shop extends Model<Shop> {
     @TableField("description")
     private String description;
 
-    /**
-    * 物品分类
-    */
-    @Schema(name = "物品分类")
-    @Excel(name = "物品分类")
-    @TableField("item_category")
-    private String itemCategory;
 
     @Schema(name = "店铺图片路径")
     @Excel(name = "店铺图片路径")

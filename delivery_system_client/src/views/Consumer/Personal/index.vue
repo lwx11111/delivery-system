@@ -3,11 +3,11 @@
         <h3 @click="toSetting()">设置</h3>
     </el-row>
     <!-- 头像名字-->
-    <el-card @click="toUserDetail" style="margin-bottom: 10px">
+    <el-card @click="toUserInfo()" style="margin-bottom: 10px">
         <el-row>
             <el-col style="margin-right: 10px"
                     :span="4">
-                <el-image :src="data.imageURL"></el-image>
+                <el-image :src="data.user.avatar"></el-image>
             </el-col>
             <el-col :span="10">
                 <h1>{{data.user.name}}</h1>
@@ -88,7 +88,7 @@ import { reactive, ref, onMounted, toRefs } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import {ElMessage, ElMessageBox} from "element-plus";
-import ApiOrder from '../../../api/api_order.js'
+
 import UserStorage from '@/cache/userStorage.js';
 const store = useStore();
 const router = useRouter()
@@ -100,13 +100,15 @@ const data = reactive({
     user: {
         id: UserStorage.getUserId(),
         name: UserStorage.getUserName(),
+        avatar:''
     }
 
 })
 
 // Mounted
 onMounted(() => {
-    data.imageURL = new URL(`@/assets/profile.png`, import.meta.url).href
+    // data.imageURL = new URL(`@/assets/profile.png`, import.meta.url).href
+    data.user.avatar = UserStorage.getUser().avatar
 })
 
 // Methods
@@ -115,12 +117,13 @@ const toSetting = () => {
         path: '/Consumer/Personal/setting',
     })
 }
-const toUserDetail = () => {
+
+/**
+ * 跳转用户信息页
+ */
+const toUserInfo = () => {
     router.push({
-        path: '/Consumer/Personal/userDetail',
-        query: {
-            userId: data.user.id
-        }
+        path: '/Consumer/Personal/info',
     })
 }
 

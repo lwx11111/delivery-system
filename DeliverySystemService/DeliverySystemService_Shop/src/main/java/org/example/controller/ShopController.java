@@ -204,16 +204,17 @@ public class ShopController {
         SimpleResponse response = new SimpleResponse();
         try {
             String addressObject = params.get("address");
-            if (addressObject != null && !("").equals(addressObject)) {
+            if (addressObject != null){
                 System.out.println(addressObject);
                 // param字段值为null 会失败
                 Address address =  JSONObject.parseObject(addressObject, Address.class);
                 IPage<Shop> page = service.selectPage(params, address);
                 response.setData(page);
-
             } else {
-                throw new Exception("地址信息能为空");
+                IPage<Shop> page = service.selectPage(params, null);
+                response.setData(page);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);

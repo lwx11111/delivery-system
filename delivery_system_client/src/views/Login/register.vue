@@ -14,6 +14,7 @@
                             <el-icon style="color: gold"><Avatar /></el-icon>
                         </template>
                     </el-input>
+
                     <el-input v-model="data.form.password"
                               class="input-item flex align-center"
                               show-password
@@ -37,6 +38,16 @@
                             <el-icon style="color: gold"><Iphone /></el-icon>
                         </template>
                     </el-input>
+
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item
+                                label="头像"
+                                prop="picture">
+                                <MinioUpload @getUrl="getUrl"></MinioUpload>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
                     <el-row>
                         <el-col :span="14">
                             <el-input v-model="data.form.verifyCode"
@@ -84,6 +95,8 @@ import {getEncryptPassword} from '@/utils/passwordEncrypt.js';
 import { useStore } from "vuex";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
+import MinioUpload from "../components/MinioUpload.vue";
+import MinioUploadNew from "../components/MinioUpload.vue";
 const store = useStore();
 const router = useRouter()
 
@@ -112,7 +125,8 @@ const data = reactive({
         phone: '',
         verifyCode: '',
         appId: '1',
-        type:''
+        type:'',
+        avatar:'',
     },
     rules: {
         type: [
@@ -127,6 +141,9 @@ onMounted(() => {
     setCaptchUrl();
 })
 
+const getUrl = (url) =>{
+    data.form.avatar = url;
+}
 /**
  * 获取验证码
  */
@@ -193,7 +210,9 @@ const submitForm = () => {
                     username: data.form.username,
                     password: getEncryptPassword(data.form.password, 'md5'),
                     appId: data.form.appId,
-                    type: data.form.type
+                    type: data.form.type,
+                    phone: data.form.phone,
+                    avatar: data.form.avatar
                 }
                 ApiUser.register(data1).then(res => {
                     console.log(res);
@@ -242,7 +261,7 @@ const submitForm = () => {
     /* 最小宽度为100% */
     min-width: 100%;
     /* 最小高度为100vh    vh: 就等于 视窗的高度  1vh = 视窗的高度的1%*/
-    min-height: 100vh;
+    min-height: 140vh;
     margin: 0;
     padding: 0;
     border: 1px white solid;
@@ -253,7 +272,7 @@ const submitForm = () => {
     margin-top: 2%;
     margin-left: 17%;
     width: 70%;
-    height: 135%;
+    height: 170%;
     .input-item {
         margin: 20px auto;
         height: 45px;

@@ -170,7 +170,7 @@ const routerPushByType = (customAccountId, accountId) => {
             userId: accountId,
         }
         ApiShop.selpage4shop(param).then(res => {
-            console.log(res.data.records);
+            console.log(res)
             if (res.code === 200){
                 if (res.data.records.length === 0){
                     router.push({
@@ -182,6 +182,8 @@ const routerPushByType = (customAccountId, accountId) => {
                         path: '/homepage',
                     })
                 }
+            } else {
+                ElMessage.error(res.message)
             }
         })
     } else if (customAccountId === 'rider') {

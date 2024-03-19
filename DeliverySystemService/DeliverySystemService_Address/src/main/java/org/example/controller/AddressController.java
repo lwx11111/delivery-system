@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.math3.analysis.function.Add;
 import org.example.dto.DoubleAddressDto;
 import org.example.params.GetExpectedTimeParams;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Tag(name = "服务")
 @RequestMapping("/address")
+@Slf4j
 public class AddressController {
     @Autowired
     private IAddressService service;
@@ -91,8 +93,9 @@ public class AddressController {
             response.setData(service.getDistanceByAddress(departure, arrival));
         } catch (Exception e) {
             response.setCode(500);
+//            response.setData(null);
             response.setMessage(e.getMessage());
-            e.printStackTrace();
+            log.warn(e.getMessage());
         }
         return response;
     }

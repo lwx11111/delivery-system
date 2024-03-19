@@ -1,35 +1,14 @@
 <template>
     <el-card>
         <el-form>
-            <el-form-item label="用户名">
-                <el-input v-model="data.user.name"></el-input>
-            </el-form-item>
-            <el-form-item label="密码">
-                <el-input v-model="data.user.name"></el-input>
-            </el-form-item>
             <el-form-item label="手机号">
-                <el-input v-model="data.user.name"></el-input>
+                <el-input v-model="data.user.phone"></el-input>
             </el-form-item>
-            <el-form-item label="邮箱">
-                <el-input v-model="data.user.name"></el-input>
-            </el-form-item>
-            <el-form-item label="性别">
-                <el-input v-model="data.user.name"></el-input>
-            </el-form-item>
-            <el-form-item label="生日">
-                <el-input v-model="data.user.name"></el-input>
-            </el-form-item>
-            <el-form-item label="地址">
-                <el-input v-model="data.user.name"></el-input>
-            </el-form-item>
-            <el-form-item label="头像">
-                <el-input v-model="data.user.name"></el-input>
-            </el-form-item>
-            <el-form-item label="个性签名">
-                <el-input v-model="data.user.name"></el-input>
+            <el-form-item label="头像" >
+                <MinioUpload v-if="data.user.avatar" :url="data.user.avatar" @getUrl="getUrl"></MinioUpload>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary">修改</el-button>
+                <el-button type="primary" @click="updateInfo()">修改</el-button>
             </el-form-item>
         </el-form>
     </el-card>
@@ -39,30 +18,65 @@
 import { reactive, ref, onMounted, toRefs } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
-import {ElMessage, ElMessageBox} from "element-plus";
-import ApiOrder from '../../../api/api_order.js'
-
+import UserStorage from '@/cache/userStorage'
+import AuthStorage from '@/cache/authStorage'
+import MinioUpload from "../../components/MinioUpload.vue";
+import ApiUser from '@/api/User/auth.js'
+import {ElMessage} from "element-plus";
 const store = useStore();
 const router = useRouter()
-import { Search } from '@element-plus/icons-vue'
+
 // Data
 const data = reactive({
     //用户信息
     user: {
-        name: 'lwx'
+        avatar: '',
+        phone: ''
     }
 
 })
 
 // Mounted
 onMounted(() => {
-
+    var user = UserStorage.getUser();
+    console.log(user)
+    data.user = user
 })
 
 // Methods
 
+const getUrl = (url) =>{
+    console.log(url)
+    data.user.avatar = url;
+}
 
-
+const updateInfo = () => {
+    if (data.user.phone.length !== 11){
+        ElMessage.info({
+            message:"手机号不通过"
+        })
+        return;
+    }
+    console.log(data.user.avatar)
+    if (data.user.avatar === null){
+        ElMessage.info({
+            message:"头像不通过"
+        })
+        return;
+    }
+    ApiUser.updateInfo(data.user).then(res => {
+        console.log(res)
+        if (res.code === '20000'){
+            ElMessage.info({
+                message:"修改成功",
+                type:"success"
+            })
+            UserStorage.removeUser();
+            AuthStorage.removeToken();
+            router.go(0)
+        }
+    })
+}
 </script>
 
 <style scoped>

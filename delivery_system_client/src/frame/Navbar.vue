@@ -18,7 +18,7 @@
                     <el-dropdown class="avatar-container right-menu-item hover-effect"
                                  trigger="click">
                         <div class="avatar-wrapper">
-                            <img src="@/assets/profile.png" class="user-avatar">
+                            <img :src="data.user.avatar" class="user-avatar">
                             <span class="user-name">{{ data.form.name }}</span>
                         </div>
                         <template #dropdown>
@@ -94,6 +94,8 @@ const router = useRouter()
 const route = useRoute();
 
 const data = reactive({
+    // 用户
+    user:{},
     // 路由集合
     breadList: [],
     sidebarOpened: false,
@@ -127,7 +129,7 @@ const data = reactive({
 // Mounted
 onMounted(() => {
     data.form.name = UserStorage.getUserName();
-
+    data.user = UserStorage.getUser();
     getBreadcrumb();
 })
 

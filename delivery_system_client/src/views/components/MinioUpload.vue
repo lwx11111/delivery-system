@@ -1,6 +1,6 @@
 <template>
     <el-upload :class="{ hide_box: data.upload_btn }"
-        :action="data.minioUrl"
+                :action="data.minioUrl"
                :file-list="fileList"
                :on-remove="handleRemove"
                list-type="picture-card"

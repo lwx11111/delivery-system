@@ -56,5 +56,13 @@ export default {
         })
     },
 
+    updateInfo(data){
+        return request({
+            url: managerUriPrefix + 'v1/account/updateInfo',
+            method: 'post',
+            data: data
+        })
+    }
+
 }
 
