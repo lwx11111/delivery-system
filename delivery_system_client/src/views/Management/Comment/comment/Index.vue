@@ -54,18 +54,18 @@
         <el-card style="margin: 10px; border: 1px solid gold">
             <!-- 操作按钮区 -->
             <div style="margin:10px 0;">
-                <el-button
-                        type="info"
-                        icon="Download"
-                        @click="downloadExcelTemplate()">
-                  下载模板
-                </el-button>
-                <el-button
-                        type="primary"
-                        icon="Upload"
-                        @click="uploadExcel()">
-                  导入
-                </el-button>
+<!--                <el-button-->
+<!--                        type="info"-->
+<!--                        icon="Download"-->
+<!--                        @click="downloadExcelTemplate()">-->
+<!--                  下载模板-->
+<!--                </el-button>-->
+<!--                <el-button-->
+<!--                        type="primary"-->
+<!--                        icon="Upload"-->
+<!--                        @click="uploadExcel()">-->
+<!--                  导入-->
+<!--                </el-button>-->
                 <el-button
                         type="warning"
                         icon="DocumentDelete"
@@ -85,10 +85,10 @@
                           icon="Close">
                     清空
                     </el-button>
-                    <el-button
-                          @click="excelData()">
-                    导出数据
-                    </el-button>
+<!--                    <el-button-->
+<!--                          @click="excelData()">-->
+<!--                    导出数据-->
+<!--                    </el-button>-->
                 </div>
             </div>
 

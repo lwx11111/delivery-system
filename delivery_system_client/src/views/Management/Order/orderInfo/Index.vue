@@ -9,7 +9,7 @@
                 <el-collapse-item name="1">
                     <template #title>
                         <div class="innerHeader">
-                          点单信息管理
+                          订单信息管理
                         </div>
                     </template>
                     <div style="display: flex;"
@@ -61,35 +61,11 @@
                   新增
                 </el-button>
                 <el-button
-                        type="info"
-                        icon="Download"
-                        @click="downloadExcelTemplate()">
-                  下载模板
-                </el-button>
-                <el-button
-                        type="primary"
-                        icon="Upload"
-                        @click="uploadExcel()">
-                  导入
-                </el-button>
-                <el-button
                         type="warning"
                         icon="DocumentDelete"
                         @click="deleteDataMany()">
                   删除
                 </el-button>
-                <el-dropdown
-                        style="margin-left:8px;"
-                        split-button
-                        type="primary">
-                    更多功能
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item>功能1</el-dropdown-item>
-                            <el-dropdown-item>功能2</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
                 <div style="float:right;">
                     <el-button
                           type="primary"
@@ -102,10 +78,6 @@
                           @click="resetData()"
                           icon="Close">
                     清空
-                    </el-button>
-                    <el-button
-                          @click="excelData()">
-                    导出数据
                     </el-button>
                 </div>
             </div>
@@ -173,44 +145,14 @@
                         align="center">
                 </el-table-column>
                  <el-table-column
-                        prop="location"
-                        label="配送地址"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="deliveryService"
-                        label="配送服务"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
                         prop="orderTime"
                         label="下单时间"
                         width="180"
                         align="center">
                 </el-table-column>
-                 <el-table-column
+                 <el-table-column :formatter="statusFormat"
                         prop="status"
                         label="状态"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="paymentMethod"
-                        label="支付方式"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="remark"
-                        label="备注"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="tableware"
-                        label="餐具数量"
                         width="180"
                         align="center">
                 </el-table-column>
@@ -276,19 +218,21 @@
 </template>
 <script lang="ts" setup>
     import Api from '@/api/Order/api_orderinfo.js'
+    import ApiDict from '@/api/Common/api_sysdict.js'
     import ItemDialog from './Item.vue'
     import { reactive, ref, defineProps, toRefs, onMounted} from 'vue'
     import Upload from "@/utils/oss/upload.vue";
     import { useStore } from "vuex";
     import { useRouter } from 'vue-router'
     import {ElMessage, ElMessageBox} from "element-plus";
-    import OrderItemDialog from "./orderItemDialog.vue";
+    import OrderItemDialog from "@/views/components/orderItemDialog.vue";
     import UserStorage from '@/cache/userStorage.js'
     const store = useStore();
     const router = useRouter()
 
     // Data
     const data = reactive({
+        orderStatus: [],
         context: { componentParent: this },// context: 父对象
         screenHeight: window.innerHeight,// screenHeight:控制高度自适应-页面高度
         otherHeight: 310,// otherHeight:控制高度自适应-表格外的高度
@@ -300,7 +244,7 @@
             id:'',
             shopId: '',
             deliveryRiderId: '',
-            userId: UserStorage.getUserId(),
+            userId: '',
             shopItem: '',
             packingCharges: '',
             deliveryCharge: '',
@@ -333,29 +277,40 @@
         // dialog
         type: '',
     })
-    // 解构抛出 直接使用
-    // const { type} = toRefs(data)
 
     // Mounted
     onMounted(() => {
         getData();
-        // window.onresize = () => {
-        //     return (() => {
-        //         data.screenHeight = window.innerHeight
-        //     })()
-        // }
-
-        // 菜单界面生成时日志记录
-        // const islog = Vue.prototype.$config.ISLOG;
-        // if (true==islog){
-        //     this.OperatorLogParam.operateFeatures = '菜单点击'
-        //     this.OperatorLogParam.operateType = LogType.Query
-        //     this.OperatorLogParam.operateState = '成功'
-        //     OperatorLog.setOperationLog(this.OperatorLogParam)
-        // }
+        getOrderStatus()
     })
 
     // Methods
+
+    /**
+     * 获取订单状态字典
+     */
+    const getOrderStatus = () => {
+        const param = {
+            parentId: '1'
+        }
+        ApiDict.selpage4sysdict(param).then(res => {
+            console.log(res)
+            if (res.code === 200){
+                console.log(res.data.records)
+                data.orderStatus = res.data.records;
+            }
+        })
+    }
+
+    const statusFormat = (row, column) => {
+        // 状态格式化
+        for (const i of data.orderStatus) {
+            if (i.id === row.status) {
+                return i.name
+            }
+        }
+    }
+
     const getData = () => {
         // 查询方法
         // 查询参数

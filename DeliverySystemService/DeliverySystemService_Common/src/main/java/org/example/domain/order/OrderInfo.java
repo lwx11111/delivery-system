@@ -110,7 +110,7 @@ public class OrderInfo extends Model<OrderInfo> {
     @Excel(name = "下单时间", exportFormat = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     @TableField("order_time")
-        @JSONField(format="yyyy-MM-dd HH:mm:ss")
+    @JSONField(format="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime orderTime;
 
     /**

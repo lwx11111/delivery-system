@@ -9,6 +9,8 @@ import io.swagger.models.auth.In;
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.dao.TestDao;
 import org.example.domain.Address;
+import org.example.domain.shop.Shop;
+import org.example.service.IShopService;
 import org.example.web.SimpleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,35 @@ public class TestController {
 
     @Autowired
     private TestDao testDao;
+
+
+    @Autowired
+    private IShopService service;
+
+    @GetMapping("/lwx")
+    public void lwx(){
+        try {
+            Shop shop = service.getShopById("1");
+//            System.out.println();
+            System.out.println(shop.getSalesVolume() == null || shop.getSalesVolume() == 0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @PostMapping("/pattern")
+    public void pattern(@RequestParam("sn") String sn){
+        System.out.println(sn);
+
+        Pattern p = Pattern.compile("[0-9a-zA-Z]{1,}");
+        Matcher m = p.matcher(sn);
+        if (!m.matches()) {
+            System.out.println("不匹配");
+        }
+    }
 
     @ResponseBody
     public SimpleResponse ttt(){

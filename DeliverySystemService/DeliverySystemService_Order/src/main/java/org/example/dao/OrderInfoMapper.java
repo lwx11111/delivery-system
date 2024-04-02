@@ -11,6 +11,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.example.domain.order.OrderItem;
 import org.example.domain.shop.ShopItem;
 import org.example.domain.shop.ShopItemVO;
+import org.example.params.GetDataNearlySevenDaysParams;
+import org.example.params.GetDataNearlySevenDaysResult;
+import org.example.params.GetHotItemDataParams;
+import org.example.params.GetHotItemDataResult;
 import org.example.vo.EarningsDataVo;
 
 import java.util.List;
@@ -26,6 +30,11 @@ import java.util.Map;
  */
 @Mapper
 public interface OrderInfoMapper extends BaseMapper<OrderInfo> {
+
+    List<GetDataNearlySevenDaysResult> getDataNearlySevenDays(GetDataNearlySevenDaysParams params) throws Exception;
+
+    List<GetHotItemDataResult> getHotItemData(GetHotItemDataParams params) throws Exception;
+
     EarningsDataVo getEarningsData(@Param("params") Map<String, String> params);
 
     List<OrderItem> listOrderItemById(@Param("params") Map<String, String> params);

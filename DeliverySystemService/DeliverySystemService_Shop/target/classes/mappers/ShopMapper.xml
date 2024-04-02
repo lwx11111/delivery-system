@@ -5,7 +5,7 @@
     <!--查询参数-->
     <sql id="selectParams">
         shop.id, user_id, name,province,county,location,score,sales_volume,min_price,delivery_charge,safety_file,
-        open_time,close_time,`status`,description,item_category,picture,category_id
+        open_time,close_time,`status`,description,picture,category_id
     </sql>
 
     <select id="getShopByOrderId" resultType="org.example.domain.shop.Shop">

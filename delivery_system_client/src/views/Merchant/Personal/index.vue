@@ -11,24 +11,29 @@
             </el-col>
         </el-row>
     </el-card>
-    <el-card style="margin-bottom: 10px">
-        <el-row>
-            <el-col :span="12">
-                <h1>收益：</h1>
-            </el-col>
-            <el-col :span="12">
-                <h1 style="color: red">{{ data.earningsData.total - data.earningsData.deliveryChargeTotal }} ￥</h1>
-            </el-col>
-        </el-row>
-        <el-row>
-            <el-col :span="12">
-                <h1>完成订单数：</h1>
-            </el-col>
-            <el-col :span="12">
-                <h1>{{data.earningsData.num}}</h1>
-            </el-col>
-        </el-row>
-    </el-card>
+<!--    <el-card style="margin-bottom: 10px">-->
+<!--        <el-row>-->
+<!--            <el-col :span="12">-->
+<!--                <h1>收益：</h1>-->
+<!--            </el-col>-->
+<!--            <el-col :span="12">-->
+<!--                <h1 style="color: red">{{ data.earningsData.total - data.earningsData.deliveryChargeTotal }} ￥</h1>-->
+<!--            </el-col>-->
+<!--        </el-row>-->
+<!--        <el-row>-->
+<!--            <el-col :span="12">-->
+<!--                <h1>完成订单数：</h1>-->
+<!--            </el-col>-->
+<!--            <el-col :span="12">-->
+<!--                <h1>{{data.earningsData.num}}</h1>-->
+<!--            </el-col>-->
+<!--        </el-row>-->
+<!--    </el-card>-->
+
+    <el-row>
+        <PieWithPadAngle style="margin-right: 20px"></PieWithPadAngle>
+        <MixedLineAndBar></MixedLineAndBar>
+    </el-row>
 
 </template>
 
@@ -40,6 +45,8 @@ import {ElMessage} from "element-plus";
 import Api from '@/api/Shop/api_shop.js'
 import ApiOrder from '@/api/Order/api_orderinfo.js'
 import UserStorage from '@/cache/userStorage.js';
+import PieWithPadAngle from '@/views/echarts/PieWithPadAngle.vue'
+import MixedLineAndBar from "../../echarts/mixedLineAndBar.vue";
 const store = useStore();
 const router = useRouter()
 
@@ -59,7 +66,7 @@ const data = reactive({
         total:'',
         num:'',
         deliveryChargeTotal: ''
-    }
+    },
 
 })
 
@@ -85,7 +92,7 @@ const getData = () => {
         console.log(res)
         if (res.code === 200){
             data.shop = res.data.records[0];
-            getEarningsData()
+            // getEarningsData()
         }
     })
 }

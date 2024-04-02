@@ -46,82 +46,6 @@
                                     </el-form-item>
                                 </el-col>
                             </el-row>
-
-<!--                            <el-row>-->
-<!--                                <el-col :span="6">-->
-<!--                                    <el-form-item label="省">-->
-<!--                                        <el-select v-model="data.formList.parentId" placeholder="请选择">-->
-<!--                                            <el-option v-for="(item, index) in data.parentCategoryList"-->
-<!--                                                       :label="item.name"-->
-<!--                                                       :value="item.id" />-->
-<!--                                        </el-select>-->
-<!--                                    </el-form-item>-->
-<!--                                </el-col>-->
-<!--                                <el-col :span="6">-->
-<!--                                    <el-form-item label="县">-->
-<!--                                        <el-select v-model="data.formList.parentId" placeholder="请选择">-->
-<!--                                            <el-option v-for="(item, index) in data.parentCategoryList"-->
-<!--                                                       :label="item.name"-->
-<!--                                                       :value="item.id" />-->
-<!--                                        </el-select>-->
-<!--                                    </el-form-item>-->
-<!--                                </el-col>-->
-<!--                                <el-col :span="6">-->
-<!--                                    <el-form-item label="具体地址">-->
-<!--                                        <el-input placeholder="请输入具体地址"-->
-<!--                                                  v-model="data.formList.location"-->
-<!--                                                  style="width: 200px"-->
-<!--                                                  @keyup.enter.native="getData">-->
-<!--                                        </el-input>-->
-<!--                                    </el-form-item>-->
-<!--                                </el-col>-->
-<!--                            </el-row>-->
-
-<!--                            <el-row>-->
-<!--                                <el-col :span="6">-->
-<!--                                    <el-form-item label="店铺评分">-->
-<!--                                        <el-input-number v-model="data.formList.score" :precision="1" :step="1">-->
-<!--                                        </el-input-number>-->
-<!--                                    </el-form-item>-->
-<!--                                </el-col>-->
-<!--                                <el-col :span="6">-->
-<!--                                    <el-form-item label="销量">-->
-<!--                                        <el-input-number v-model="data.formList.salesVolume" :step="100">-->
-<!--                                        </el-input-number>-->
-<!--                                    </el-form-item>-->
-<!--                                </el-col>-->
-<!--                                <el-col :span="6">-->
-<!--                                    <el-form-item label="起送价格">-->
-<!--                                        <el-input-number v-model="data.formList.minPrice" :precision="2" :step="1">-->
-<!--                                        </el-input-number>-->
-<!--                                    </el-form-item>-->
-<!--                                </el-col>-->
-<!--                                <el-col :span="6">-->
-<!--                                    <el-form-item label="配送费">-->
-<!--                                        <el-input-number v-model="data.formList.deliveryCharge" :precision="2" :step="1">-->
-<!--                                        </el-input-number>-->
-<!--                                    </el-form-item>-->
-<!--                                </el-col>-->
-<!--                            </el-row>-->
-
-<!--                            <el-row>-->
-<!--                                <el-col :span="8">-->
-<!--                                    <el-form-item label="开门时间">-->
-<!--                                        <el-time-picker-->
-<!--                                                v-model="data.formList.openTime"-->
-<!--                                                placeholder="请输入开门时间">-->
-<!--                                        </el-time-picker>-->
-<!--                                    </el-form-item>-->
-<!--                                </el-col>-->
-<!--                                <el-col :span="8">-->
-<!--                                    <el-form-item label="关门时间">-->
-<!--                                        <el-time-picker-->
-<!--                                                v-model="data.formList.closeTime"-->
-<!--                                                placeholder="请输入关门时间">-->
-<!--                                        </el-time-picker>-->
-<!--                                    </el-form-item>-->
-<!--                                </el-col>-->
-<!--                            </el-row>-->
                         </el-form>
                     </div>
                 </el-collapse-item>
@@ -130,24 +54,18 @@
         <el-card style="margin: 10px; border: 1px solid gold">
             <!-- 操作按钮区 -->
             <div style="margin:10px 0;">
-                <el-button
-                        type="success"
-                        icon="DocumentAdd"
-                        @click="addData()">
-                  新增
-                </el-button>
-                <el-button
-                        type="info"
-                        icon="Download"
-                        @click="downloadExcelTemplate()">
-                  下载模板
-                </el-button>
-                <el-button
-                        type="primary"
-                        icon="Upload"
-                        @click="uploadExcel()">
-                  导入
-                </el-button>
+<!--                <el-button-->
+<!--                        type="info"-->
+<!--                        icon="Download"-->
+<!--                        @click="downloadExcelTemplate()">-->
+<!--                  下载模板-->
+<!--                </el-button>-->
+<!--                <el-button-->
+<!--                        type="primary"-->
+<!--                        icon="Upload"-->
+<!--                        @click="uploadExcel()">-->
+<!--                  导入-->
+<!--                </el-button>-->
                 <el-button
                         type="warning"
                         icon="DocumentDelete"
@@ -167,10 +85,10 @@
                           icon="Close">
                     清空
                     </el-button>
-                    <el-button
-                          @click="excelData()">
-                    导出数据
-                    </el-button>
+<!--                    <el-button-->
+<!--                          @click="excelData()">-->
+<!--                    导出数据-->
+<!--                    </el-button>-->
                 </div>
             </div>
 
@@ -200,18 +118,6 @@
                         width="180"
                         align="center">
                 </el-table-column>
-<!--                 <el-table-column-->
-<!--                        prop="province"-->
-<!--                        label="省"-->
-<!--                        width="180"-->
-<!--                        align="center">-->
-<!--                </el-table-column>-->
-<!--                 <el-table-column-->
-<!--                        prop="county"-->
-<!--                        label="县"-->
-<!--                        width="180"-->
-<!--                        align="center">-->
-<!--                </el-table-column>-->
                  <el-table-column
                         prop="location"
                         label="具体地址"
@@ -242,48 +148,12 @@
                         width="180"
                         align="center">
                 </el-table-column>
-<!--                 <el-table-column-->
-<!--                        prop="safetyFile"-->
-<!--                        label="安全档案图片"-->
-<!--                        width="180"-->
-<!--                        align="center">-->
-<!--                </el-table-column>-->
-<!--                 <el-table-column-->
-<!--                        prop="openTime"-->
-<!--                        label="开门时间"-->
-<!--                        width="180"-->
-<!--                        align="center">-->
-<!--                </el-table-column>-->
-<!--                 <el-table-column-->
-<!--                        prop="closeTime"-->
-<!--                        label="关门时间"-->
-<!--                        width="180"-->
-<!--                        align="center">-->
-<!--                </el-table-column>-->
-                 <el-table-column
+                 <el-table-column :formatter="statusFormat"
                         prop="status"
                         label="状态"
                         width="180"
                         align="center">
                 </el-table-column>
-<!--                 <el-table-column-->
-<!--                        prop="description"-->
-<!--                        label="店铺描述"-->
-<!--                        width="180"-->
-<!--                        align="center">-->
-<!--                </el-table-column>-->
-<!--                 <el-table-column-->
-<!--                        prop="itemCategory"-->
-<!--                        label="物品分类"-->
-<!--                        width="180"-->
-<!--                        align="center">-->
-<!--                </el-table-column>-->
-<!--                 <el-table-column-->
-<!--                        prop="picture"-->
-<!--                        label="店铺图片路径"-->
-<!--                        width="180"-->
-<!--                        align="center">-->
-<!--                </el-table-column>-->
                 <el-table-column
                         fixed="right"
                         label="操作"
@@ -296,7 +166,7 @@
                             type="primary"
                             size="small"
                             :underline="false">
-                            编辑物品
+                            查看物品
                         </el-link>
                         <el-link
                                 style="margin-right: 20px"
@@ -410,23 +280,21 @@
     // Mounted
     onMounted(() => {
         getData();
-        // window.onresize = () => {
-        //     return (() => {
-        //         data.screenHeight = window.innerHeight
-        //     })()
-        // }
-
-        // 菜单界面生成时日志记录
-        // const islog = Vue.prototype.$config.ISLOG;
-        // if (true==islog){
-        //     this.OperatorLogParam.operateFeatures = '菜单点击'
-        //     this.OperatorLogParam.operateType = LogType.Query
-        //     this.OperatorLogParam.operateState = '成功'
-        //     OperatorLog.setOperationLog(this.OperatorLogParam)
-        // }
     })
 
     // Methods
+    const statusFormat = (row, column) => {
+        // 状态格式化
+        const statusOptions = [
+            { id: 1, name: '正常' },
+            { id: 0, name: '关闭' }
+        ]
+        for (const i of statusOptions) {
+            if (i.id === row.status) {
+                return i.name
+            }
+        }
+    }
     const getData = () => {
         // 查询方法
         // 查询参数
@@ -457,14 +325,6 @@
                 data.pageConfig.total = res.data.total
                 data.isSearch = false
             }
-
-            // 日志记录
-            // data.OperatorLogParam.operateContent = JSON.stringify(params)
-            // data.OperatorLogParam.operateFeatures = '查询列表'
-            // data.OperatorLogParam.operateType = LogType.Query
-            // data.OperatorLogParam.operateState = '成功'
-            // OperatorLog.setOperationLog(this.OperatorLogParam)
-
         })
     }
     // 添加记录
@@ -530,13 +390,6 @@
                             message: '删除失败',
                         })
                     }
-
-                    // 日志记录
-                    // this.OperatorLogParam.operateContent = JSON.stringify(dataids)
-                    // this.OperatorLogParam.operateFeatures = '删除记录'
-                    // this.OperatorLogParam.operateType = LogType.Query
-                    // this.OperatorLogParam.operateState = '成功'
-                    // OperatorLog.setOperationLog(this.OperatorLogParam)
                 })
             }).catch(() => {
                 ElMessage({
@@ -581,22 +434,6 @@
      @param response: 响应内容
      **/
     const uploadExcelCallback = (action, status, groupId, response) =>{
-        console.log("Success")
-        // if (action === 'put' && status) {
-        //     this.$notify({
-        //         type: 'success',
-        //         title: '导入成功',
-        //         message: response.message,
-        //         duration: 5000
-        //     })
-        // } else {
-        //     this.$notify({
-        //         type: 'error',
-        //         title: '导入失败',
-        //         message: response.message,
-        //         duration: 5000
-        //     })
-        // }
     }
     const selectionChanged = (val: number) => {
         // 选中行变化事件
@@ -638,13 +475,6 @@
                     })
                 }
             })
-
-            // 日志记录
-            // this.OperatorLogParam.operateContent = JSON.stringify(dataids)
-            // this.OperatorLogParam.operateFeatures = '删除记录'
-            // this.OperatorLogParam.operateType = LogType.Query
-            // this.OperatorLogParam.operateState = '成功'
-            // OperatorLog.setOperationLog(this.OperatorLogParam)
         }).catch(() => {
             ElMessage({
                 type: 'info',

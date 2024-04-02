@@ -52,6 +52,11 @@ public class OrderShopItem extends Model<OrderShopItem> {
     @TableField("amount")
     private Integer amount;
 
+    @Schema(description = "总价")
+    @Excel(name = "总价")
+    @TableField("total")
+    private Double total;
+
     @TableField(exist = false)
     private Map<String,String> params;
 

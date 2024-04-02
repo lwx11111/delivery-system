@@ -15,6 +15,46 @@
         </association>
     </resultMap>
 
+    <select id="getDataNearlySevenDays" resultType="org.example.params.GetDataNearlySevenDaysResult">
+        select d.date, IFNULL(T.total,0) total, IFNULL(T.num,0) num from
+            (
+                SELECT CURDATE() AS date
+                UNION ALL
+                SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY) AS date
+                UNION ALL
+                SELECT DATE_SUB(CURDATE(), INTERVAL 2 DAY) AS date
+                UNION ALL
+                SELECT DATE_SUB(CURDATE(), INTERVAL 3 DAY) AS date
+                UNION ALL
+                SELECT DATE_SUB(CURDATE(), INTERVAL 4 DAY) AS date
+                UNION ALL
+                SELECT DATE_SUB(CURDATE(), INTERVAL 5 DAY) AS date
+                UNION ALL
+                SELECT DATE_SUB(CURDATE(), INTERVAL 6 DAY) AS date
+            )  d
+                left join(
+                select DATE_FORMAT(order_time,'%Y-%m-%d') as order_time, sum(total_charge) as total, count(*) as num
+                from order_info
+                where shop_id = #{shopId}
+                group by DATE_FORMAT(order_time,'%Y-%m-%d')
+            ) T on T.order_time = d.date
+        GROUP BY d.date
+    </select>
+
+    <select id="getHotItemData" resultType="org.example.params.GetHotItemDataResult">
+        SELECT name ,total as value
+        from shop_item si
+         right JOIN (
+            SELECT shop_item_id, sum(total) as total
+            FROM `order_shop_item` osi
+            LEFT JOIN order_info oi on oi.id = osi.order_id
+            where shop_id = #{shopId}
+            GROUP BY shop_item_id
+            ORDER BY total desc
+            LIMIT 5
+        ) t on t.shop_item_id = si.id
+    </select>
+
     <select id="getEarningsData" resultType="org.example.vo.EarningsDataVo">
         SELECT sum(total_charge) as total, COUNT(*) as num, sum(delivery_charge) as deliveryChargeTotal
         from order_info

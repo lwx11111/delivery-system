@@ -129,29 +129,27 @@
 <!--                    </el-col>-->
 <!--                </el-row>-->
                 <el-row>
-                    <el-col :span="24">
+                    <el-col :span="6">
                         <el-form-item
                                 label="店铺图片"
                                 prop="picture"
                                 label-width="150px">
-                            <MinioUpload :file-list="data.pictureArray"
-                                         ref="uploadRef"
-                                         @uploadCallback="uploadCallbackPicture"
-                                         :limit="1">
+                            <MinioUpload :url="data.item.picture"
+                                         :disabled="type === 'detail'"
+                                         @getUrl="getUrl"
+                                         key1="picture">
                             </MinioUpload>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="24">
+                    <el-col :span="6">
                         <el-form-item
                                 label="安全档案图片"
                                 prop="safetyFile"
                                 label-width="150px">
-                            <MinioUpload :file-list="data.safetyFileArray"
-                                         ref="uploadRef"
-                                         @uploadCallback="uploadCallbackSafetyFile"
-                                         :limit="1">
+                            <MinioUpload :url="data.item.safetyFile"
+                                         :disabled="type === 'detail'"
+                                         @getUrl="getUrl"
+                                         key1="safetyFile">
                             </MinioUpload>
                         </el-form-item>
                     </el-col>
@@ -208,32 +206,7 @@
 
     // Data
     const data = reactive({
-        // 图片数组
-        pictureArray: [],
-        safetyFileArray: [],
-        // todo
-        provinces: [
-            {
-                name:"北京市",
-                id:'1'
-            },
-            {
-                name: "天津市",
-                id: "2"
-            }
-        ],
-        counties: [
-            {
-                name:"北京市",
-                id:'1'
-            },
-            {
-                name: "天津市",
-                id: "2"
-            }
-        ],
         operateTitle: '新增',
-        backUrl: '/name/shop/index',
         type: '',
         showBtn: true,
         disabled: false,
@@ -260,12 +233,6 @@
             // 选择的类型
             categoryIds:[],
         },
-        OperatorLogParam: {
-            operateContent: '',
-            operateFeatures: '',
-            operateState: '',
-            operateType: ''
-        },
         showDialog: false,
         // 类型选择
         categoryTree: [],
@@ -291,18 +258,18 @@
             safetyFile: [
                 { required: true, message: '安全档案图片不能为空', trigger: 'blur' }
             ],
-            openTime: [
-                { required: true, message: '开门时间不能为空', trigger: 'blur' }
-            ],
-            closeTime: [
-                { required: true, message: '关门时间不能为空', trigger: 'blur' }
-            ],
+            // openTime: [
+            //     { required: true, message: '开门时间不能为空', trigger: 'blur' }
+            // ],
+            // closeTime: [
+            //     { required: true, message: '关门时间不能为空', trigger: 'blur' }
+            // ],
             // description: [
             //     { required: true, message: '店铺描述不能为空', trigger: 'blur' }
             // ],
-            // picture: [
-            //     { required: true, message: '店铺图片路径不能为空', trigger: 'blur' }
-            // ]
+            picture: [
+                { required: true, message: '店铺图片路径不能为空', trigger: 'blur' }
+            ]
         },
     })
 
@@ -332,13 +299,12 @@
     })
 
     // Methods
-    const uploadCallbackPicture = (response, url) => {
-        console.log(url)
-        data.item.picture = url
-    }
-    const uploadCallbackSafetyFile = (response, url) => {
-        console.log(url)
-        data.item.safetyFile = url
+    const getUrl = (url, key1) => {
+        if (key1 === 'picture'){
+            data.item.picture = url
+        } else if (key1 === 'safetyFile'){
+            data.item.safetyFile = url
+        }
     }
 
     const init = (id, type) => {
@@ -379,24 +345,6 @@
                 console.log(res)
                 if (res.code === 200){
                     data.item = res.data;
-
-                    // 图片处理
-                    if (data.pictureArray.length === 0){
-                        let item = {
-                            url: res.data.picture,
-                        }
-                        data.pictureArray.push(item)
-                    }
-                    if (data.safetyFileArray.length === 0){
-                        let item = {
-                            url: res.data.safetyFile,
-                        }
-                        data.safetyFileArray.push(item)
-                    }
-
-                    // 分类数据
-                    console.log(data.item.categoryIds)
-
                     // 界面显示
                     data.showDialog = true;
                 } else {

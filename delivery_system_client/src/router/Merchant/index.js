@@ -24,7 +24,7 @@ const merchantRouter = {
         {
             path: '/Merchant/Order/index',
             component: MerchantOrderIndex,
-            name: '订单管理',
+            name: '我的订单',
         },
         {
             path: '/Merchant/Personal/index',

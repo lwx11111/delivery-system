@@ -277,8 +277,6 @@ const mapChoose = () => {
     })
 }
 
-
-
 /**
  * 获取url
  * @param url
@@ -286,7 +284,6 @@ const mapChoose = () => {
  * @param key2
  */
 const getUrl = (url, key1, key2) => {
-    console.log(url)
     if (key1 === 'picture'){
         data.item.picture = url
     } else if (key1 === 'safetyFile'){

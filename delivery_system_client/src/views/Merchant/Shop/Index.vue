@@ -15,24 +15,12 @@
                     type="selection"
                     width="60">
             </el-table-column>
-<!--            <el-table-column-->
-<!--                    prop="id"-->
-<!--                    label="id"-->
-<!--                    width="200"-->
-<!--                    align="center">-->
-<!--            </el-table-column>-->
             <el-table-column
                     prop="name"
                     label="店铺名"
                     width="180"
                     align="center">
             </el-table-column>
-<!--            <el-table-column-->
-<!--                    prop="province"-->
-<!--                    label="省"-->
-<!--                    width="180"-->
-<!--                    align="center">-->
-<!--            </el-table-column>-->
             <el-table-column
                     prop="score"
                     label="店铺评分"
@@ -75,18 +63,7 @@
 <!--                    width="180"-->
 <!--                    align="center">-->
 <!--            </el-table-column>-->
-            <el-table-column
-                    prop="description"
-                    label="店铺描述"
-                    width="180"
-                    align="center">
-            </el-table-column>
-<!--            <el-table-column-->
-<!--                    prop="itemCategory"-->
-<!--                    label="物品分类"-->
-<!--                    width="180"-->
-<!--                    align="center">-->
-<!--            </el-table-column>-->
+
             <el-table-column
                     fixed="right"
                     label="操作"

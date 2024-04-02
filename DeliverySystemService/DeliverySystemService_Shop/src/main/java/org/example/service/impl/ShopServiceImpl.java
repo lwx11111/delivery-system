@@ -352,9 +352,6 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
             if("description".equals(entry.getKey())){
                 query.eq("description",entry.getValue());
             }
-            if("itemCategory".equals(entry.getKey())){
-                query.eq("item_category",entry.getValue());
-            }
             // 特殊筛选
             if("screening".equals(entry.getKey())){
                 switch (entry.getValue()) {

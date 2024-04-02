@@ -18,7 +18,7 @@ import org.example.dto.OrderPayDto;
 import org.example.feign.AddressFeignApi;
 import org.example.feign.ShopFeignApi;
 import org.example.feign.UserFeignApi;
-import org.example.params.GetExpectedTimeParams;
+import org.example.params.*;
 import org.example.service.IOrderInfoService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -46,6 +46,7 @@ import cn.afterturn.easypoi.excel.imports.ExcelImportService;
 import java.io.InputStream;
 import org.example.utils.PageUtils;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -85,6 +86,16 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     private OrderStateService orderStateService;
 
     @Override
+    public List<GetDataNearlySevenDaysResult> getDataNearlySevenDays(GetDataNearlySevenDaysParams params) throws Exception {
+        return this.baseMapper.getDataNearlySevenDays(params);
+    }
+
+    @Override
+    public List<GetHotItemDataResult> getHotItemData(GetHotItemDataParams params) throws Exception {
+        return this.baseMapper.getHotItemData(params);
+    }
+
+    @Override
     public String getExpectedTime(GetExpectedTimeParams params) {
         // 得到店铺位置信息
         SimpleResponse addressRes = addressFeignApi.getDistanceByIds(params);
@@ -94,7 +105,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         // 计算预计送达时间
         now = now.plusMinutes(Long.parseLong(dto.getDuration()));
 
-        return now.format(DateTimeFormatter.ofPattern("HH-mm"));
+        return now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
     }
 
     @Override
@@ -262,6 +273,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String saveByParam(OrderInfo obj,Map<String, String> params) throws Exception{
+        obj.setOrderTime(LocalDateTime.now());
         if  (obj.getOrderItems() != null) {
             // 先保存订单基本信息 订单状态信息初始status = 0
             this.save(obj);
@@ -272,6 +284,8 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderShopItem.setShopItemId(orderItem.getShopItem().getId());
                 orderShopItem.setOrderId(orderId);
                 orderShopItem.setAmount(orderItem.getAmount());
+                Double total = orderItem.getShopItem().getPrice().multiply(BigDecimal.valueOf(orderItem.getAmount())).doubleValue();
+                orderShopItem.setTotal(total);
                 System.out.println("orderShopItem:"+orderShopItem);
                 // todo 批量插入
                 orderShopItemMapper.insert(orderShopItem);

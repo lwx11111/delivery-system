@@ -3,11 +3,12 @@ import HomePage from "@/views/homePage.vue";
 
 const CategoryIndex = () => import('@/views/Management/Shop/category/Index.vue')
 const CollectionIndex = () => import('@/views/Management/User/collection/Index.vue')
-const OrderInfoIndex = () => import('@/views/Management/Order/orderinfo/Index.vue')
+const OrderIndex = () => import('@/views/Management/Order/orderInfo/Index.vue')
 const ShopInfoIndex = () => import('@/views/Management/Shop/shopinfo/Index.vue')
 // const ShopItem = () => import('@/views/Management/Shop/shopitem.vue')
 const CommentIndex = () => import('@/views/Management/Comment/comment/Index.vue')
 const AddressIndex = () => import('@/views/Management/Address/Index.vue')
+
 const managementRouter =
 {
     path: '/',
@@ -36,24 +37,13 @@ const managementRouter =
             ],
         },
         {
-            path: '/Order',
+            path: '/OrderInfo',
             name: '订单管理',
             children: [
                 {
                     path: '/Management/orderinfo/index',
-                    component: OrderInfoIndex,
-                    name: '订单信息'
-                },
-            ],
-        },
-        {
-            path: '/Comment',
-            name: '评论管理',
-            children: [
-                {
-                    path: '/Management/Comment/comment/index',
-                    component: CommentIndex,
-                    name: '评论管理',
+                    component: OrderIndex,
+                    name: '管理订单' // name不能重复
                 },
             ],
         },

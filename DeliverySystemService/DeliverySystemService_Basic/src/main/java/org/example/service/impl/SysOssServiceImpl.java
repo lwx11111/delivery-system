@@ -198,7 +198,7 @@ public class SysOssServiceImpl extends ServiceImpl<SysOssMapper, SysOss> impleme
         // 检查存储桶是否存在，不存在就创建存储桶
         this.checkBucket(minioClient, bucketName);
         // 上传文件
-        this.upload2Minio(minioClient, file, storageFileName, bucketName);
+        this.uploadMinio(minioClient, file, storageFileName, bucketName);
         log.info("手机端上传文件到minio，工单号：{}，耗时：{}ms",groupId, (System.currentTimeMillis()-start));
         String userId="";
         try {
@@ -271,7 +271,7 @@ public class SysOssServiceImpl extends ServiceImpl<SysOssMapper, SysOss> impleme
      * @param storageFileName
      * @throws Exception
      */
-    private void upload2Minio (MinioClient minioClient, MultipartFile file, String storageFileName, String bucketName) throws Exception {
+    private void uploadMinio (MinioClient minioClient, MultipartFile file, String storageFileName, String bucketName) throws Exception {
         ByteArrayInputStream bais = new ByteArrayInputStream(file.getBytes());
         minioClient.putObject(
                 PutObjectArgs.builder().bucket(bucketName).object(storageFileName).stream(

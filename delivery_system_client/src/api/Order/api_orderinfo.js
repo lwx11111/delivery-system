@@ -3,10 +3,25 @@ const serverName = '/order'
 
 
 export default {
+  getDataNearlySevenDays(data) {
+    return request({
+      url: serverName + '/order/getDataNearlySevenDays',
+      method: 'post',
+      data: data
+    })
+  },
 
   getExpectedTime(data) {
     return request({
       url: serverName + '/order/getExpectedTime',
+      method: 'post',
+      data: data
+    })
+  },
+
+  getHotItemData(data) {
+    return request({
+      url: serverName + '/order/getHotItemData',
       method: 'post',
       data: data
     })

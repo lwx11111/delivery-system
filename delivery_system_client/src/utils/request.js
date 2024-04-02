@@ -6,6 +6,8 @@ import {ElMessage} from 'element-plus'
 import qs from "qs";
 import AuthStorage from '@/cache/authStorage.js';
 import UserStorage from "@/cache/userStorage";
+import {useRouter} from "vue-router";
+const router = useRouter();
 
 // axios默认配置
 axios.defaults.timeout = 10000 // 超时时间
@@ -73,7 +75,10 @@ axios.interceptors.response.use(
                 ElMessage.error('Token值无效，请重新登录');
                 AuthStorage.removeToken();
                 UserStorage.removeUser();
-                router.replace('/login');
+                router.push({
+                    path: 'login',
+                })
+                // router.replace('/login');
             } else {
                 // Message({
                 //     message: error.message,

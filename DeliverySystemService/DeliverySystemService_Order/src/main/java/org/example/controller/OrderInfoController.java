@@ -2,7 +2,9 @@ package org.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.domain.shop.ShopItemVO;
+import org.example.params.GetDataNearlySevenDaysParams;
 import org.example.params.GetExpectedTimeParams;
+import org.example.params.GetHotItemDataParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import org.example.web.SimpleResponse;
@@ -33,6 +35,20 @@ public class OrderInfoController {
     @Autowired
     private IOrderInfoService service;
 
+    @PostMapping("/getDataNearlySevenDays")
+    @ResponseBody
+    public SimpleResponse getDataNearlySevenDays(@RequestBody GetDataNearlySevenDaysParams params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.getDataNearlySevenDays(params));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
     @PostMapping("/getExpectedTime")
     @ResponseBody
     public SimpleResponse getExpectedTime(@RequestBody GetExpectedTimeParams params){
@@ -46,6 +62,21 @@ public class OrderInfoController {
         }
         return response;
     }
+
+    @PostMapping("/getHotItemData")
+    @ResponseBody
+    public SimpleResponse getHotItemData(@RequestBody GetHotItemDataParams params){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            response.setData(service.getHotItemData(params));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
 
     @PostMapping("/getEarningsData")
     @ResponseBody

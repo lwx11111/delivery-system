@@ -18,69 +18,6 @@
                                  :model="data.formList"
                                  size="default"
                                  label-width="100px">
-                            <el-form-item label="经度">
-                                <el-input placeholder="请输入经度"
-                                            v-model="data.formList.longitude"
-                                            style="width: 200px"
-                                            @keyup.enter.native="getData">
-                                  </el-input>
-                            </el-form-item>
-                            <el-form-item label="纬度">
-                                <el-input placeholder="请输入纬度"
-                                            v-model="data.formList.latitude"
-                                            style="width: 200px"
-                                            @keyup.enter.native="getData">
-                                  </el-input>
-                            </el-form-item>
-                            <el-form-item label="省名">
-                                <el-input placeholder="请输入省名"
-                                            v-model="data.formList.provinceName"
-                                            style="width: 200px"
-                                            @keyup.enter.native="getData">
-                                  </el-input>
-                            </el-form-item>
-                            <el-form-item label="省ID">
-                                <el-input placeholder="请输入省ID"
-                                            v-model="data.formList.provinceId"
-                                            style="width: 200px"
-                                            @keyup.enter.native="getData">
-                                  </el-input>
-                            </el-form-item>
-                            <el-form-item label="市名">
-                                <el-input placeholder="请输入市名"
-                                            v-model="data.formList.cityName"
-                                            style="width: 200px"
-                                            @keyup.enter.native="getData">
-                                  </el-input>
-                            </el-form-item>
-                            <el-form-item label="市ID">
-                                <el-input placeholder="请输入市ID"
-                                            v-model="data.formList.cityId"
-                                            style="width: 200px"
-                                            @keyup.enter.native="getData">
-                                  </el-input>
-                            </el-form-item>
-                            <el-form-item label="县名">
-                                <el-input placeholder="请输入县名"
-                                            v-model="data.formList.countyName"
-                                            style="width: 200px"
-                                            @keyup.enter.native="getData">
-                                  </el-input>
-                            </el-form-item>
-                            <el-form-item label="县ID">
-                                <el-input placeholder="请输入县ID"
-                                            v-model="data.formList.countyId"
-                                            style="width: 200px"
-                                            @keyup.enter.native="getData">
-                                  </el-input>
-                            </el-form-item>
-                            <el-form-item label="详细地址">
-                                <el-input placeholder="请输入详细地址"
-                                            v-model="data.formList.detailAddress"
-                                            style="width: 200px"
-                                            @keyup.enter.native="getData">
-                                  </el-input>
-                            </el-form-item>
                             <el-form-item label="联系人">
                                 <el-input placeholder="请输入联系人"
                                             v-model="data.formList.contacts"
@@ -102,13 +39,6 @@
                                             @keyup.enter.native="getData">
                                   </el-input>
                             </el-form-item>
-                            <el-form-item label="门牌号">
-                                <el-input placeholder="请输入门牌号"
-                                            v-model="data.formList.houseNumber"
-                                            style="width: 200px"
-                                            @keyup.enter.native="getData">
-                                  </el-input>
-                            </el-form-item>
                         </el-form>
                     </div>
                 </el-collapse-item>
@@ -124,35 +54,11 @@
                   新增
                 </el-button>
                 <el-button
-                        type="info"
-                        icon="Download"
-                        @click="downloadExcelTemplate()">
-                  下载模板
-                </el-button>
-                <el-button
-                        type="primary"
-                        icon="Upload"
-                        @click="uploadExcel()">
-                  导入
-                </el-button>
-                <el-button
                         type="warning"
                         icon="DocumentDelete"
                         @click="deleteDataMany()">
                   删除
                 </el-button>
-                <el-dropdown
-                        style="margin-left:8px;"
-                        split-button
-                        type="primary">
-                    更多功能
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item>功能1</el-dropdown-item>
-                            <el-dropdown-item>功能2</el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
                 <div style="float:right;">
                     <el-button
                           type="primary"
@@ -165,10 +71,6 @@
                           @click="resetData()"
                           icon="Close">
                     清空
-                    </el-button>
-                    <el-button
-                          @click="excelData()">
-                    导出数据
                     </el-button>
                 </div>
             </div>
@@ -187,81 +89,27 @@
                         type="selection"
                         width="60">
                 </el-table-column>
-                 <el-table-column
-                        prop="id"
-                        label="id"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="longitude"
-                        label="经度"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="latitude"
-                        label="纬度"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="provinceName"
-                        label="省名"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="provinceId"
-                        label="省ID"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="cityName"
-                        label="市名"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="cityId"
-                        label="市ID"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="countyName"
-                        label="县名"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="countyId"
-                        label="县ID"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
-                        prop="detailAddress"
-                        label="详细地址"
-                        width="180"
-                        align="center">
-                </el-table-column>
-                 <el-table-column
+                <el-table-column
                         prop="contacts"
                         label="联系人"
                         width="180"
                         align="center">
                 </el-table-column>
-                 <el-table-column
+                <el-table-column
                         prop="phone"
                         label="联系电话"
                         width="180"
                         align="center">
                 </el-table-column>
-                 <el-table-column
+                <el-table-column
                         prop="accountId"
                         label="对应用户ID"
+                        width="180"
+                        align="center">
+                </el-table-column>
+                <el-table-column
+                        prop="detailAddress"
+                        label="详细地址"
                         width="180"
                         align="center">
                 </el-table-column>

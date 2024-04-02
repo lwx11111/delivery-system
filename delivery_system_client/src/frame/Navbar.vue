@@ -86,6 +86,7 @@ import Api from '@/api/auth'
 import {ElMessage} from "element-plus";
 import UserStorage from '@/cache/userStorage.js';
 import AuthStorage from '@/cache/authStorage.js';
+import AddressStorage from '@/cache/addressStorage.js';
 import {getEncryptPassword} from "@/utils/passwordEncrypt";
 import { onBeforeRouteUpdate } from "vue-router";
 
@@ -209,6 +210,7 @@ const logout = () => {
         console.log(res);
         AuthStorage.removeToken();
         UserStorage.removeUser();
+        AddressStorage.removeAddress();
         localStorage.removeItem("shopId");
         router.push({
             path: '/login',

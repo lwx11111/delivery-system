@@ -14,16 +14,6 @@
                     ref="itemForm"
                     label-width="100px">
                 <el-row>
-<!--                    <el-col :span="6">-->
-<!--                        <el-form-item-->
-<!--                                label="userId"-->
-<!--                                prop="userId">-->
-<!--                            <el-input-->
-<!--                                    v-model="data.item.userId"-->
-<!--                                    :disabled="data.disabled">-->
-<!--                            </el-input>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
                     <el-col :span="6">
                         <el-form-item
                                 label="店铺名"
@@ -46,30 +36,6 @@
                 </el-row>
 
                 <el-row>
-<!--                    <el-col :span="6">-->
-<!--                        <el-form-item-->
-<!--                                label="省"-->
-<!--                                prop="province">-->
-<!--                            <el-select v-model="data.item.province" placeholder="请选择">-->
-<!--                                <el-option :disabled="data.disabled"-->
-<!--                                           v-for="(item, index) in data.provinces"-->
-<!--                                           :label="item.name"-->
-<!--                                           :value="item.id" />-->
-<!--                            </el-select>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
-<!--                    <el-col :span="6">-->
-<!--                        <el-form-item-->
-<!--                                label="县"-->
-<!--                                prop="county">-->
-<!--                            <el-select v-model="data.item.county" placeholder="请选择">-->
-<!--                                <el-option :disabled="data.disabled"-->
-<!--                                            v-for="(item, index) in data.counties"-->
-<!--                                           :label="item.name"-->
-<!--                                           :value="item.id" />-->
-<!--                            </el-select>-->
-<!--                        </el-form-item>-->
-<!--                    </el-col>-->
                     <el-col :span="6">
                         <el-form-item
                                 label="具体地址"
@@ -106,32 +72,32 @@
                 </el-row>
 
                 <el-row>
-                    <el-col :span="6">
-                        <el-form-item
-                                label="开门时间"
-                                prop="openTime">
-                            <el-time-picker
-                                    :disabled="data.disabled"
-                                    format="HH:mm:ss"
-                                    value-format="HH:mm:ss"
-                                    v-model="data.item.openTime"
-                                    placeholder="请选择开门时间">
-                            </el-time-picker>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item
-                                label="关门时间"
-                                prop="closeTime">
-                            <el-time-picker
-                                    :disabled="data.disabled"
-                                    format="HH:mm:ss"
-                                    value-format="HH:mm:ss"
-                                    v-model="data.item.closeTime"
-                                    placeholder="请选择开门时间">
-                            </el-time-picker>
-                        </el-form-item>
-                    </el-col>
+<!--                    <el-col :span="6">-->
+<!--                        <el-form-item-->
+<!--                                label="开门时间"-->
+<!--                                prop="openTime">-->
+<!--                            <el-time-picker-->
+<!--                                    :disabled="data.disabled"-->
+<!--                                    format="HH:mm:ss"-->
+<!--                                    value-format="HH:mm:ss"-->
+<!--                                    v-model="data.item.openTime"-->
+<!--                                    placeholder="请选择开门时间">-->
+<!--                            </el-time-picker>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
+<!--                    <el-col :span="6">-->
+<!--                        <el-form-item-->
+<!--                                label="关门时间"-->
+<!--                                prop="closeTime">-->
+<!--                            <el-time-picker-->
+<!--                                    :disabled="data.disabled"-->
+<!--                                    format="HH:mm:ss"-->
+<!--                                    value-format="HH:mm:ss"-->
+<!--                                    v-model="data.item.closeTime"-->
+<!--                                    placeholder="请选择开门时间">-->
+<!--                            </el-time-picker>-->
+<!--                        </el-form-item>-->
+<!--                    </el-col>-->
                     <el-col :span="6">
                         <el-form-item label="状态">
                             <el-select v-model="data.item.status"
@@ -164,7 +130,7 @@
                                 label-width="150px">
                             <MinioUpload :disabled="type === 'detail'"
                                          key1="safetyFile"
-                                         :url="data.item.picture"
+                                         :url="data.item.safetyFile"
                                          @getUrl="getUrl">
                             </MinioUpload>
                         </el-form-item>

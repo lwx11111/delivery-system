@@ -9,7 +9,7 @@ import org.example.domain.order.OrderItem;
 import org.example.domain.order.vo.OrderRiderVO;
 import org.example.domain.shop.ShopItem;
 import org.example.domain.shop.ShopItemVO;
-import org.example.params.GetExpectedTimeParams;
+import org.example.params.*;
 import org.example.vo.EarningsDataVo;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +28,10 @@ import java.util.Map;
 public interface IOrderInfoService extends IService<OrderInfo> {
 
     String getExpectedTime(GetExpectedTimeParams params);
+
+    List<GetDataNearlySevenDaysResult> getDataNearlySevenDays(GetDataNearlySevenDaysParams params) throws Exception;
+
+    List<GetHotItemDataResult> getHotItemData(GetHotItemDataParams params) throws Exception;
 
 
     EarningsDataVo getEarningsData(Map<String,String> params) throws Exception;

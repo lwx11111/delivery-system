@@ -17,7 +17,7 @@
         <!--用户信息-->
         <el-row>
             <el-col :span="3">
-                <el-image style="width: 100px;height: 100px" src="http://127.0.0.1:9000/test/038915195d79a495ab8ed3db4aa7f8c5_.jpg"></el-image>
+                <el-image style="width: 100px;height: 100px" src="http://127.0.0.1:9000/sys/shop1.png"></el-image>
             </el-col>
             <el-col :span="10">
                 <el-row>

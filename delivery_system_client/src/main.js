@@ -11,12 +11,14 @@ import './permission'
 import './utils/stringUtil'
 // Cache
 import AddressStorage from "@/cache/addressStorage.js";
-
 // 全局变量
 import dataJson from "../public/config.json";
+import * as echarts from 'echarts';
+
 
 const app = createApp(App);
 app.config.globalProperties.$axios = axios;
+app.config.globalProperties.$echarts = echarts;
 app.use(ElementPlus).use(router).use(store).mount('#app');
 
 // 全局注册element-plus的图标
