@@ -39,6 +39,7 @@
                 group by DATE_FORMAT(order_time,'%Y-%m-%d')
             ) T on T.order_time = d.date
         GROUP BY d.date
+        order by d.date asc
     </select>
 
     <select id="getHotItemData" resultType="org.example.params.GetHotItemDataResult">

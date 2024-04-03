@@ -1,7 +1,7 @@
 {
   "APP_NAME": "外卖系统",
   "APP_ID": "1",
-  "GATEWAY_URL": "http://localhost:8921",
+  "GATEWAY_URL": "http://localhost:9999",
   "AUTH_NAME": "manager",
   "CAPTCHA_URL": "v1/public/anon/verification-code/create?uuid=",
   "USER_TOKEN_NAME": "Delivery-UserId",

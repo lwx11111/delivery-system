@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="DeliverySystemService_xxlJob" />
         <module name="DeliverySystemService_UAA" />
         <module name="DeliverySystemService_Gateway" />
         <module name="DeliverySystemService_Shop" />
@@ -31,6 +32,7 @@
       <module name="DeliverySystemService_Order" options="-parameters" />
       <module name="DeliverySystemService_Shop" options="-parameters" />
       <module name="DeliverySystemService_UAA" options="-parameters" />
+      <module name="DeliverySystemService_xxlJob" options="-parameters" />
     </option>
   </component>
 </project>

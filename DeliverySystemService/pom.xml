@@ -17,6 +17,7 @@
       <module>DeliverySystemService_Basic</module>
       <module>DeliverySystemService_Comment</module>
       <module>DeliverySystemService_Address</module>
+      <module>DeliverySystemService_xxlJob</module>
   </modules>
 
   <parent>

@@ -111,7 +111,6 @@
                         width="180"
                         align="center">
                 </el-table-column>
-                <!--记录-->
                 <el-table-column :formatter="typeFormat"
                         prop="parentId"
                         label="大类ID"

@@ -12,15 +12,15 @@ spring:
       discovery:
         locator:
           enabled: true # 让gateway可以发现nacos中的微服务
-      routes:
-        - id: shop_route
-          uri: lb://shop # lb指的是从nacos中按照名称获取微服务,并遵循负载均衡策略
-          predicates:
-            - Path=/shop/**
-        - id: order_route
-          uri: lb://order
-          predicates:
-            - Path=/order/**
+#      routes:
+#        - id: shop_route
+#          uri: lb://shop # lb指的是从nacos中按照名称获取微服务,并遵循负载均衡策略
+#          predicates:
+#            - Path=/shop/**
+#        - id: order_route
+#          uri: lb://order
+#          predicates:
+#            - Path=/order/**
 #         权限系统网关
 #        - id: auth_gateway_route
 #          uri: lb://auth-gateway-lwx
