@@ -51,9 +51,14 @@ public class TestController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    @GetMapping("/api/demo")
+    public void demo(){
 
     }
+
+
 
     @PostMapping("/pattern")
     public void pattern(@RequestParam("sn") String sn){
