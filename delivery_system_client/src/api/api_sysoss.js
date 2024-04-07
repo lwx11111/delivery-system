@@ -1,6 +1,15 @@
 import request from '@/utils/request'
+const serverName = '/basic'
 
 export default {
+  deleteFileByUrl(data){
+    return request({
+      url: serverName + '/sysoss/anon/deleteFileByUrl',
+      method: 'post',
+      data: data
+    })
+  },
+
   deleteFileByStorageFileName(data) {
     return request({
       url: '/basic/file/sysoss/deleteFileByStorageFileName',

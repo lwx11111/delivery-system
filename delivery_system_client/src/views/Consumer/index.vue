@@ -6,7 +6,7 @@
                 <el-text style="color:black;" tag="b">配送至：</el-text>
             </el-col>
             <el-col :span="6" style="padding-top: 12px; text-align: left">
-                <el-text truncated>{{data.address.detailAddress}}</el-text>
+                <el-text truncated v-if="data.address.detailAddress !== undefined">{{data.address.detailAddress}}</el-text>
             </el-col>
             <el-col :span="8" style="padding-top: 12px;">
                 <el-text style="color:black;" size="large" tag="b">
@@ -72,29 +72,7 @@ const data = reactive({
         houseNumber: '',
     },
     // 店铺信息
-    shopList: [
-        {
-            // categoryIds: '',
-            // closeTime: "",
-            // county: "",
-            // deliveryCharge: 2,
-            // description: "这是一家店",
-            // id:"1",
-            // itemCategory: "1",
-            // location: "1",
-            // minPrice: 2,
-            // name: "店铺1",
-            // openTime: "08:00:01",
-            // params: null,
-            // picture: "http://127.0.0.1:9000/sys/shop1.png",
-            // province: "1",
-            // safetyFile: "http://127.0.0.1:9000/sys/shop1.png",
-            // salesVolume: 1,
-            // score: 1,
-            // status: 1,
-            // userId: "1",
-        }
-    ],
+    shopList: [],
     // 查询参数
     params: {
         screening: '',
@@ -122,9 +100,8 @@ const getAddressData = () => {
     ApiAddress.selpage4address(params).then(res => {
         console.log(res)
         if (res.code === 200){
-            data.address = res.data.records[0];
             // 没有地址信息
-            if (!data.address){
+            if (res.data.records.length === 0){
                 ElMessageBox.confirm(
                     '请先添加地址信息',
                     '提示',
@@ -147,10 +124,10 @@ const getAddressData = () => {
                     })
                 })
             } else {
+                data.address = res.data.records[0];
                 AddressStorage.setAddress(data.address);
                 getShopList();
             }
-
         }
     })
 }

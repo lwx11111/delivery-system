@@ -7,7 +7,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="DeliverySystemService_xxlJob" />
-        <module name="DeliverySystemService_UAA" />
         <module name="DeliverySystemService_Gateway" />
         <module name="DeliverySystemService_Shop" />
         <module name="DeliverySystemService_Order" />
@@ -19,6 +18,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="DeliverySystemService_Dependencies" target="17" />
+      <module name="DeliverySystemService_UAA" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">

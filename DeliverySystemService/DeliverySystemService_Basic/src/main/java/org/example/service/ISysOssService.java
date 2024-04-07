@@ -19,7 +19,7 @@ import java.util.Map;
  * @since 2023-11-13
  */
 public interface ISysOssService extends IService<SysOss> {
-
+    Boolean deleteFileByUrl(String url) throws Exception;
     /**
      * 对象存储
      * @param file

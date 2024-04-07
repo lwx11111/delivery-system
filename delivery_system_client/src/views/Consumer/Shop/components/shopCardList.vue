@@ -1,5 +1,5 @@
 <template>
-    <div v-for="(item, key) in props.shopList" @click="toShopDetail(key)">
+    <div v-for="(item, key) in props.shopList" @click="toShopDetail(key)" v-if="props.shopList.length !== 0">
         <el-card style="margin-bottom: 10px">
             <el-row>
                 <el-col :span="11" style="margin-right: 5px">

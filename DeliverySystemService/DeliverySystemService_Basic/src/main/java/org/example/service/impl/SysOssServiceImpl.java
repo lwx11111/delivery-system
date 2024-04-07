@@ -66,11 +66,33 @@ public class SysOssServiceImpl extends ServiceImpl<SysOssMapper, SysOss> impleme
     @Value("${minio.bucket}")
     private String bucket;
 
-//    @Override
-//    public void deleteByDate(String id) {
-//        this.baseMapper.deleteByDate(id);
-//    }
-//
+    @Override
+    public Boolean deleteFileByUrl(String url) throws Exception {
+        MinioClient minioClient = this.getMinioClient();
+        // 截取字符串
+        String[] parts = url.split("/" + bucket + "/");
+        System.out.println(url);
+        System.out.println(parts.length);
+        if (parts.length <= 1){
+            return false;
+        }
+        String storageFileName = parts[1];
+        System.out.println("截取到的字符为: " + storageFileName);
+        // 删除对象
+        minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                        .bucket(bucket)
+                        .object(storageFileName)
+                        .build()
+        );
+
+        // 数据库删除
+        Map<String,Object> param = new HashMap<String,Object>();
+        param.put("storage_file_name",storageFileName);
+        mapper.deleteByMap(param);
+        return true;
+    }
+
     public void test1() throws Exception {
         try {
             // 创建MinioClient对象
@@ -261,7 +283,6 @@ public class SysOssServiceImpl extends ServiceImpl<SysOssMapper, SysOss> impleme
         System.out.println(storageFileName);
         mapper.deleteByMap(param);
         return true;
-
     }
 
     /**

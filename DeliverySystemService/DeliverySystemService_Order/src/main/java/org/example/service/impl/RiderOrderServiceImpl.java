@@ -3,7 +3,7 @@ package org.example.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.example.dao.OrderStatusMapper;
 import org.example.dao.RiderOrderMapper;
-import org.example.domain.OrderStatusDomain;
+import org.example.domain.order.OrderStatusDomain;
 import org.example.domain.order.OrderInfo;
 import org.example.domain.user.RiderOrder;
 import org.example.service.IOrderStatusService;

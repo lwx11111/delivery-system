@@ -153,8 +153,6 @@ const initMap = () => {
 
         // 搜索自动补全插件
         const auto = new AMap.AutoComplete({
-            pageSize: 5, //每页结果数,默认10
-            pageIndex: 1, //请求页码，默认1
             input: "searchInputId",
         });
         // 搜索插件
@@ -164,11 +162,12 @@ const initMap = () => {
             pageSize: 5, //每页结果数,默认10
             pageIndex: 1, //请求页码，默认1
         });
+        // 自动补全搜索事件
         auto.on("select",select);
 
         function select(e) {
-            console.log(e)
             placeSearch.setCity(e.poi.adcode);
+            alert("请点击地图上的标记选择地址")
             placeSearch.search(e.poi.name, function (status, result){
                 console.log(status);
                 console.log(result);
@@ -176,6 +175,7 @@ const initMap = () => {
         }
         // 点击搜索得到的结果
         placeSearch.on('markerClick', function (e) {
+
             // 处理用户点击地图标记的操作
             console.log(e);
             data.position.detailAddress = e.data.address;

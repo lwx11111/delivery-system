@@ -1,18 +1,20 @@
 <template>
     <el-upload :class="{ hide_box: data.upload_btn }"
-                :action="data.minioUrl"
-               :file-list="fileList"
+               ref="minioUpload"
+               :action="data.minioUrl"
+               :file-list="data.fileList"
                :on-remove="handleRemove"
+               :limit="1"
                list-type="picture-card"
                :on-success="handleSuccess"
-               :limit="1"
+               :on-error="handleError"
                :auto-upload="true">
         <!--添加-->
         <el-icon><Plus /></el-icon>
         <!--上传文件展示-->
         <template #file="{ file }">
             <div>
-                <img class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
+                <img  class="el-upload-list__item-thumbnail" :src="file.url" alt="" />
                 <span class="el-upload-list__item-actions">
                     <!-- 放大-->
                     <span
@@ -41,7 +43,7 @@
             </div>
         </template>
     </el-upload>
-
+    <!-- 放大显示-->
     <el-dialog style="width: 800px" v-model="dialogVisible">
         <img :src="dialogImageUrl" alt="Preview Image" />
     </el-dialog>
@@ -49,10 +51,10 @@
 <script lang="ts" setup>
 import { reactive, ref, onMounted } from 'vue'
 import { Delete, Download, Plus, ZoomIn } from '@element-plus/icons-vue'
-import type { UploadProps, UploadUserFile, UploadInstance, UploadRawFile } from 'element-plus'
-
+import type { UploadProps, UploadUserFile, UploadRawFile } from 'element-plus'
 import type { UploadFile } from 'element-plus'
-import {ElMessageBox} from "element-plus";
+import { ElMessage } from "element-plus";
+import ApiOss from "@/api/api_sysoss.js";
 
 const dialogImageUrl = ref('')
 const dialogVisible = ref(false)
@@ -60,20 +62,19 @@ const disabled = ref(false)
 
 // Data
 const data = reactive({
-    // 达到limit限制时隐藏上传按钮
+    // 达到limit限制时隐藏上传按钮,false显示
     upload_btn: false,
-    minioUrl: "http://localhost:6001/sysoss/uploadOSS",
+    minioUrl: "http://localhost:8921/basic/sysoss/anon/uploadOSS",
     minioServerUrl: "http://127.0.0.1:9000/",
+    // 上传的图片数组
+    fileList:[],
+    // 图片url
+    url:'',
 })
 
-const fileList = ref<UploadUserFile[]>([
-    // {
-    //     name: '',
-    //     url: '',
-    // },
-])
 // Props
 const props = defineProps({
+    // key1 key2 用来回调时区分，key1区分来源那个，key2区分该来源具体下标
     key1:{
         type: String,
         required: false
@@ -97,41 +98,21 @@ const props = defineProps({
 
 // Mounted
 onMounted(() => {
-    console.log(props.url)
+    // 如果已经有图片
     if (props.url) {
         let obj = {
             name: 'pic',
             url: props.url
         }
-        fileList.value.push(obj);
+        data.url = props.url;
+        data.fileList.push(obj);
         data.upload_btn = true
     }
-
+    // 是否只展示
     if (props.disabled) {
         disabled.value = props.disabled
     }
 })
-
-const handleRemove = (file: UploadFile) => {
-    console.log(file)
-    // return ElMessageBox.confirm(
-    //     `Cancel the transfer of file ?`
-    // ).then(
-    //     () => true,
-    //     () => false
-    // )
-}
-
-const handlePictureCardPreview = (file: UploadFile) => {
-    console.log(file)
-    dialogImageUrl.value = file.url!
-    dialogVisible.value = true
-
-}
-
-const handleDownload = (file: UploadFile) => {
-    console.log(file)
-}
 
 /**
  * 上传成功回调函数，对象存储：提示成功，并更新文件列表、groupId，同时返回 response，调用回调函数，由调用者处理
@@ -143,14 +124,64 @@ const handleDownload = (file: UploadFile) => {
 const emits = defineEmits(["getUrl"]);
 const handleSuccess: UploadProps['onSuccess'] = (response, file, fileList) => {
     if (response.code === 200){
-        // 封装文件信息
-        const url = data.minioServerUrl + response.data.bucket + "/" + response.data.storageFileName;
         // 上传路径
-        console.log(url)
+        const url = data.minioServerUrl + response.data.bucket + "/" + response.data.storageFileName;
+        data.url = url;
         data.upload_btn = true
         // 回调
         emits("getUrl",url,props.key1,props.key2);
+    } else {
+        data.fileList = []
+        ElMessage({
+            type: 'error',
+            message: response.message
+        })
     }
+}
+
+
+/**
+ * 删除图片
+ */
+const handleRemove = (file: UploadFile) => {
+    const param = {
+        url: data.url
+    }
+    ApiOss.deleteFileByUrl(param).then(res => {
+        if (res.code === 200 && res.data === true) {
+            ElMessage({
+                type: 'success',
+                message: '删除成功'
+            })
+            data.fileList = []
+            data.upload_btn = false
+        } else {
+            ElMessage({
+                type: 'error',
+                message: '删除失败'
+            })
+        }
+    })
+
+}
+
+const handlePictureCardPreview = (file: UploadFile) => {
+    dialogImageUrl.value = file.url!
+    dialogVisible.value = true
+
+}
+
+const handleDownload = (file: UploadFile) => {
+
+}
+
+
+const handleError = (err: Error, file: UploadRawFile, fileList: UploadUserFile[]) => {
+    console.log(err, file, fileList)
+    ElMessage({
+        type: 'error',
+        message: '上传图片失败，请重新上传或联系管理员',
+    })
 }
 </script>
 <style>

@@ -3,7 +3,7 @@
         <h5 @click="addAddress()">添加地址</h5>
     </el-row>
     <el-card>
-        <el-row v-for="(item, index) in data.addressData">
+        <el-row v-for="(item, index) in data.addressData" v-if="data.addressData.length !== 0">
             <el-row style="width: 100%">
                 <el-col :span="15">
                     <h4>{{item.detailAddress}}</h4>
@@ -21,6 +21,9 @@
                 </el-col>
             </el-row>
             <el-divider></el-divider>
+        </el-row>
+        <el-row v-else>
+            还没有地址信息，点击添加地址
         </el-row>
     </el-card>
     <AddAddress ref="addressRef"></AddAddress>

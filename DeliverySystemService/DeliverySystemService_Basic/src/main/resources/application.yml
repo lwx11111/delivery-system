@@ -65,18 +65,3 @@ minio:
   bucket: test
 
 
-xxl:
-  job:
-    accessToken:
-    admin:
-      addresses: http://43.138.149.121:8080/xxl-job-admin
-      #如需开启xxl修改为true，开启时必须保证能连接到address地址，否则应用无法启动
-      isopen: true
-    executor:
-      address:
-      appname: ser-wfm-costaudit
-      ip: 10.238.89.220
-      port: 9999
-      logpath: /home/tmn/job/jobhandler
-      logretentiondays: 30
-

@@ -1,5 +1,7 @@
 package org.example.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @Tag(name = "服务")
-@CrossOrigin
+//@CrossOrigin
 @RequestMapping("/sysoss")
 public class SysOssController {
     @Autowired
@@ -40,7 +42,7 @@ public class SysOssController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/uploadOSS")
+    @PostMapping("/anon/uploadOSS")
     @ResponseBody
     @Operation(description = "上传附件")
     public SimpleResponse uploadOSS(@RequestParam MultipartFile file, @RequestParam(required = false) String groupId,
@@ -53,6 +55,27 @@ public class SysOssController {
         SimpleResponse response = new SimpleResponse();
         try {
             response.setData(service.uploadOSS(file, groupId,groupName,bizId,groupInfoId,groupInfoName,fileName, tagName));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    /**
+     * 删除文件
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/anon/deleteFileByUrl")
+    @ResponseBody
+    @Operation(description = "上传附件")
+    public SimpleResponse deleteFileByUrl(@RequestBody Map<String, String> json) throws Exception {
+        SimpleResponse response = new SimpleResponse();
+        try {
+            String url = json.get("url");
+            response.setData(service.deleteFileByUrl(url));
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);
