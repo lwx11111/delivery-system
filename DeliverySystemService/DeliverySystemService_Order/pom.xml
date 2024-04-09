@@ -12,12 +12,6 @@
     <artifactId>DeliverySystemService_Order</artifactId>
 
     <dependencies>
-        <!--支付宝-->
-        <dependency>
-            <groupId>com.alipay.sdk</groupId>
-            <artifactId>alipay-sdk-java</artifactId>
-            <version>4.39.2.ALL</version>
-        </dependency>
         <dependency>
             <groupId>org.example</groupId>
             <artifactId>DeliverySystemService_Common</artifactId>
@@ -54,11 +48,11 @@
         </dependency>
         <!--mybatisPlus
               springBoot3 使用springboot6 删除 NestedIOException
-              mybatisPlus version >= 3.5.3.1-->
+              mybatisPlus version >= 3.5.3-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
-            <version>3.5.3.1</version>
+            <version>3.5.3</version>
         </dependency>
         <!-- fastjson -->
         <dependency>
@@ -71,6 +65,12 @@
             <groupId>com.github.pagehelper</groupId>
             <artifactId>pagehelper</artifactId>
             <version>5.1.11</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>jsqlparser</artifactId>
+                    <groupId>com.github.jsqlparser</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--velocity 基于java的模板引擎-->
         <dependency>

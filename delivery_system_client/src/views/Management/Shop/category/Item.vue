@@ -140,6 +140,9 @@
             name: [
               { required: true, message: '分类名不能为空', trigger: 'blur' }
             ],
+            picture: [
+                { required: true, message: '图片不能为空', trigger: 'blur' }
+            ],
         },
         show: true,
     })

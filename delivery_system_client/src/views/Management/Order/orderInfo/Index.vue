@@ -260,13 +260,6 @@
         },
         // tableData:表格数据
         tableData: [],
-        // OperatorLogParam:用于记录日志
-        OperatorLogParam: {
-            operateContent: '',
-            operateFeatures: '',
-            operateState: '',
-            operateType: ''
-        },
         activeName: '1',
         // 分页配置
         pageConfig: {
@@ -333,21 +326,15 @@
             pageIndex : data.pageConfig.currentPage,
             pageSize : data.pageConfig.pageSize
         }
+        console.log(params)
         // 后台请求
         Api.selpage4orderinfo(params).then(res=> {
+            console.log(res)
             if (res.code === 200){
                 data.tableData = res.data.records
                 data.pageConfig.total = res.data.total
                 data.isSearch = false
             }
-
-            // 日志记录
-            // data.OperatorLogParam.operateContent = JSON.stringify(params)
-            // data.OperatorLogParam.operateFeatures = '查询列表'
-            // data.OperatorLogParam.operateType = LogType.Query
-            // data.OperatorLogParam.operateState = '成功'
-            // OperatorLog.setOperationLog(this.OperatorLogParam)
-
         })
     }
     // 添加记录

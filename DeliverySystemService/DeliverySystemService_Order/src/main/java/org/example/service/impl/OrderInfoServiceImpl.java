@@ -10,6 +10,7 @@ import org.example.dao.OrderInfoMapper;
 import org.example.domain.order.OrderItem;
 import org.example.domain.order.OrderShopItem;
 import org.example.domain.order.vo.OrderRiderVO;
+import org.example.domain.shop.Category;
 import org.example.domain.shop.Shop;
 import org.example.domain.user.SysAccount;
 import org.example.dto.DistanceDto;
@@ -330,51 +331,57 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     @Override
-    public IPage<OrderInfo> selectPage(Map<String, String> params) throws Exception{
+    public IPage<OrderInfo> selectPage(Map<String, String> params){
         Page<OrderInfo> page = PageUtils.pageHandler(params);
         QueryWrapper<OrderInfo> query = getQuery(params);
         IPage<OrderInfo> result = this.page(page, query);
-
-        for (OrderInfo orderInfo : result.getRecords()) {
-            System.out.println(orderInfo);
-            // 查询订单物品
-            Map<String, String> param = new HashMap<>();
-            param.put("id", orderInfo.getId());
-            List<OrderItem> orderItems =  this.listOrderItemById(param);
-            orderInfo.setOrderItems(orderItems);
-            // 查询商铺信息
-            SimpleResponse simpleResponse = shopFeignApi.select(orderInfo.getShopId());
-            System.out.println("simpleResponse:"+simpleResponse);
-
-            if  (simpleResponse.getCode() == 200) {
-                // LinkedHashMap To Object
-                Shop shop = JSON.parseObject(JSON.toJSONString(simpleResponse.getData()), Shop.class);
-                System.out.println("shop:"+shop);
-                orderInfo.setShop(shop);
-            }
-
-            // 用户 骑手名字
-            if (orderInfo.getUserId() != null) {
-                SimpleResponseOld userRes = userFeignApi.getAccountById(orderInfo.getUserId());
-                if  ("20000".equals(userRes.getCode())) {
-                    // LinkedHashMap To Object
-                    SysAccount user = JSON.parseObject(JSON.toJSONString(userRes.getData()), SysAccount.class);
-                    orderInfo.setUserName(user.getAccountName());
-                }
-            }
-
-            if (orderInfo.getRiderId() != null) {
-                SimpleResponseOld riderRes = userFeignApi.getAccountById(orderInfo.getRiderId());
-                if  ("20000".equals(riderRes.getCode())) {
-                    // LinkedHashMap To Object
-                    SysAccount rider = JSON.parseObject(JSON.toJSONString(riderRes.getData()), SysAccount.class);
-                    orderInfo.setRiderName(rider.getAccountName());
-                }
-            }
-        }
-
-
         return result;
+
+//        Page<OrderInfo> page = PageUtils.pageHandler(params);
+//        System.out.println(page.getTotal());
+//        System.out.println("分页：" + params.get("pageSize"));
+//
+//        QueryWrapper<OrderInfo> query = getQuery(params);
+//        IPage<OrderInfo> result = this.page(page, query);
+//        System.out.println(result.getSize());
+//        System.out.println("结果：" + result.getTotal());
+//        for (OrderInfo orderInfo : result.getRecords()) {
+//            // 查询订单物品
+//            Map<String, String> param = new HashMap<>();
+//            param.put("id", orderInfo.getId());
+//            List<OrderItem> orderItems =  this.listOrderItemById(param);
+//            orderInfo.setOrderItems(orderItems);
+//            // 查询商铺信息
+//            SimpleResponse simpleResponse = shopFeignApi.select(orderInfo.getShopId());
+//
+//            if  (simpleResponse.getCode() == 200) {
+//                // LinkedHashMap To Object
+//                Shop shop = JSON.parseObject(JSON.toJSONString(simpleResponse.getData()), Shop.class);
+//                orderInfo.setShop(shop);
+//            }
+//
+//            // 用户 骑手名字
+//            if (orderInfo.getUserId() != null) {
+//                SimpleResponseOld userRes = userFeignApi.getAccountById(orderInfo.getUserId());
+//                if  ("20000".equals(userRes.getCode())) {
+//                    // LinkedHashMap To Object
+//                    SysAccount user = JSON.parseObject(JSON.toJSONString(userRes.getData()), SysAccount.class);
+//                    orderInfo.setUserName(user.getAccountName());
+//                }
+//            }
+//
+//            if (orderInfo.getRiderId() != null) {
+//                SimpleResponseOld riderRes = userFeignApi.getAccountById(orderInfo.getRiderId());
+//                if  ("20000".equals(riderRes.getCode())) {
+//                    // LinkedHashMap To Object
+//                    SysAccount rider = JSON.parseObject(JSON.toJSONString(riderRes.getData()), SysAccount.class);
+//                    orderInfo.setRiderName(rider.getAccountName());
+//                }
+//            }
+//        }
+//        System.out.println("结果1：" + result.getTotal());
+//
+//        return result;
     }
 
     @Override

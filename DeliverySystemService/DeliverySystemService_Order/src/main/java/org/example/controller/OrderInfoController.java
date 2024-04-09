@@ -341,8 +341,7 @@ public class OrderInfoController {
     public SimpleResponse selectPage(@RequestBody Map<String, String> params) {
         SimpleResponse response = new SimpleResponse();
         try {
-            IPage<OrderInfo> page = service.selectPage(params);
-            response.setData(page);
+            response.setData(service.selectPage(params));
         } catch (Exception e) {
             e.printStackTrace();
             response.setCode(500);

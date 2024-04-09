@@ -170,7 +170,6 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
      * @return
      */
     private QueryWrapper<Category> getQuery(Map<String, String> params){
-        System.out.println("params = " + params);
         QueryWrapper<Category> query  = new QueryWrapper<>();
         if(params==null||params.size()<1) {
             return  query;
