@@ -26,6 +26,8 @@ import java.util.Map;
  */
 public interface IShopService extends IService<Shop> {
 
+    void calculateScore() throws Exception;
+
     void updateSumScore(UpdateSumScoreParams updateSumScoreParams) throws Exception;
 
     void salesVolumePlus(String shopId) throws Exception;

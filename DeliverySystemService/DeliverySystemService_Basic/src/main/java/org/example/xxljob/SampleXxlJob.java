@@ -1,9 +1,11 @@
-package org.example.executor.service.jobhandler;
+package org.example.xxljob;
 
 import com.xxl.job.core.context.XxlJobHelper;
 import com.xxl.job.core.handler.annotation.XxlJob;
+import org.example.feign.ShopFeignApi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.BufferedInputStream;
@@ -30,6 +32,15 @@ import java.util.concurrent.TimeUnit;
 public class SampleXxlJob {
     private static Logger logger = LoggerFactory.getLogger(SampleXxlJob.class);
 
+    @Autowired
+    private ShopFeignApi shopFeignApi;
+
+    @XxlJob("calculateScore")
+    public void calculateScore() throws Exception {
+        XxlJobHelper.log("calculateScore");
+        shopFeignApi.calculateScore();
+    }
+
 
     /**
      * 1、简单任务示例（Bean模式）
@@ -45,12 +56,7 @@ public class SampleXxlJob {
         // default success
     }
 
-    @XxlJob("lwxdemo")
-    public void lwxdemo() throws Exception {
-        XxlJobHelper.log("Lwx");
 
-        System.out.println("lwx");
-    }
 
 
     /**

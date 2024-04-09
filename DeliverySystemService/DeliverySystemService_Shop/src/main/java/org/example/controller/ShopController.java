@@ -36,6 +36,24 @@ public class ShopController {
     private IShopService service;
 
     /**
+     * 计算分数 非权限
+     * @return
+     */
+    @PostMapping("/anon/calculateScore")
+    @ResponseBody
+    SimpleResponse calculateScore(){
+        SimpleResponse response = new SimpleResponse();
+        try {
+            service.calculateScore();
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
+        return response;
+    }
+
+    /**
      * 更新总分
      * @return
      */

@@ -72,6 +72,25 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     private AddressFeignApi addressFeignApi;
 
     @Override
+    public void calculateScore() throws Exception {
+        List<Shop> res = this.list();
+        System.out.println(res.size());
+        for (Shop item : res) {
+            Integer score = null;
+            if (item.getSumPeople() == 0 || item.getSumScore() == 0) {
+                score = 4;
+            } else {
+                score = item.getSumScore() / item.getSumPeople();
+            }
+
+            LambdaUpdateWrapper<Shop> wrapper = new LambdaUpdateWrapper<Shop>()
+                    .eq(Shop::getId, item.getId())
+                    .set(Shop::getScore, score);
+            this.update(wrapper);
+        }
+    }
+
+    @Override
     public void updateSumScore(UpdateSumScoreParams updateSumScoreParams) throws Exception {
         LambdaUpdateWrapper<Shop> wrapper = new LambdaUpdateWrapper<Shop>()
                 .eq(Shop::getId, updateSumScoreParams.getShopId())
