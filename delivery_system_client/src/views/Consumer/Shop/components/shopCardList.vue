@@ -1,10 +1,13 @@
 <template>
     <div v-for="(item, key) in props.shopList" @click="toShopDetail(key)" v-if="props.shopList.length !== 0">
-        <el-card style="margin-bottom: 10px">
+        <el-card style="margin-bottom: 10px; width: 1000px; height: 400px">
             <el-row>
+                <!--左侧图片-->
                 <el-col :span="11" style="margin-right: 5px">
-                    <el-image :src="item.picture"></el-image>
+                    <el-image fit="fill" :src="item.picture"
+                              style="width: 95%; height: 350px"></el-image>
                 </el-col>
+                <!--右侧-->
                 <el-col :span="12">
                     <el-row>
                         <span style="font-size: 20px;font-weight: bold;">

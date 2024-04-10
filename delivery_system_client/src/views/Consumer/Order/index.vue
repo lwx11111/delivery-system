@@ -103,6 +103,8 @@
             </el-row>
         </el-card>
     </div>
+    <el-empty v-if="!data.isHaveData" :image-size="50" description="没有数据了" />
+
     <PublishComment ref="commentDialog"></PublishComment>
 </template>
 
@@ -195,17 +197,53 @@ const data = reactive({
         userId: UserStorage.getUserId(),
         status: '',
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 5
     },
+    // 是否还有数据
+    isHaveData: true,
 })
 
 // Mounted
 onMounted(() => {
+    // 初始化数据
+    initData();
+    // 挂载dom后注册onBottom事件
+    window.addEventListener('scroll', onBottom)
     getOrderStatus()
     getOrderList(0);
 })
 
+/**
+ * 监听触底
+ */
+const onBottom = () => {
+    const scrollHeight = document.documentElement.scrollHeight // 可滚动区域的高
+    const scrollTop = document.documentElement.scrollTop // 已经滚动区域的高
+    const clientHeight = document.documentElement.clientHeight // 可视区高度
+    // 以滚动高度 + 当前视口高度  >= 可滚动高度 = 触底
+    if (clientHeight + scrollTop >= scrollHeight) {
+        console.log("触底")
+        if (data.isHaveData){
+            data.params.pageIndex = data.params.pageIndex + 1;
+            getOrderList(getStatusByTabName())
+        }
+
+    }
+}
+
 // Methods
+
+/**
+ * 初始化数据
+ *  分页相关的初始化
+ *  列表数据初始化
+ */
+const initData = () => {
+    // 初始化数据
+    data.orderList = [];
+    data.params.pageIndex = 1;
+    data.isHaveData = true
+}
 
 const commentDialog = ref();
 const toComment = (key) => {
@@ -227,20 +265,25 @@ const getOrderStatus = () => {
         }
     })
 }
+
 // 查询订单列表
 const getOrderList = (status) => {
-    // 0默认全部订单
+    // 0 默认全部订单
     if (status === 0){
         data.params.status = '';
     } else {
         data.params.status = status;
     }
     Api.selpage4orderinfo(data.params).then(res => {
+        console.log(res)
         if (res.code === 200){
-            console.log(res.data.records)
-            data.orderList = res.data.records;
+            if (res.data.records.length === 0){
+                data.isHaveData = false;
+                return;
+            }
             // 订单状态赋值
-            for (let i = 0; i < data.orderList.length; i++) {
+            for (let i = 0; i < res.data.records.length; i++) {
+                data.orderList.push(res.data.records[i]);
                 if (data.orderList[i].statusName === null || data.orderList[i].statusName === undefined || data.orderList[i].statusName === ''){
                     for (let j = 0; j < data.orderStatus.length; j++){
                         if (data.orderList[i].status.toString() === data.orderStatus[j].value){
@@ -248,9 +291,9 @@ const getOrderList = (status) => {
                         }
                     }
                 }
-
             }
         }
+        console.log(data.orderList)
     })
 }
 
@@ -264,25 +307,31 @@ const toOrderDetail = (key) => {
     })
 }
 
-// 菜单栏点击事件
+/**
+ * 菜单栏点击事件
+ */
 const handleClick = (tab: TabsPaneContext, event: Event) => {
-    console.log(tab);
-    switch (tab.props.name){
+    initData();
+    // 状态栏名字赋值
+    data.tabName = tab.props.name
+    getOrderList(getStatusByTabName())
+}
+
+/**
+ * 根据状态栏名字返回状态码
+ */
+const getStatusByTabName = () => {
+    switch (data.tabName){
         case 'allOrder' :
-            getOrderList(0);
-            break;
+            return 0;
         case 'toPay':
-            getOrderList(1);
-            break;
+            return 1;
         case 'toReceive':
-            getOrderList(4);
-            break;
+            return 4;
         case 'toComment':
-            getOrderList(5);
-            break;
+            return 5;
         case 'refund':
-            getOrderList(8);
-            break;
+            return 8;
     }
 }
 

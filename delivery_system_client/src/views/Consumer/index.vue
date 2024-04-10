@@ -33,11 +33,12 @@
         <ScreeningList @get-screening-index="getScreeningIndex"></ScreeningList>
         <!--商品信息-->
         <ShopCardList :shop-list="data.shopList"></ShopCardList>
+        <el-empty v-if="!data.isHaveData" :image-size="50" description="没有数据了" />
     </div>
 </template>
 
 <script lang="ts" setup>
-import { reactive, ref, onMounted, toRefs, inject } from 'vue'
+import { reactive, ref, onMounted, toRefs, inject, onUnmounted, watch } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
 import ApiShop from '@/api/Shop/api_shop.js'
@@ -79,16 +80,45 @@ const data = reactive({
         name:'',
         categoryId: '',
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 5
     },
+    // 是否还有数据
+    isHaveData: true,
 })
 
 // Mounted
 onMounted(() => {
+    // 初始化数据
+    data.shopList = [];
+    // 挂载dom后注册onBottom事件
+    window.addEventListener('scroll', onBottom)
     getAddressData();
 })
 
+// 页面销毁移除scroll事件
+onUnmounted(() => {
+    window.removeEventListener('scroll', onBottom)
+})
+
 // Methods
+
+/**
+ * 监听触底
+ */
+const onBottom = () => {
+    const scrollHeight = document.documentElement.scrollHeight // 可滚动区域的高
+    const scrollTop = document.documentElement.scrollTop // 已经滚动区域的高
+    const clientHeight = document.documentElement.clientHeight // 可视区高度
+    // 以滚动高度 + 当前视口高度  >= 可滚动高度 = 触底
+    if (clientHeight + scrollTop >= scrollHeight) {
+        console.log("触底")
+        if (data.isHaveData){
+            data.params.pageIndex = data.params.pageIndex + 1;
+            getShopList();
+        }
+
+    }
+}
 
 /**
  * 获取地址信息
@@ -136,6 +166,7 @@ const getAddressData = () => {
  * 店铺列表
  */
 const getShopList = () => {
+    // 删除key
     delete data.address.shopId;
     delete data.address.params;
     data.params.address = JSON.stringify(data.address) ;
@@ -143,7 +174,13 @@ const getShopList = () => {
     ApiShop.selpage4shop(data.params).then(res => {
         console.log(res)
         if (res.code === 200){
-            data.shopList = res.data.records;
+            if (res.data.records.length === 0){
+                data.isHaveData = false;
+                return;
+            }
+            for ( let i = 0; i < res.data.records.length; i++ ){
+                data.shopList.push(res.data.records[i]);
+            }
         }
     })
 }
@@ -153,6 +190,7 @@ const getShopList = () => {
  * @param index 筛选条件的下标
  */
 const getScreeningIndex = (index) => {
+    data.shopList = [];
     data.params.screening = index;
     getShopList();
 }

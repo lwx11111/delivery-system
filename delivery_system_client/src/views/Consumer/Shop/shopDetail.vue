@@ -46,10 +46,9 @@
 
                 <!--菜品列表-->
                 <el-col :span="24" style="text-align: center">
-                    <!--todo 高度-->
-                    <el-scrollbar height="500px" style="padding: 10px">
+                    <el-scrollbar ref="shopItemScroll" @scroll="onScroll" height="500px" style="padding: 10px">
                         <el-space direction="vertical">
-                            <el-card v-for="(item, key) in data.shopItemList">
+                            <el-card v-for="(item, key) in data.shopItemList" style="width: 500px; height: 250px" >
                                 <el-row>
                                     <!--图片-->
                                     <el-col :span="11"
@@ -110,8 +109,10 @@
                                 </el-row>
                             </el-card>
                         </el-space>
+                        <el-empty v-if="!data.isHaveData" :image-size="30" description="没有数据了" />
                     </el-scrollbar>
                 </el-col>
+
             </el-row>
             <!--购物车-->
             <el-card style="border: 1px solid gold ">
@@ -261,14 +262,18 @@ const data = reactive({
     params: {
         shopId: '',
         pageIndex: 1,
-        pageSize: 10
+        pageSize: 5
     },
+    // 是否还有数据
+    isHaveData: true,
 })
 
 // Mounted
+
 onMounted(() => {
     data.shop.id = route.query.shopId;
     data.params.shopId = route.query.shopId;
+    data.shopItemList = [];
     getShop();
     getAddressByShopId();
     getShopItemList();
@@ -277,6 +282,25 @@ onMounted(() => {
 })
 
 // Methods
+
+/**
+ * 触底事件
+ * @param options
+ */
+const shopItemScroll = ref();
+const onScroll = (options: any) => {
+    let wrapRef = shopItemScroll.value.wrapRef
+    shopItemScroll.value.moveY = wrapRef.scrollTop * 100 / wrapRef.clientHeight
+    shopItemScroll.value.moveX = wrapRef.scrollLeft * 100 / wrapRef.clientWidth
+    let poor = wrapRef.scrollHeight - wrapRef.clientHeight
+    // 判断滚动到底部
+    if (options.scrollTop + 1 >= poor) {
+        if (data.isHaveData){
+            data.params.pageIndex  = data.params.pageIndex + 1;
+            getShopItemList();
+        }
+    }
+}
 
 const getAddressByShopId = () => {
     ApiAddress.getAddressByShopId(data.shop.id).then(res => {
@@ -346,12 +370,21 @@ const getShop = () => {
         }
     })
 }
-// 菜品列表
+
+/**
+ * 获取菜品列表
+ */
 const getShopItemList = () => {
     ApiShopItem.selpage4shopitem(data.params).then(res => {
-        console.log(res)
         if (res.code === 200){
-            data.shopItemList = res.data.records;
+            for ( let i = 0; i < res.data.records.length; i++ ){
+                data.shopItemList.push(res.data.records[i]);
+            }
+            // 触底总是触发多次
+            if(  data.params.pageIndex >= res.data.pages ) {
+                data.isHaveData = false;
+                return;
+            }
         }
     })
 }

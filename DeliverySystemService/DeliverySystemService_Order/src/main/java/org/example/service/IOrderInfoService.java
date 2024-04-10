@@ -82,7 +82,7 @@ public interface IOrderInfoService extends IService<OrderInfo> {
      * @param params
      * @return: IPage<OrderInfo>
     */
-    IPage<OrderInfo> selectPage(Map<String, String> params);
+    IPage<OrderInfo> selectPage(Map<String, String> params) throws Exception;
 
     /**
      * 分页查询-自定义sql-Wrapper
