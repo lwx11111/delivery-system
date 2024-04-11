@@ -7,6 +7,8 @@ import org.example.domain.shop.ShopItemVO;
 import org.example.params.UpdateSumScoreParams;
 import org.example.web.SimpleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.IOException;
 import java.util.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,15 +62,8 @@ public class ShopController {
     @PostMapping("/shop/updateSumScore")
     @ResponseBody
     SimpleResponse updateSumScore(@RequestBody UpdateSumScoreParams updateSumScoreParams){
-        SimpleResponse response = new SimpleResponse();
-        try {
-            service.updateSumScore(updateSumScoreParams);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.setCode(500);
-            response.setMessage(e.getMessage());
-        }
-        return response;
+        service.updateSumScore(updateSumScoreParams);
+        return new SimpleResponse.SimpleResponseBuilder().success().build();
     }
 
     @PostMapping("/salesVolumePlus")
@@ -88,15 +83,13 @@ public class ShopController {
     @GetMapping("/getShopByOrderId/{orderId}")
     @ResponseBody
     public SimpleResponse getShopByOrderId(@PathVariable(name = "orderId") String orderId){
-        SimpleResponse response = new SimpleResponse();
         try {
-            response.setData(service.getShopByOrderId(orderId));
+            Shop shop = service.getShopByOrderId(orderId);
+            return new SimpleResponse.SimpleResponseBuilder().success(shop).build();
         } catch (Exception e) {
             e.printStackTrace();
-            response.setCode(500);
-            response.setMessage(e.getMessage());
+            return new SimpleResponse.SimpleResponseBuilder().failure(e.getMessage()).build();
         }
-        return response;
     }
 
     @GetMapping("/listShopItemsByShopId/{id}")
@@ -211,8 +204,9 @@ public class ShopController {
 
     @PostMapping("/selby")
     @ResponseBody
-    public List<Shop> selectBy(@RequestBody(required = false) Map<String, String> params) {
-        return  service.selectBy(params);
+    public SimpleResponse selectBy(@RequestBody(required = false) Map<String, String> params) {
+        List<Shop> shops = service.selectBy(params);
+        return new SimpleResponse.SimpleResponseBuilder().success(shops).build();
     }
 
     @PostMapping("/selpage")

@@ -38,12 +38,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.common.collect.Lists;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.imports.ExcelImportService;
+import org.webjars.NotFoundException;
 
 import java.io.InputStream;
 
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -91,7 +93,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     }
 
     @Override
-    public void updateSumScore(UpdateSumScoreParams updateSumScoreParams) throws Exception {
+    public void updateSumScore(UpdateSumScoreParams updateSumScoreParams) {
         LambdaUpdateWrapper<Shop> wrapper = new LambdaUpdateWrapper<Shop>()
                 .eq(Shop::getId, updateSumScoreParams.getShopId())
                 .setSql("sum_score = sum_score + " + updateSumScoreParams.getScore())
@@ -261,6 +263,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     public IPage<Shop> selpageCustomSqlByMap(Map<String, String> params) {
         Page<Shop> page = PageUtils.pageHandler(params);
         IPage<Shop> result = this.baseMapper.selpageCustomSqlByMap(page, params);
+
         return result;
     }
 

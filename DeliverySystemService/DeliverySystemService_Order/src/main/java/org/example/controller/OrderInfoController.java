@@ -338,15 +338,17 @@ public class OrderInfoController {
     @PostMapping("/selpage")
     @Operation(description = "分页查询")
     @ResponseBody
+    @ExceptionHandler
     public SimpleResponse selectPage(@RequestBody Map<String, String> params) {
         SimpleResponse response = new SimpleResponse();
-        try {
-            response.setData(service.selectPage(params));
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.setCode(500);
-            response.setMessage(e.getMessage());
-        }
+//        try {
+//            response.setData(service.selectPage(params));
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            response.setCode(500);
+//            response.setMessage(e.getMessage());
+//        }
+        response.setData(service.selectPage(params));
         return response;
     }
 

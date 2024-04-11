@@ -1,14 +1,9 @@
 package org.example.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.parser.Feature;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
 import jakarta.servlet.http.HttpServletRequest;
 import org.example.dao.TestDao;
-import org.example.domain.Address;
 import org.example.domain.shop.Shop;
 import org.example.service.IShopService;
 import org.example.web.SimpleResponse;
@@ -18,11 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,7 +26,6 @@ public class TestController {
 
     @Autowired
     private TestDao testDao;
-
 
     @Autowired
     private IShopService service;
