@@ -11,6 +11,16 @@
     <artifactId>DeliverySystemService_Common</artifactId>
 
     <dependencies>
+        <!--aop-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+        </dependency>
         <!--引入spring-boot-starter-web,支持web开发-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

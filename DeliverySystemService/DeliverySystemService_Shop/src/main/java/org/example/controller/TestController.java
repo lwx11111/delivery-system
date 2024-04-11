@@ -3,8 +3,8 @@ package org.example.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import jakarta.servlet.http.HttpServletRequest;
+import org.example.annotation.SysLog;
 import org.example.dao.TestDao;
-import org.example.domain.shop.Shop;
 import org.example.service.IShopService;
 import org.example.web.SimpleResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +30,11 @@ public class TestController {
     @Autowired
     private IShopService service;
 
+    @SysLog(name = "lwx")
     @GetMapping("/lwx")
-    public void lwx(){
-        try {
-            Shop shop = service.getShopById("1");
-//            System.out.println();
-            System.out.println(shop.getSalesVolume() == null || shop.getSalesVolume() == 0);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public SimpleResponse lwx(@RequestBody String jsonData){
+        System.out.println("123");
+        return new SimpleResponse.SimpleResponseBuilder().success().build();
     }
 
     @GetMapping("/api/demo")
