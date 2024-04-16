@@ -3,6 +3,14 @@ const serverName = '/order'
 
 
 export default {
+  getOrderIdByMessageId(data){
+    return request({
+      url: serverName + '/order/getOrderIdByMessageId',
+      method: 'get',
+      data: data
+    })
+  },
+
   getDataNearlySevenDays(data) {
     return request({
       url: serverName + '/order/getDataNearlySevenDays',

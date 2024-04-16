@@ -197,9 +197,15 @@ public class ShopController {
 
 
     @PostMapping("/delby")
-    @Operation(description = "条件删除店铺信息")
-    public void deleteBy(@RequestBody(required = false) Map<String, String> params) {
-        service.deleteBy(params);
+    @Operation(description = "逻辑删除")
+    public SimpleResponse deleteBy(@RequestBody(required = false) Map<String, String> params) {
+        try {
+            service.deleteBy(params);
+            return new SimpleResponse.SimpleResponseBuilder().success().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new SimpleResponse.SimpleResponseBuilder().failure(e.getMessage()).build();
+        }
     }
 
     @PostMapping("/selby")
@@ -217,7 +223,6 @@ public class ShopController {
         try {
             String addressObject = params.get("address");
             if (addressObject != null){
-                System.out.println(addressObject);
                 // param字段值为null 会失败
                 Address address =  JSONObject.parseObject(addressObject, Address.class);
                 IPage<Shop> page = service.selectPage(params, address);

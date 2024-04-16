@@ -1,6 +1,7 @@
 package org.example.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import jakarta.annotation.Resource;
 import org.example.dao.OrderShopItemMapper;
@@ -30,6 +31,7 @@ import org.example.vo.EarningsDataVo;
 import org.example.web.SimpleResponse;
 import org.example.web.SimpleResponseOld;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang3.StringUtils;
 import cn.afterturn.easypoi.excel.ExcelExportUtil;
@@ -80,11 +82,27 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Resource
     private AddressFeignApi addressFeignApi;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     /**
      * 订单状态
      */
     @Autowired
     private OrderStateService orderStateService;
+
+    @Override
+    public String getOrderIdByMessageId(String messageId) {
+        // redis获取主键
+        JSONObject obj = JSON.parseObject(messageId);
+        messageId = obj.getString("messageId");
+        System.out.println(messageId);
+//        redisTemplate.opsForHash().put("HashKey", messageId,"123");
+        String id = String.valueOf(redisTemplate.opsForHash().get("HashKey",messageId));
+        redisTemplate.delete(messageId);
+        System.out.println(id);
+        return id;
+    }
 
     @Override
     public List<GetDataNearlySevenDaysResult> getDataNearlySevenDays(GetDataNearlySevenDaysParams params) throws Exception {
@@ -287,23 +305,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderShopItem.setAmount(orderItem.getAmount());
                 Double total = orderItem.getShopItem().getPrice().multiply(BigDecimal.valueOf(orderItem.getAmount())).doubleValue();
                 orderShopItem.setTotal(total);
-                System.out.println("orderShopItem:"+orderShopItem);
                 // todo 批量插入
                 orderShopItemMapper.insert(orderShopItem);
                 // todo 更新库存
             }
-            // 废弃的Json操作
-//            String json = JSON.toJSONString(obj.getOrderItems());
-//            obj.setShopItem(json);
-//            JSONArray jsonArray = JSON.parseArray(json);
-//            System.out.println("jsonArray:"+jsonArray);
-//            for(int i=0;i<jsonArray.size();i++){
-//                JSONObject jsonObject1 = jsonArray.getJSONObject(i);
-//                System.out.println("jsonObject1:"+jsonObject1);
-//                OrderItem orderItem = JSON.toJavaObject(jsonObject1,OrderItem.class);
-//                System.out.println("orderItem:"+orderItem);
-//            }
-
             // todo 通知商家
         } else {
             throw new Exception("订单商品不能为空");

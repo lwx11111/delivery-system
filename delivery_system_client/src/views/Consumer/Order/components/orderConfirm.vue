@@ -210,17 +210,25 @@ const submitOrder = () => {
     // 地址信息
     data.orderInfo.shopAddressId = data.shopAddressId;
     data.orderInfo.userAddressId = data.addressData.id;
+    console.log(data.orderInfo)
     ApiOrder.add4orderinfo(data.orderInfo).then(res => {
         if (res.code === 200){
-            // 主键保存
-            data.orderInfo.id = res.data;
-            // 去支付
-            router.push({
-                path: '/Consumer/Order/orderPay',
-                query: {
-                    orderId: data.orderInfo.id
-                }
-            })
+            const params = {
+                messageId: res.data
+            }
+            // 主键获取
+            ApiOrder.getOrderIdByMessageId(params).then(res => {
+               if (res.code === 200 && res.data !== null){
+                   data.orderInfo.id = res.data;
+                   // 去支付
+                   router.push({
+                       path: '/Consumer/Order/orderPay',
+                       query: {
+                           orderId: data.orderInfo.id
+                       }
+                   })
+               }
+            });
         } else {
             ElMessage.error(res.msg)
         }

@@ -1,6 +1,8 @@
 package org.example.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.example.dao.ShopItemMapper;
+import org.example.domain.shop.Shop;
 import org.example.domain.shop.ShopItem;
 import org.example.service.IShopItemService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -37,6 +39,23 @@ import java.util.Map;
  */
 @Service
 public class ShopItemServiceImpl extends ServiceImpl<ShopItemMapper, ShopItem> implements IShopItemService {
+
+    /**
+     * 逻辑删除
+     * @param shopId
+     * @throws Exception
+     */
+    @Override
+    public void logicalDeletion(String shopId) throws Exception {
+        if (shopId == null){
+            throw new Exception("ShopId cannot be null");
+        }
+
+        LambdaUpdateWrapper<ShopItem> updateWrapper = new LambdaUpdateWrapper<ShopItem>()
+                .eq(ShopItem::getShopId, shopId)
+                .set(ShopItem::getStatus, 0);
+        this.update(updateWrapper);
+    }
 
     @Override
     public void saveByParam(ShopItem obj,Map<String, String> params){

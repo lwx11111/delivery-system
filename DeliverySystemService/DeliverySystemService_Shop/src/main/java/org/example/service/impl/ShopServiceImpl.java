@@ -66,6 +66,12 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     @Autowired
     private ShopItemMapper shopItemMapper;
 
+    /**
+     * 商铺物品
+     */
+    @Autowired
+    private ShopItemServiceImpl shopItemService;
+
     // 商铺基础信息表
     @Autowired
     private ShopMapper shopMapper;
@@ -203,12 +209,26 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
         this.updateById(obj);
     }
 
+    /**
+     * 逻辑删除
+     * @param params
+     * @throws Exception
+     */
     @Override
-    public void deleteBy(Map<String, String> params) {
-        QueryWrapper<Shop> query = new QueryWrapper<>();
-        if(!query.isEmptyOfWhere()) {
-            remove(query);
+    public void deleteBy(Map<String, String> params) throws Exception {
+        // 判空
+        String shopId = params.get("shopId");
+        if (shopId == null){
+            throw new Exception("ShopId cannot be null");
         }
+        // 店铺逻辑删除
+        LambdaUpdateWrapper<Shop> updateWrapper = new LambdaUpdateWrapper<Shop>()
+                .eq(Shop::getId, shopId)
+                .set(Shop::getStatus, 0);
+        this.update(updateWrapper);
+
+        // 物品逻辑删除
+        shopItemService.logicalDeletion(shopId);
     }
 
     @Override
@@ -320,7 +340,7 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
      * @param params
      * @return
      */
-    private  QueryWrapper<Shop> getQuery(Map<String, String> params){
+    private QueryWrapper<Shop> getQuery(Map<String, String> params){
         QueryWrapper<Shop> query  = new QueryWrapper<>();
         if(params==null||params.size()<1) {
             return  query;

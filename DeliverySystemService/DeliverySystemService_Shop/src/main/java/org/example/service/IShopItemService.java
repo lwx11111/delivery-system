@@ -19,6 +19,7 @@ import java.util.Map;
  * @since 2023-11-28
  */
 public interface IShopItemService extends IService<ShopItem> {
+    void logicalDeletion(String shopId) throws Exception;
     /**
      * 根据参数保存
      * @param obj

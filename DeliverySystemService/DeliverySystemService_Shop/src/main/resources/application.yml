@@ -56,3 +56,4 @@ mybatis-plus:
 ribbon:
   eager-load:
     enabled: true
+

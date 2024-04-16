@@ -27,6 +27,8 @@ import java.util.Map;
  */
 public interface IOrderInfoService extends IService<OrderInfo> {
 
+    String getOrderIdByMessageId(String messageId);
+
     String getExpectedTime(GetExpectedTimeParams params);
 
     List<GetDataNearlySevenDaysResult> getDataNearlySevenDays(GetDataNearlySevenDaysParams params) throws Exception;

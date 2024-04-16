@@ -2,10 +2,13 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Address/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DeliverySystemService_Address/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Basic/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Basic/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Comment/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DeliverySystemService_Comment/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/DeliverySystemService_Common/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Dependencies/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Gateway/src/main/resources" charset="UTF-8" />

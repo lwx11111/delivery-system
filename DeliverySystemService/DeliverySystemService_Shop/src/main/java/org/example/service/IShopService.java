@@ -62,7 +62,7 @@ public interface IShopService extends IService<Shop> {
      * @param params
      * @return: void
      */
-    void deleteBy(Map<String, String> params);
+    void deleteBy(Map<String, String> params) throws Exception;
 
     /**
      * 根据条件查询

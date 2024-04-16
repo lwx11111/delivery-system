@@ -97,6 +97,11 @@ public class ShopItem extends Model<ShopItem> {
     @TableField("vice_ingredient")
     private String viceIngredient;
 
+    @Schema(description = "状态")
+    @Excel(name = "状态")
+    @TableField("status")
+    private Integer status;
+
     /**
      * 适配购物车的字段，todo 优化
      */

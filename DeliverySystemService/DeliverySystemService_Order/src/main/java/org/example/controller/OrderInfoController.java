@@ -1,10 +1,10 @@
 package org.example.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import org.example.domain.shop.ShopItemVO;
 import org.example.params.GetDataNearlySevenDaysParams;
 import org.example.params.GetExpectedTimeParams;
 import org.example.params.GetHotItemDataParams;
+import org.example.rocketMQ.order.OrderSaveProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import org.example.web.SimpleResponse;
@@ -32,8 +32,13 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "服务")
 @RequestMapping("/order")
 public class OrderInfoController {
+
+    @Autowired
+    private OrderSaveProducer orderSaveProducer;
+
     @Autowired
     private IOrderInfoService service;
+
 
     @PostMapping("/getDataNearlySevenDays")
     @ResponseBody
@@ -137,7 +142,6 @@ public class OrderInfoController {
     @PostMapping("/orderDelivery")
     @ResponseBody
     public SimpleResponse orderDelivery(@RequestBody Map<String,String> params){
-        System.out.println("kwxxxxxxx");
         SimpleResponse response = new SimpleResponse();
         try {
             response.setData(service.orderDelivery(params));
@@ -245,8 +249,28 @@ public class OrderInfoController {
         }
         return response;
     }
+
     /**
-     *
+     * 根据消息ID获取主键
+     * @param messageId
+     * @return
+     */
+    @GetMapping("getOrderIdByMessageId")
+    @ResponseBody
+    @Operation(description = "创建")
+    public SimpleResponse getOrderIdByMessageId(@RequestBody String messageId){
+        try {
+            // 主键
+            String id = service.getOrderIdByMessageId(messageId);
+            return new SimpleResponse.SimpleResponseBuilder().success(id).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new SimpleResponse.SimpleResponseBuilder().failure(e.getMessage()).build();
+        }
+    }
+
+    /**
+     * 保存对象， controller -> producer -> consumer -> service
      * @param obj
      * @return
      */
@@ -254,15 +278,15 @@ public class OrderInfoController {
     @ResponseBody
     @Operation(description = "创建")
     public SimpleResponse save(@RequestBody OrderInfo obj){
-        SimpleResponse response = new SimpleResponse();
+        System.out.println(obj);
         try {
-            response.setData(service.saveByParam(obj,obj.getParams()));
+            // 消息号
+            String messageId = orderSaveProducer.sendSaveOrder(obj);
+            return new SimpleResponse.SimpleResponseBuilder().success(messageId).build();
         } catch (Exception e) {
             e.printStackTrace();
-            response.setCode(500);
-            response.setMessage(e.getMessage());
+            return new SimpleResponse.SimpleResponseBuilder().failure(e.getMessage()).build();
         }
-        return response;
     }
 
     @PutMapping("/{id}")
@@ -341,14 +365,13 @@ public class OrderInfoController {
     @ExceptionHandler
     public SimpleResponse selectPage(@RequestBody Map<String, String> params) {
         SimpleResponse response = new SimpleResponse();
-//        try {
-//            response.setData(service.selectPage(params));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            response.setCode(500);
-//            response.setMessage(e.getMessage());
-//        }
-        response.setData(service.selectPage(params));
+        try {
+            response.setData(service.selectPage(params));
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setCode(500);
+            response.setMessage(e.getMessage());
+        }
         return response;
     }
 
