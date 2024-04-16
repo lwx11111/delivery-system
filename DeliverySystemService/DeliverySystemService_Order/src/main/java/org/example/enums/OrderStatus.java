@@ -6,7 +6,6 @@ package org.example.enums;
  * 订单状态机
  */
 public enum OrderStatus {
-    //
     DELETE(0,"逻辑删除"),
     WAIT_PAYMENT(1,"待支付"),
     WAIT_TAKING(2,"待接单"),
@@ -16,7 +15,8 @@ public enum OrderStatus {
     COMMENT(51,"订单评论"),
     CONSUMER_CANCEL(6,"消费者取消"),
     SHOP_CANCEL(7,"商家取消"),
-    REFUND(8,"退款");
+    REFUND(8,"退款"),
+    SYSTEM_CANCEL(9,"系统取消");
 
     private Integer value;
     private String name;

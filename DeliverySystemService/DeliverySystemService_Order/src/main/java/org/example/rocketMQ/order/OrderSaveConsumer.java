@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 /**
  * @Author 刘文轩
  * @Date 2024/4/16 15:56
+ * 订单创建消费者
  */
 @Component
 @RocketMQMessageListener(consumerGroup = ("saveOrderConsumer"), topic = ("saveOrderTopic"))
@@ -42,7 +43,5 @@ public class OrderSaveConsumer implements RocketMQListener<MessageExt> {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
     }
 }
