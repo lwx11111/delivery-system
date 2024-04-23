@@ -231,15 +231,15 @@
     import Api from '@/api/Order/api_orderinfo.js'
     import ApiShop from '@/api/Shop/api_shop.js'
     import ItemDialog from './Item.vue'
-    import { reactive, ref, onMounted} from 'vue'
+    import { reactive, ref, onMounted, watch } from 'vue'
     import { useStore } from "vuex";
-    import { useRouter } from 'vue-router'
+    import { useRouter,useRoute } from 'vue-router'
     import {ElMessage, ElMessageBox} from "element-plus";
     import OrderItemDialog from "@/views/components/orderItemDialog.vue";
     import UserStorage from '@/cache/userStorage.js';
     const store = useStore();
-    const router = useRouter()
-
+    const router = useRouter();
+    const route = useRoute();
     // Data
     const data = reactive({
         screenHeight: window.innerHeight,// screenHeight:控制高度自适应-页面高度
@@ -282,7 +282,11 @@
     // Mounted
     onMounted(() => {
         listShopId();
-        // getData();
+    })
+
+    watch(route, (to, from) => {
+        console.log("321")
+        router.go(0)
     })
 
     // Methods

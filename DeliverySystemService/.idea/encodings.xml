@@ -10,8 +10,6 @@
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Common/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Dependencies/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/DeliverySystemService_Gateway/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/DeliverySystemService_Gateway/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Order/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Order/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/DeliverySystemService_Shop/src/main/java" charset="UTF-8" />

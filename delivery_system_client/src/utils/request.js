@@ -75,10 +75,7 @@ axios.interceptors.response.use(
                 ElMessage.error('Token值无效，请重新登录');
                 AuthStorage.removeToken();
                 UserStorage.removeUser();
-                router.push({
-                    path: 'login',
-                })
-                // router.replace('/login');
+                router.replace('/login');
             } else {
                 // Message({
                 //     message: error.message,

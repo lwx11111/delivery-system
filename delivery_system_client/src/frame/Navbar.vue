@@ -14,6 +14,12 @@
                 </div>
             </el-col>
             <el-col :span="10">
+                <el-badge v-if="data.user.customAccountId === 'merchant' "
+                          :value="data.newOrderNum"
+                          style="margin-top: 15px"
+                          @click="toMerchantOrder()">
+                    <el-icon size="20px"><Bell /></el-icon>
+                </el-badge>
                 <div class="right-menu">
                     <el-dropdown class="avatar-container right-menu-item hover-effect"
                                  trigger="click">
@@ -23,12 +29,6 @@
                         </div>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <!--                            <el-dropdown-item>-->
-                                <!--                                <span style="display:block;"-->
-                                <!--                                      @click="handlePersonal()">-->
-                                <!--                                    修改个人信息-->
-                                <!--                                </span>-->
-                                <!--                            </el-dropdown-item>-->
                                 <el-dropdown-item>
                                 <span style="display:block;"
                                       @click="handleModifyPass()">
@@ -89,12 +89,15 @@ import AuthStorage from '@/cache/authStorage.js';
 import AddressStorage from '@/cache/addressStorage.js';
 import {getEncryptPassword} from "@/utils/passwordEncrypt";
 import { onBeforeRouteUpdate } from "vue-router";
+import { createScoket } from '@/utils/websocket.js'
 
 const store = useStore();
 const router = useRouter()
 const route = useRoute();
 
 const data = reactive({
+    // 商家新订单数量
+    newOrderNum: 0,
     // 用户
     user:{},
     // 路由集合
@@ -132,6 +135,17 @@ onMounted(() => {
     data.form.name = UserStorage.getUserName();
     data.user = UserStorage.getUser();
     getBreadcrumb();
+    if ( data.user.customAccountId === 'merchant' ){
+        var socket = createScoket(localStorage.getItem("shopId"));
+        //获得消息事件
+        socket.onmessage = function (result) {
+            data.newOrderNum = data.newOrderNum + 1;
+            ElMessage.success({
+                message: "您有新订单，点击消息查看"
+            })
+        };
+    }
+
 })
 
 /**
@@ -216,6 +230,21 @@ const logout = () => {
             path: '/login',
         })
     })
+}
+
+/**
+ * 跳转商家订单界面
+ */
+const toMerchantOrder = () => {
+    // 如果已经在订单界面
+    if (route.fullPath === "/Merchant/Order/index") {
+        router.go(0)
+    } else {
+        router.push({
+            path: '/Merchant/Order/index',
+        })
+    }
+
 }
 
 </script>

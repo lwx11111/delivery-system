@@ -10,29 +10,23 @@
   </div>
 </template>
 
-<script>
-import { useStore } from "vuex";
-import ItemDialog from "@/views/Merchant/Order/Item.vue";
+<script lang="ts" setup>
+import {reactive, onMounted, ref, onActivated,onUnmounted} from 'vue';
 
-export default {
 
-    name: "homePage",
-    components: {ItemDialog},
+// Data
+const data = reactive({
+    order: {}
+})
 
-    mounted() {
-        // // State
-        // const store = useStore();
-        // console.log(store.state.count)
-        // store.commit('increment')
-        // console.log(store.state.count)
-        //
-        // // Getter
-        // console.log(store.getters['getCount']);
-        //
-        // // Action
-        // store.dispatch('increment')
-    }
-}
+onMounted(() => {
+
+})
+
+
+
+
+
 </script>
 
 <style scoped>

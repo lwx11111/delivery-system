@@ -30,6 +30,7 @@ import org.example.service.OrderStateService;
 import org.example.vo.EarningsDataVo;
 import org.example.web.SimpleResponse;
 import org.example.web.SimpleResponseOld;
+import org.example.websocket.WebsocketServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -91,13 +92,17 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     @Autowired
     private OrderStateService orderStateService;
 
+    /**
+     * 根据消息号获取订单主键
+     * @param messageId
+     * @return
+     */
     @Override
     public String getOrderIdByMessageId(String messageId) {
         // redis获取主键
         JSONObject obj = JSON.parseObject(messageId);
         messageId = obj.getString("messageId");
         System.out.println(messageId);
-//        redisTemplate.opsForHash().put("HashKey", messageId,"123");
         String id = String.valueOf(redisTemplate.opsForHash().get("HashKey",messageId));
         redisTemplate.delete(messageId);
         System.out.println(id);
@@ -309,7 +314,9 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderShopItemMapper.insert(orderShopItem);
                 // todo 更新库存
             }
-            // todo 通知商家
+            // 通知商家
+            System.out.println("通知商家");
+            WebsocketServer.sendWebsocket(obj.getShopId(), JSON.toJSONString(obj));
         } else {
             throw new Exception("订单商品不能为空");
         }

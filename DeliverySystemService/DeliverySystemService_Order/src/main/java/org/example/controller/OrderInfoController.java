@@ -39,7 +39,6 @@ public class OrderInfoController {
     @Autowired
     private IOrderInfoService service;
 
-
     @PostMapping("/getDataNearlySevenDays")
     @ResponseBody
     public SimpleResponse getDataNearlySevenDays(@RequestBody GetDataNearlySevenDaysParams params){

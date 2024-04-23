@@ -22,6 +22,8 @@
     "screenfull": "^6.0.2",
     "sha256": "^0.2.0",
     "vue": "^3.3.4",
+    "vue-native-websocket": "^2.0.15",
+    "vue-native-websocket-vue3": "^3.1.7",
     "vue-router": "^4.2.5",
     "vuex": "^4.0.2"
   },
