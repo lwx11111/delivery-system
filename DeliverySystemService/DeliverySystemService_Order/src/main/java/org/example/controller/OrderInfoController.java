@@ -100,6 +100,17 @@ public class OrderInfoController {
 
     // ======================================= 订单状态 =======================================
 
+    @PostMapping("/orderComment")
+    @ResponseBody
+    public SimpleResponse orderComment(@RequestBody Map<String,String> params){
+        try {
+            return new SimpleResponse.SimpleResponseBuilder().success(service.orderComment(params)).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new SimpleResponse.SimpleResponseBuilder().failure(e.getMessage()).build();
+        }
+    }
+
     @PostMapping("/orderPay")
     @ResponseBody
     public SimpleResponse orderPay(@RequestBody Map<String,String> params){
@@ -254,13 +265,14 @@ public class OrderInfoController {
      * @param messageId
      * @return
      */
-    @GetMapping("getOrderIdByMessageId")
+    @PostMapping("getOrderIdByMessageId")
     @ResponseBody
     @Operation(description = "创建")
     public SimpleResponse getOrderIdByMessageId(@RequestBody String messageId){
         try {
             // 主键
             String id = service.getOrderIdByMessageId(messageId);
+            System.out.println(id);
             return new SimpleResponse.SimpleResponseBuilder().success(id).build();
         } catch (Exception e) {
             e.printStackTrace();
@@ -277,12 +289,12 @@ public class OrderInfoController {
     @ResponseBody
     @Operation(description = "创建")
     public SimpleResponse save(@RequestBody OrderInfo obj){
-        System.out.println(obj);
         try {
             // 消息号
             String messageId = orderSaveProducer.sendSaveOrder(obj);
             return new SimpleResponse.SimpleResponseBuilder().success(messageId).build();
         } catch (Exception e) {
+            System.out.println("123");
             e.printStackTrace();
             return new SimpleResponse.SimpleResponseBuilder().failure(e.getMessage()).build();
         }

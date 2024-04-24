@@ -21,6 +21,7 @@ public class WebExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public SimpleResponse exception(Exception e) {
+        System.out.println("全局异常");
         e.printStackTrace();
         return new SimpleResponse.SimpleResponseBuilder().failure(e.getMessage()).build();
     }

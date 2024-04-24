@@ -26,7 +26,7 @@ const router = useRouter()
 // Data
 const data = reactive({
     // 筛选条件 todo 字典配置
-    screeningList: ["高分好评","月售最多","起送价最低","配送费最低","速度最快","距离最近","人均高到低","人均低到高"],
+    screeningList: ["高分好评","月售最多","起送价最低","配送费最低","速度最快","距离最近"],
 })
 
 // Mounted

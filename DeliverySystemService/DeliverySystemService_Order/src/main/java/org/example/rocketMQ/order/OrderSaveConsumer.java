@@ -33,7 +33,6 @@ public class OrderSaveConsumer implements RocketMQListener<MessageExt> {
             // 获取消息
             byte[] body = messageExt.getBody();
             OrderInfo orderInfo = JSON.parseObject(new String(body), OrderInfo.class);
-            System.out.println(orderInfo);
             // 保存逻辑
             String id = orderInfoService.saveByParam(orderInfo, null);
             // redis保存

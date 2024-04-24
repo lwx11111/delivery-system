@@ -1,7 +1,6 @@
 package org.example.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -38,14 +37,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.common.collect.Lists;
 import cn.afterturn.easypoi.excel.entity.ImportParams;
 import cn.afterturn.easypoi.excel.imports.ExcelImportService;
-import org.webjars.NotFoundException;
 
 import java.io.InputStream;
 
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -268,6 +266,26 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
                 }
             }
         }
+        System.out.println(params.get("screening"));
+        // 排序
+        if ( params.get("screening") != null &&
+                ( "4".equals(params.get("screening"))
+                        || "5".equals(params.get("screening")))) {
+            System.out.println("排序");
+            List<Shop> shops = result.getRecords().stream().sorted(new Comparator<Shop>() {
+                @Override
+                public int compare(Shop o1, Shop o2) {
+                    Double i1 = Double.parseDouble(o1.getDistanceKm());
+                    Double i2 = Double.parseDouble(o2.getDistanceKm());
+                    if (i1 < i2) {
+                        return -1;
+                    }
+                    return 1;
+                }
+            }).collect(Collectors.toList());
+            result.setRecords(shops);
+
+        }
         return result;
     }
 
@@ -412,7 +430,6 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
                         break;
                     }
                 }
-
             }
         }
         return  query;

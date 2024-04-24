@@ -255,7 +255,7 @@ const data = reactive({
         orderTime: '2023-01-01 00:00:00',
         status: '0',
         paymentMethod: '1',
-        remark: '1',
+        remark: '',
         tableware: '1',
     },
     // 查询参数
@@ -451,14 +451,17 @@ const saveCart = () => {
     console.log(params)
     ApiCart.add4cart(params).then(res => {
         if (res.code === 200){
-            ElMessageBox.alert('加入购物车成功', '提示', {
-                confirmButtonText: '去支付',
-                callback: action => {
-                    router.push({
-                        path: '/Consumer/Personal/shoppingCart'
-                    })
-                }
+            ElMessage.success({
+                message: "加入购物车成功"
             });
+            // ElMessageBox.alert('加入购物车成功', '提示', {
+            //     confirmButtonText: '去支付',
+            //     callback: action => {
+            //         router.push({
+            //             path: '/Consumer/Personal/shoppingCart'
+            //         })
+            //     }
+            // });
         } else {
             ElMessage.error(res.msg)
         }

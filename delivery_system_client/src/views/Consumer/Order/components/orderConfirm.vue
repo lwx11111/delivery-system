@@ -165,7 +165,7 @@ const data = reactive({
         orderTime: '2023-01-01 00:00:00',
         status: '0',
         paymentMethod: '1',
-        remark: '1',
+        remark: '',
         tableware: '1',
     },
 })
@@ -212,12 +212,15 @@ const submitOrder = () => {
     data.orderInfo.userAddressId = data.addressData.id;
     console.log(data.orderInfo)
     ApiOrder.add4orderinfo(data.orderInfo).then(res => {
+        console.log(res)
         if (res.code === 200){
             const params = {
                 messageId: res.data
             }
+            console.log(params)
             // 主键获取
             ApiOrder.getOrderIdByMessageId(params).then(res => {
+                console.log(res)
                if (res.code === 200 && res.data !== null){
                    data.orderInfo.id = res.data;
                    // 去支付

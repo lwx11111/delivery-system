@@ -10,10 +10,10 @@
             </el-row>
             <el-row>
                 <el-col :span="10">
-                    {{data.rider.name}}
+                    {{data.rider.accountName}}
                 </el-col>
                 <el-col :span="10">
-                    送达时间：{{data.time}}
+                    送达时间：{{data.order.expectedTime}}
                 </el-col>
             </el-row>
             <el-row>
@@ -49,6 +49,8 @@
 import Api from '@/api/Order/api_orderinfo.js'
 import ApiShop from '@/api/Shop/api_shop.js'
 import ApiComment from '@/api/Comment/api_comment.js'
+import ApiUser from '@/api/auth.js'
+
 import { reactive, onMounted } from 'vue'
 import { useStore } from "vuex";
 import { useRouter } from 'vue-router'
@@ -59,6 +61,7 @@ const router = useRouter()
 
 // Data
 const data = reactive({
+    order: {},
     // dialog
     operateTitle: '评论',
     showDialog: false,
@@ -113,11 +116,32 @@ const submit = () => {
         if (res.code === 200){
             ElMessage.success('评论成功');
             data.showDialog = false;
+            // 订单状态修改
+            const params = {
+                orderId: data.orderId
+            }
+            Api.orderComment(params).then(res => {
+                console.log(res)
+                if (res.code === 200){
+                    router.go(0)
+                }
+            })
         } else {
             ElMessage.error('评论失败');
         }
     })
 }
+
+const getOrderInfo = () => {
+    Api.sel4orderinfo(data.orderId).then(res => {
+        console.log(res);
+        if (res.code === 200){
+            data.order = res.data;
+            getRiderByOrderId();
+        }
+    })
+}
+
 const getShopByOrderId = () => {
     console.log(data.orderId)
     ApiShop.getShopByOrderId(data.orderId).then(res => {
@@ -129,18 +153,19 @@ const getShopByOrderId = () => {
 }
 
 const getRiderByOrderId = () => {
-    // ApiUser.getRiderByOrderId(data.orderId).then(res => {
-    //     console.log(res);
-    //     if (res.code === 200){
-    //         res.rider = res.data;
-    //     }
-    // })
+    ApiUser.getAccountById(data.order.riderId).then(res => {
+        console.log(res);
+        if (res.code === "20000"){
+            data.rider = res.data.account;
+        }
+    })
 }
 
 const init = (orderId) => {
     data.orderId = orderId;
     // 获取信息
     getShopByOrderId();
+    getOrderInfo();
     // 界面显示
     data.showDialog = true;
 }

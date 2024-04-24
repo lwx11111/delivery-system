@@ -31,15 +31,15 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, ref } from 'vue'
+import {reactive, onMounted, ref, watch} from 'vue'
 import { useStore } from "vuex";
-import { useRouter } from 'vue-router'
+import { useRouter,useRoute } from 'vue-router'
 import Api from '@/api/Address/api_address.js'
 import UserStorage from '@/cache/userStorage.js';
 import AddAddress from "./addAddress.vue";
 const store = useStore();
 const router = useRouter()
-
+const route = useRoute()
 // Data
 const data = reactive({
     // 地址信息
@@ -69,6 +69,9 @@ const data = reactive({
 // Mounted
 onMounted(() => {
     listAddressData();
+    if (route.query.isBack === 'true'){
+        addAddress();
+    }
 })
 
 // Methods
@@ -89,7 +92,6 @@ const listAddressData = () => {
         data.addressData = res.data.records;
     })
 }
-
 
 </script>
 

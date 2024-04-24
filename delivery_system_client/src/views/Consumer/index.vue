@@ -22,7 +22,7 @@
                         <el-button :icon="Search" />
                     </template>
                     <template #append>
-                        <div @click="getShopList">搜索</div>
+                        <div @click="getShopListBySearch">搜索</div>
                     </template>
                 </el-input>
             </el-col>
@@ -76,6 +76,7 @@ const data = reactive({
     shopList: [],
     // 查询参数
     params: {
+        status: 1,
         screening: '',
         name:'',
         categoryId: '',
@@ -90,6 +91,7 @@ const data = reactive({
 onMounted(() => {
     // 初始化数据
     data.shopList = [];
+    data.isHaveData = true;
     // 挂载dom后注册onBottom事件
     window.addEventListener('scroll', onBottom)
     getAddressData();
@@ -111,12 +113,13 @@ const onBottom = () => {
     const clientHeight = document.documentElement.clientHeight // 可视区高度
     // 以滚动高度 + 当前视口高度  >= 可滚动高度 = 触底
     if (clientHeight + scrollTop >= scrollHeight) {
-        console.log("触底")
-        if (data.isHaveData){
-            data.params.pageIndex = data.params.pageIndex + 1;
-            getShopList();
+        // 返回该页面时 没数据就会自动到第二页
+        if (data.shopList.length !== 0){
+            if (data.isHaveData){
+                data.params.pageIndex = data.params.pageIndex + 1;
+                getShopList();
+            }
         }
-
     }
 }
 
@@ -128,7 +131,6 @@ const getAddressData = () => {
         accountId: UserStorage.getUserId(),
     }
     ApiAddress.selpage4address(params).then(res => {
-        console.log(res)
         if (res.code === 200){
             // 没有地址信息
             if (res.data.records.length === 0){
@@ -170,9 +172,7 @@ const getShopList = () => {
     delete data.address.shopId;
     delete data.address.params;
     data.params.address = JSON.stringify(data.address) ;
-    console.log(data.params)
     ApiShop.selpage4shop(data.params).then(res => {
-        console.log(res)
         if (res.code === 200){
             if (res.data.records.length === 0){
                 data.isHaveData = false;
@@ -186,13 +186,39 @@ const getShopList = () => {
 }
 
 /**
+ * 搜索
+ */
+const getShopListBySearch = () => {
+    delete data.address.shopId;
+    delete data.address.params;
+    data.params.address = JSON.stringify(data.address) ;
+    ApiShop.selpage4shop(data.params).then(res => {
+        if (res.code === 200){
+            data.shopList = res.data.records;
+            data.isHaveData = false;
+            return;
+        }
+    })
+}
+
+/**
  * 特殊筛选
  * @param index 筛选条件的下标
  */
 const getScreeningIndex = (index) => {
     data.shopList = [];
     data.params.screening = index;
-    getShopList();
+
+    delete data.address.shopId;
+    delete data.address.params;
+    data.params.address = JSON.stringify(data.address) ;
+    ApiShop.selpage4shop(data.params).then(res => {
+        if (res.code === 200){
+            data.shopList = res.data.records;
+            data.isHaveData = false;
+            return;
+        }
+    })
 }
 </script>
 

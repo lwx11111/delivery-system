@@ -9,10 +9,6 @@
                          @open="open"
                          mode="horizontal">
                     <el-menu-item index="/Consumer/index">外卖</el-menu-item>
-<!--                    <el-sub-menu index="2">-->
-<!--                        <template #title>Workspace</template>-->
-<!--                        <el-menu-item index="/">会员</el-menu-item>-->
-<!--                    </el-sub-menu>-->
                     <el-menu-item index="/Consumer/Order/index">订单</el-menu-item>
                     <el-menu-item index="/Consumer/Personal/index">我的</el-menu-item>
                 </el-menu>
@@ -22,9 +18,9 @@
                 <el-container>
                     <el-main style="background: #FFFAFA">
                         <router-view v-slot="{ Component }" :key="key" >
-                            <keep-alive>
+<!--                            <keep-alive>-->
                                 <component :is="Component" />
-                            </keep-alive>
+<!--                            </keep-alive>-->
                         </router-view>
                     </el-main>
                 </el-container>

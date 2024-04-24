@@ -6,7 +6,7 @@ export default {
   getOrderIdByMessageId(data){
     return request({
       url: serverName + '/order/getOrderIdByMessageId',
-      method: 'get',
+      method: 'post',
       data: data
     })
   },
@@ -44,6 +44,14 @@ export default {
   },
 
   // ========================================== 订单状态
+
+  orderComment(data) {
+    return request({
+      url: serverName + '/order/orderComment',
+      method: 'post',
+      data: data
+    })
+  },
 
   orderPay(data) {
     return request({

@@ -199,6 +199,12 @@ const form = ref();
 const handleSavePass = () => {
     form.value.validate(valid => {
         if (valid) {
+            // 密码验证
+            var pattern = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d!#@*&.]{8,}$/;
+            if (!pattern.test(data.form.newPass)){
+                ElMessage.error('新密码必须8位以上，必须包含大小写字母和数字');
+                return false;
+            }
             data.form.newPass = getEncryptPassword(data.form.newPass, 'aes');
             data.form.oldPass = getEncryptPassword(data.form.oldPass, 'aes');
             Api.modifyPass(data.form).then(res => {
@@ -221,10 +227,10 @@ const handleSavePass = () => {
  */
 const logout = () => {
     Api.logout().then(res => {
-        console.log(res);
+        AddressStorage.removeAddress();
         AuthStorage.removeToken();
         UserStorage.removeUser();
-        AddressStorage.removeAddress();
+
         localStorage.removeItem("shopId");
         router.push({
             path: '/login',

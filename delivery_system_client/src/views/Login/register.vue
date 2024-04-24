@@ -174,6 +174,11 @@ const validateForm = () => {
         ElMessage.error('密码不能为空');
         return false;
     }
+    var pattern = /^(?=.*?[a-z])(?=.*?[A-Z])(?=.*?\d)[a-zA-Z\d!#@*&.]{8,}$/;
+    if (!pattern.test(data.form.password)){
+        ElMessage.error('密码必须8位以上，必须包含大小写字母和数字');
+        return false;
+    }
     if (data.form.confirmPassword === ''){
         ElMessage.error('确认密码不能为空');
         return false;
@@ -204,6 +209,7 @@ const submitForm = () => {
     formRef.value.validate(valid => {
         if (valid) {
             if (validateForm()){
+
                 const data1 = {
                     verify: data.form.verifyCode,
                     uuid: data.uuid,

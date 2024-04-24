@@ -29,6 +29,18 @@ public class OrderStateServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInf
     @Autowired
     private StateMachinePersister<OrderStatus, OrderStatusChangeEvent, OrderInfo> persister;
 
+    @Override
+    public Boolean comment(OrderInfo orderInfo) {
+        // 获得订单信息
+        System.out.println("线程名称：" + Thread.currentThread().getName() + " 尝试支付，订单号：" + orderInfo.getId());
+        // 发送支付事件
+        Boolean result = sendEvent(OrderStatusChangeEvent.COMMENT, orderInfo);
+        if (!result) {
+            System.out.println("线程名称：" + Thread.currentThread().getName() + " 接单失败, 状态异常，订单号：" + orderInfo.getId());
+        }
+        return result;
+    }
+
     /**
      * 发送订单支付事件
      */

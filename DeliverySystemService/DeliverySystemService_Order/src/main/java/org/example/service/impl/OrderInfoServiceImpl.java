@@ -102,10 +102,10 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
         // redis获取主键
         JSONObject obj = JSON.parseObject(messageId);
         messageId = obj.getString("messageId");
-        System.out.println(messageId);
+        System.out.println("信息化" + messageId);
         String id = String.valueOf(redisTemplate.opsForHash().get("HashKey",messageId));
         redisTemplate.delete(messageId);
-        System.out.println(id);
+        System.out.println("自己" + id);
         return id;
     }
 
@@ -138,6 +138,14 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
     }
 
     // =============================== 订单状态 ===============================
+
+
+    @Override
+    public Boolean orderComment(Map<String, String> params) throws Exception {
+        OrderInfo orderInfo = this.getById(params.get("orderId"));
+        // 修改订单状态信息
+        return this.orderStateService.comment(orderInfo);
+    }
 
     @Override
     public Boolean orderPay(Map<String,String> params) throws Exception {
@@ -314,9 +322,6 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 orderShopItemMapper.insert(orderShopItem);
                 // todo 更新库存
             }
-            // 通知商家
-            System.out.println("通知商家");
-            WebsocketServer.sendWebsocket(obj.getShopId(), JSON.toJSONString(obj));
         } else {
             throw new Exception("订单商品不能为空");
         }

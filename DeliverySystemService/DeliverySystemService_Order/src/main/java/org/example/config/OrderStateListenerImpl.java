@@ -1,5 +1,6 @@
 package org.example.config;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.example.enums.OrderStatus;
 import org.example.enums.OrderStatusChangeEvent;
 import org.example.feign.ShopFeignApi;
 import org.example.service.impl.OrderInfoServiceImpl;
+import org.example.websocket.WebsocketServer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.Message;
 import org.springframework.statemachine.annotation.OnTransition;
@@ -62,6 +64,9 @@ public class OrderStateListenerImpl{
     public boolean payTransition(Message<OrderStatusChangeEvent> message) {
         OrderInfo order = (OrderInfo) message.getHeaders().get("order");
         try {
+            // 通知商家
+            System.out.println("通知商家");
+            WebsocketServer.sendWebsocket(order.getShopId(), JSON.toJSONString(order));
             // 修改状态
             order.setStatus(OrderStatus.WAIT_TAKING.getValue());
             order.setStatusName("消费者支付");

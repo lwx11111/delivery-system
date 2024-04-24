@@ -123,10 +123,9 @@ const toAddress = () => {
  */
 const logout = () => {
     ApiUser.logout().then(res => {
-        console.log(res);
         AuthStorage.removeToken();
-        AddressStorage.removeToken();
-        UserStorage.removeToken();
+        AddressStorage.removeAddress();
+        UserStorage.removeUser();
         router.push({
             path: '/login',
         })

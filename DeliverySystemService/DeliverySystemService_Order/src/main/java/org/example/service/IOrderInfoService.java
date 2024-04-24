@@ -38,6 +38,7 @@ public interface IOrderInfoService extends IService<OrderInfo> {
 
     EarningsDataVo getEarningsData(Map<String,String> params) throws Exception;
     // ================================ 订单状态 ================================
+    Boolean orderComment(Map<String,String> params) throws Exception;
     Boolean orderPay(Map<String,String> params) throws Exception;
     Boolean orderTaking(Map<String,String> params) throws Exception;
     Boolean orderDelivery(Map<String,String> params) throws Exception;

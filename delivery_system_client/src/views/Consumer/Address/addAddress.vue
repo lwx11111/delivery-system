@@ -36,13 +36,15 @@
 </template>
 
 <script lang="ts" setup>
-import { reactive, onMounted, ref, onActivated } from 'vue'
+import { reactive, onMounted, ref, onActivated,watch } from 'vue'
 import { useStore } from "vuex";
-import { useRouter } from 'vue-router'
+import {useRoute, useRouter} from 'vue-router'
 import Api from '@/api/Address/api_address.js'
 import UserStorage from '@/cache/userStorage.js';
 const store = useStore();
 const router = useRouter()
+const route = useRoute()
+
 import {ElMessage, ElMessageBox} from "element-plus";
 // Data
 const data = reactive({
@@ -82,10 +84,6 @@ const data = reactive({
 
 // Mounted
 onMounted(() => {
-
-})
-
-onActivated(() => {
     console.log('onShow')
     // 从地图选择的地址
     const position = JSON.parse(sessionStorage.getItem('position'))
@@ -102,6 +100,10 @@ onActivated(() => {
         data.address.latitude = position.latitude;
         sessionStorage.removeItem('position')
     }
+})
+
+onActivated(() => {
+
 })
 
 // Methods
@@ -141,6 +143,7 @@ const addAddress = () => {
                         message: '保存成功',
                         type: 'success',
                     })
+                    router.go(0)
                 })
             }
 
@@ -192,6 +195,7 @@ const init = (address) => {
 defineExpose({
     init,
 });
+
 </script>
 
 <style scoped>

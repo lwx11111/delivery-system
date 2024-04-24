@@ -1,7 +1,7 @@
 <template>
     <div>
         <!--外卖首页信息和地址-->
-        <el-row style="text-align: center;background: #DAA520; height: 50px" >
+        <el-row style="text-align: center;background: #DAA520; height: 50px; margin-bottom: 10px" >
             <el-col :span="2" style="padding-top: 10px; text-align: right">
                 <el-text style="color:black;" tag="b">配送至：</el-text>
             </el-col>
@@ -13,22 +13,6 @@
                     分类店铺</el-text>
             </el-col>
         </el-row>
-        <!-- 搜索框-->
-        <el-row style="margin-top: 10px; margin-bottom: 10px;">
-            <el-col :span="24">
-                <el-input v-model="data.params.name"
-                          placeholder="请输入">
-                    <template #prepend>
-                        <el-button :icon="Search" />
-                    </template>
-                    <template #append>
-                        <div @click="getShopList">搜索</div>
-                    </template>
-                </el-input>
-            </el-col>
-        </el-row>
-        <!--筛选栏-->
-        <ScreeningList @get-screening-index="getScreeningIndex"></ScreeningList>
         <!--商品信息-->
         <ShopCardList :shop-list="data.shopList"></ShopCardList>
     </div>
@@ -70,22 +54,21 @@ const data = reactive({
 
 // Mounted
 onMounted(() => {
-    // onActivated 会执行
-    // getShopList();
-})
-
-// 每次打开界面时，刷新界面，否则只有组件初始化时才会刷新，路由也监听不到
-onActivated(() => {
     data.address = AddressStorage.getAddress();
     data.params.isParentId = route.query.isParentId
     data.params.categoryId = route.query.categoryId
     getShopList();
 })
 
+// 每次打开界面时，刷新界面，否则只有组件初始化时才会刷新，路由也监听不到
+// keepAlive 打开时用这个
+onActivated(() => {
+
+})
+
 // Methods
 const getShopList = () => {
     ApiShop.listShopsByCategoryId(data.params).then(res => {
-        console.log(res)
         if (res.code === 200){
             data.shopList = res.data.records;
         }

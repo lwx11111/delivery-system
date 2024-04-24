@@ -42,6 +42,9 @@ const consumerRouter = {
                 name: 'CategoryList',
                 query: {
                     categoryInfo: {}
+                },
+                meta:{
+                    keepAlive: true
                 }
             },
             {
@@ -118,6 +121,9 @@ const consumerRouter = {
                 path: '/Consumer/Address/index',
                 component: AddressIndex,
                 name: 'AddressIndex',
+                query: {
+                    isBack: ''
+                }
             },
         ]
     }

@@ -12,15 +12,27 @@
 
 <script lang="ts" setup>
 import {reactive, onMounted, ref, onActivated,onUnmounted} from 'vue';
-
+import AuthStorage from '@/cache/authStorage.js';
+import UserStorage from '@/cache/userStorage.js';
+import { useRouter} from "vue-router";
+const router = useRouter()
 
 // Data
 const data = reactive({
-    order: {}
+
 })
 
 onMounted(() => {
-
+    // 已经登录
+    if (AuthStorage.getToken() !== null && UserStorage.getUser() !== null){
+        let user = UserStorage.getUser();
+        console.log(user)
+        if (user.customAccountId === 'consumer'){
+            router.push({
+                path: "/Consumer/index"
+            })
+        }
+    }
 })
 
 

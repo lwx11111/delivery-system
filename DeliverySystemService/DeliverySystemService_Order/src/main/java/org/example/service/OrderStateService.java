@@ -8,6 +8,8 @@ import org.example.domain.order.OrderInfo;
  */
 public interface OrderStateService {
 
+    Boolean comment(OrderInfo orderInfo);
+
     //发起支付
     Boolean pay(OrderInfo orderInfo);
 

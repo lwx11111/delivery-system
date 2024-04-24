@@ -38,6 +38,13 @@ export default {
         })
     },
 
+    getAccountById(id) {
+        return request({
+            url: managerUriPrefix + '/v1/account/info/' + id,
+            method: 'get'
+        })
+    }
+
 
 
 
