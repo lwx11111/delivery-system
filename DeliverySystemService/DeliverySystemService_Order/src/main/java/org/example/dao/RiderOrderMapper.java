@@ -3,6 +3,7 @@ package org.example.dao;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.example.domain.user.RiderOrder;
+import org.example.domain.user.SysAccount;
 
 /**
  * @Author 刘文轩
@@ -10,5 +11,5 @@ import org.example.domain.user.RiderOrder;
  */
 @Mapper
 public interface RiderOrderMapper extends BaseMapper<RiderOrder> {
-    String getRiderByNum();
+    SysAccount getRiderByNum();
 }

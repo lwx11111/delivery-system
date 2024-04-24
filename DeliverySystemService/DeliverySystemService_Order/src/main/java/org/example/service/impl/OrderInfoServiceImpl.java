@@ -508,6 +508,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
                 query.eq("status",entry.getValue());
             }
         }
+        query.orderByDesc("order_time");
         return  query;
     }
 

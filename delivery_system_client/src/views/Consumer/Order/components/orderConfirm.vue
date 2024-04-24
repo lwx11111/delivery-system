@@ -3,8 +3,13 @@
     <el-dialog v-model="data.dialogVisible">
         <!--地址信息-->
         <el-card>
-            <el-row style="width: 100%">
-                <h4>{{data.addressData.detailAddress}}</h4>
+            <el-row style="width: 100%" @click="chooseAddress()">
+                <el-col :span="20">
+                    <h4>{{data.addressData.detailAddress}}</h4>
+                </el-col>
+                <el-col :span="4">
+                    <h4><el-icon><ArrowRight /></el-icon></h4>
+                </el-col>
             </el-row>
             <el-row style="width: 100%">
                 <el-col :span="6">
@@ -104,7 +109,8 @@
             </el-row>
         </el-card>
     </el-dialog>
-
+    <!--选择地址-->
+    <ChooseAddress @modify-address="modifyAddress" ref="chooseAddressRef"></ChooseAddress>
 </template>
 
 <script lang="ts" setup>
@@ -116,6 +122,7 @@ import ApiAddress from '@/api/Address/api_address.js'
 import ApiOrder from '@/api/Order/api_orderinfo.js'
 import UserStorage from '@/cache/userStorage.js'
 import AddressStorage from '@/cache/addressStorage.js'
+import ChooseAddress from "../../Address/components/chooseAddress.vue";
 const store = useStore();
 const router = useRouter();
 const route = useRoute();
@@ -182,6 +189,23 @@ onMounted(() => {
 
 // Methods
 
+
+/**
+ * 修改地址回调函数
+ * @param address
+ */
+const modifyAddress = (address) => {
+    data.addressData = address
+    ElMessage.success({
+        message: "修改成功"
+    })
+}
+
+
+const chooseAddressRef = ref();
+const chooseAddress = () => {
+    chooseAddressRef.value.init();
+}
 /**
  * 计算预计送达时间
  */

@@ -11,6 +11,7 @@ import org.example.dao.RiderOrderMapper;
 import org.example.domain.order.OrderStatusDomain;
 import org.example.domain.order.OrderInfo;
 import org.example.domain.user.RiderOrder;
+import org.example.domain.user.SysAccount;
 import org.example.enums.OrderStatus;
 import org.example.enums.OrderStatusChangeEvent;
 import org.example.feign.ShopFeignApi;
@@ -96,8 +97,9 @@ public class OrderStateListenerImpl{
         OrderInfo order = (OrderInfo) message.getHeaders().get("order");
         try {
             // 分配给附近骑手
-            String riderId = riderOrderAllocation.pollingAllocation(order);
-            order.setRiderId(riderId);
+            SysAccount account = riderOrderAllocation.pollingAllocation(order);
+            order.setRiderId(account.getAccountId());
+            order.setRiderName(account.getAccountName());
             // 修改骑手订单数量
 
             // 修改状态

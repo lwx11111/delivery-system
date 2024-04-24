@@ -26,16 +26,16 @@
 <!--                <el-icon> <ChatDotRound></ChatDotRound></el-icon>-->
 <!--                <div>打赏骑手</div>-->
 <!--            </div>-->
-            <div style="margin: 10px;"
-                 @click="orderAgain">
-                <el-icon> <ChatDotRound></ChatDotRound></el-icon>
-                <div>再来一单</div>
-            </div>
-            <div style="margin: 10px;"
-                 @click="toComment()">
-                <el-icon> <ChatDotRound></ChatDotRound></el-icon>
-                <div>评价</div>
-            </div>
+<!--            <div style="margin: 10px;"-->
+<!--                 @click="orderAgain">-->
+<!--                <el-icon> <ChatDotRound></ChatDotRound></el-icon>-->
+<!--                <div>再来一单</div>-->
+<!--            </div>-->
+<!--            <div style="margin: 10px;"-->
+<!--                 @click="toComment()">-->
+<!--                <el-icon> <ChatDotRound></ChatDotRound></el-icon>-->
+<!--                <div>评价</div>-->
+<!--            </div>-->
 <!--            <div style="margin: 10px;">-->
 <!--                <el-icon> <ChatDotRound></ChatDotRound></el-icon>-->
 <!--                <div>联系商家</div>-->
@@ -110,12 +110,12 @@
         <el-row style="margin-bottom: 5px">
             用户信息: {{data.addressData.contacts}} ---- {{data.addressData.phone}}
         </el-row>
-        <el-row style="margin-bottom: 5px">
-            配送服务: {{data.order.deliveryService}}
-        </el-row>
+<!--        <el-row style="margin-bottom: 5px">-->
+<!--            配送服务: {{data.order.deliveryService}}-->
+<!--        </el-row>-->
         <el-row @click="toRiderDetail"
                 style="margin-bottom: 5px">
-            配送骑手: {{data.order.deliveryRiderId}}
+            配送骑手: {{data.order.riderName}}
 <!--            <el-icon><ArrowRight></ArrowRight></el-icon>-->
         </el-row>
         <el-row style="margin-bottom: 5px">

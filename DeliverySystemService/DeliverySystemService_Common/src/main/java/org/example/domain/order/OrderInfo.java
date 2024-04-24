@@ -58,7 +58,9 @@ public class OrderInfo extends Model<OrderInfo> {
     @TableField("rider_id")
     private String riderId;
 
-    @TableField(exist = false)
+    @Schema(description = "骑手名")
+    @Excel(name = "骑手名")
+    @TableField("rider_name")
     private String riderName;
 
     /**

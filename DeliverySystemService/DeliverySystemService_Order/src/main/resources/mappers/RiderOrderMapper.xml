@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.example.dao.RiderOrderMapper">
 
-    <select id="getRiderByNum" resultType="String">
-        select account_id
+    <select id="getRiderByNum" resultType="org.example.domain.user.SysAccount">
+        select account_id, r.name as account_name
         from rider_order r
         where r.status = 0
         order by num desc
