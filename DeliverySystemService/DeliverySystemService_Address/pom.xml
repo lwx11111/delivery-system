@@ -17,6 +17,12 @@
             <artifactId>DeliverySystemService_Common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        <!-- Lombok -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!--引入spring-boot-starter-web,支持web开发-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -27,12 +33,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <!-- Lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
         </dependency>
         <!--mysql-->
         <dependency>
@@ -48,17 +48,17 @@
         </dependency>
         <!--mybatisPlus
               springBoot3 使用springboot6 删除 NestedIOException
-              mybatisPlus version >= 3.5.3.1-->
+              mybatisPlus version >= 3.5.3-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>3.5.3</version>
         </dependency>
-        <!-- fastjson -->
+        <!-- fastjson2 -->
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-            <version>2.0.9</version>
+            <groupId>com.alibaba.fastjson2</groupId>
+            <artifactId>fastjson2</artifactId>
+            <version>2.0.49</version>
         </dependency>
         <!--分页-->
         <dependency>
@@ -71,12 +71,6 @@
                     <groupId>com.github.jsqlparser</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <!--velocity 基于java的模板引擎-->
-        <dependency>
-            <groupId>org.apache.velocity</groupId>
-            <artifactId>velocity</artifactId>
-            <version>1.7</version>
         </dependency>
         <!--swagger-->
         <dependency>
@@ -115,27 +109,11 @@
             <artifactId>spring-boot-starter-data-redis</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!--rabbitmq-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
         <!--dubbo-->
         <!--        <dependency>-->
         <!--            <groupId>com.alibaba.cloud</groupId>-->
         <!--            <artifactId>spring-cloud-starter-dubbo</artifactId>-->
         <!--            <version>3.2.0-beta.6</version>-->
         <!--        </dependency>-->
-        <!--websocket-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
-        </dependency>
-        <!--状态机-->
-        <dependency>
-            <groupId>org.springframework.statemachine</groupId>
-            <artifactId>spring-statemachine-core</artifactId>
-            <version>2.0.1.RELEASE</version>
-        </dependency>
     </dependencies>
 </project>

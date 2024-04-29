@@ -59,12 +59,13 @@ const submitPosition = () => {
     }
     console.log(data.position)
     sessionStorage.setItem('position', JSON.stringify(data.position))
-    router.push({
-        path: '/Consumer/Address/index',
-        query: {
-            isBack: 'true'
-        }
-    })
+    router.go(-1);
+    // router.push({
+    //     path: '/Consumer/Address/index',
+    //     query: {
+    //         isBack: 'true'
+    //     }
+    // })
 }
 
 /**

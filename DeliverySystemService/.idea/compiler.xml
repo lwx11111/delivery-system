@@ -6,12 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="DeliverySystemService_Basic" />
+        <module name="DeliverySystemService_Comment" />
         <module name="DeliverySystemService_Shop" />
         <module name="DeliverySystemService_Order" />
         <module name="DeliverySystemService_Common" />
         <module name="DeliverySystemService_Address" />
-        <module name="DeliverySystemService_Basic" />
-        <module name="DeliverySystemService_Comment" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
