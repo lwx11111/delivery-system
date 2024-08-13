@@ -57,6 +57,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
 
 /**
  * <p>
@@ -358,6 +360,7 @@ public class OrderInfoServiceImpl extends ServiceImpl<OrderInfoMapper, OrderInfo
             param.put("id", orderInfo.getId());
             List<OrderItem> orderItems =  this.listOrderItemById(param);
             orderInfo.setOrderItems(orderItems);
+
             // 查询商铺信息
             SimpleResponse simpleResponse = shopFeignApi.select(orderInfo.getShopId());
 

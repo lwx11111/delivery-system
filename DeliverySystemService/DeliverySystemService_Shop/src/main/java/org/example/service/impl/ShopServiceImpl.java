@@ -44,6 +44,10 @@ import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -77,22 +81,58 @@ public class ShopServiceImpl extends ServiceImpl<ShopMapper, Shop> implements IS
     @Resource
     private AddressFeignApi addressFeignApi;
 
-    @Override
-    public void calculateScore() throws Exception {
-        List<Shop> res = this.list();
-        System.out.println(res.size());
-        for (Shop item : res) {
-            Integer score = null;
-            if (item.getSumPeople() == 0 || item.getSumScore() == 0) {
-                score = 4;
-            } else {
-                score = item.getSumScore() / item.getSumPeople();
-            }
+    private static final ThreadPoolExecutor EXECUTOR =
+            new ThreadPoolExecutor(10,10,0L, TimeUnit.MINUTES, new LinkedBlockingQueue<>());
 
-            LambdaUpdateWrapper<Shop> wrapper = new LambdaUpdateWrapper<Shop>()
-                    .eq(Shop::getId, item.getId())
-                    .set(Shop::getScore, score);
-            this.update(wrapper);
+    /**
+     * 定时任务
+     * 处理每天店铺分数
+     */
+    @Override
+    public void calculateScore() {
+        // 获取店铺总数
+        long totalShopNum = shopMapper.selectCount(new QueryWrapper<>());
+        // 分组数
+        int groupNum = 1;
+        // 线程数
+        int threadNum = (int) totalShopNum / groupNum + 1;
+        // 计数器
+        CountDownLatch count = new CountDownLatch(threadNum);
+        // 提交到线程池
+        for (int i = 0; i < threadNum; i++){
+            int finalI = i;
+            EXECUTOR.submit(() -> {
+                try{
+                    // 每次取groupNum条
+                    String sqlLimit = "limit " + finalI * groupNum + "," + (finalI + 1) * groupNum;
+                    List<Shop> res = shopMapper.selectList(
+                            new QueryWrapper<Shop>().last(sqlLimit));
+                    // 更新分数逻辑
+                    for (Shop item : res) {
+                        Integer score = null;
+                        if (item.getSumPeople() == 0 || item.getSumScore() == 0) {
+                            score = 4;
+                        } else {
+                            score = item.getSumScore() / item.getSumPeople();
+                        }
+
+                        LambdaUpdateWrapper<Shop> wrapper = new LambdaUpdateWrapper<Shop>()
+                                .eq(Shop::getId, item.getId())
+                                .set(Shop::getScore, score);
+                        this.update(wrapper);
+                    }
+                }finally {
+                    count.countDown();
+                }
+            });
+        }
+
+        try {
+            count.await();
+            // 全部处理完成
+            System.out.println("All Down");
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 

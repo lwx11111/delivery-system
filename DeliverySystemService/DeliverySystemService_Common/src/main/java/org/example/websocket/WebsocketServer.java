@@ -1,5 +1,18 @@
 package org.example.websocket;
 
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.http.HttpObjectAggregator;
+import io.netty.handler.codec.http.HttpServerCodec;
+import io.netty.handler.codec.http.websocketx.WebSocketFrameAggregator;
+import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.stream.ChunkedWriteHandler;
 import jakarta.websocket.*;
 import jakarta.websocket.server.PathParam;
 import jakarta.websocket.server.ServerEndpoint;
@@ -18,6 +31,30 @@ public class WebsocketServer {
      * @param jsonData
      */
     public static final void sendWebsocket(String accountName, String jsonData){
+
+        // 服务启动器
+        new ServerBootstrap()
+                .group(new NioEventLoopGroup())
+                .channel(NioServerSocketChannel.class)
+                .childHandler(new ChannelInitializer<NioSocketChannel>() {
+                    @Override
+                    protected void initChannel(NioSocketChannel ch) throws Exception {
+                        ch.pipeline().addLast(new HttpServerCodec());
+                        ch.pipeline().addLast(new HttpObjectAggregator(65536));
+                        ch.pipeline().addLast(new ChunkedWriteHandler());
+                        ch.pipeline().addLast(new WebSocketServerProtocolHandler("/ws"));
+                        ch.pipeline().addLast(new WebSocketFrameAggregator(65536));
+                        ch.pipeline().addLast(new StringDecoder());
+                        ch.pipeline().addLast(new ChannelInboundHandlerAdapter() {
+                            @Override
+                            public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+                                System.out.println(msg);
+                            }
+                        });
+                    }
+                })
+                .bind(8080);
+
         //找到客户端
         Session session;
         int count = 3;

@@ -1,5 +1,6 @@
 <template>
     <el-container>
+
         <el-aside width="200px">
             <Sidebar class="sidebar-container"></Sidebar>
         </el-aside>
@@ -7,6 +8,7 @@
             <el-header>
                 <Navbar></Navbar>
             </el-header>
+
             <el-main>
                 <AppMain></AppMain>
             </el-main>
@@ -24,7 +26,7 @@
 .sidebar-container {
     transition: width 0.28s;
     width: 200px;
-    background-color: #BCD2EE;
+    background-color: #545c64;
     height: 100%;
     position: fixed;
     font-size: 0px;
@@ -33,11 +35,6 @@
     left: 0;
     z-index: 1001;
     overflow: hidden;
-}
-
-/*默认有padding*/
-.el-header {
-    padding: 0 ;
 }
 </style>
 

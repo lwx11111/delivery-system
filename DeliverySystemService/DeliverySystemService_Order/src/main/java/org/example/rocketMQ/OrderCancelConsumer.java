@@ -1,4 +1,4 @@
-package org.example.rocketMQ.order;
+package org.example.rocketMQ;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;

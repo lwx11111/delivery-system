@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import org.example.params.GetDataNearlySevenDaysParams;
 import org.example.params.GetExpectedTimeParams;
 import org.example.params.GetHotItemDataParams;
-import org.example.rocketMQ.order.OrderSaveProducer;
+import org.example.rocketMQ.OrderSaveProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.*;
 import org.example.web.SimpleResponse;

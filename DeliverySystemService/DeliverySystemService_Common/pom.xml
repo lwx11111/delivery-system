@@ -11,6 +11,12 @@
     <artifactId>DeliverySystemService_Common</artifactId>
 
     <dependencies>
+        <!--netty-->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-all</artifactId>
+            <version>4.1.39.Final</version>
+        </dependency>
         <!--aop-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
